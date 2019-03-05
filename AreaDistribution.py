@@ -1,6 +1,7 @@
 import utilityFunctions
 import numpy as np
 import random
+import datetime
 from multiprocessing import Process
 from pymclevel import alphaMaterials
 
@@ -62,7 +63,9 @@ def perform(level, box, options):
     for proc in procs:
         proc.join()
     """
-    print(create_two_dimensional_height_map(level, box))
+    start = datetime.datetime.now()
+    create_two_dimensional_height_map(level, box)
+    print(datetime.datetime.now() - start)
     #skidaddle_skidoodle_perform_genetic_algorithm_you_noodle()
 
 
@@ -75,7 +78,8 @@ def create_two_dimensional_height_map(level, box):
         if currentBlock in skipBlocks:
             continue
         print(y)
-        xReferencePoint = y
+        xReferencePoint = y + 1
+        #utilityFunctions.setBlock(level, (am.DiamondOre.ID, 0), box.maxx + dimensionCorrector, y, box.maxz + dimensionCorrector)
         break
 
     """From the reference point, start finding the hights"""
@@ -89,7 +93,7 @@ def create_two_dimensional_height_map(level, box):
                 while currentBlock == am.Air.ID:
                     currentReferencePoint -= 1
                     currentBlock = level.blockAt(x, currentReferencePoint, z)
-                y = currentReferencePoint
+                y = currentReferencePoint + 1
                 positionDict[x, z] = [y, currentBlock]
                 if(onlyUpdateOnce):
                     onlyUpdateOnce = False
@@ -100,7 +104,7 @@ def create_two_dimensional_height_map(level, box):
                     currentReferencePoint += 1
                     currentBlock = level.blockAt(x, currentReferencePoint, z)
                 currentBlock = level.blockAt(x, currentReferencePoint - 1, z)
-                y = currentReferencePoint
+                y = currentReferencePoint + 1
                 positionDict[x, z] = [y, currentBlock]
                 if (onlyUpdateOnce):
                     onlyUpdateOnce = False
