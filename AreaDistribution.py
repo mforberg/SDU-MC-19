@@ -30,9 +30,9 @@ blocks = [
 ]
 
 skipBlocks = [
-    am.Air.ID#,
-    #am.Wood.ID,
-    #am.Leaves.ID
+    am.Air.ID,
+    am.Wood.ID,
+    am.Leaves.ID
 ]
 
 #zero indexed coordinates in the box
@@ -63,9 +63,10 @@ def perform(level, box, options):
     for proc in procs:
         proc.join()
     """
-    start = datetime.datetime.now()
-    create_two_dimensional_height_map(level, box)
-    print(datetime.datetime.now() - start)
+    #start = datetime.datetime.now()
+    print(am.Grass.ID)
+    print(create_two_dimensional_height_map(level, box))
+    #print(datetime.datetime.now() - start)
     #skidaddle_skidoodle_perform_genetic_algorithm_you_noodle()
 
 
@@ -78,7 +79,7 @@ def create_two_dimensional_height_map(level, box):
         if currentBlock in skipBlocks:
             continue
         print(y)
-        xReferencePoint = y + 1
+        xReferencePoint = y
         #utilityFunctions.setBlock(level, (am.DiamondOre.ID, 0), box.maxx + dimensionCorrector, y, box.maxz + dimensionCorrector)
         break
 
@@ -93,7 +94,8 @@ def create_two_dimensional_height_map(level, box):
                 while currentBlock == am.Air.ID:
                     currentReferencePoint -= 1
                     currentBlock = level.blockAt(x, currentReferencePoint, z)
-                y = currentReferencePoint + 1
+                y = currentReferencePoint
+                print(str(y) + "going down")
                 positionDict[x, z] = [y, currentBlock]
                 if(onlyUpdateOnce):
                     onlyUpdateOnce = False
@@ -103,8 +105,10 @@ def create_two_dimensional_height_map(level, box):
                 while currentBlock != am.Air.ID:
                     currentReferencePoint += 1
                     currentBlock = level.blockAt(x, currentReferencePoint, z)
-                currentBlock = level.blockAt(x, currentReferencePoint - 1, z)
-                y = currentReferencePoint + 1
+                currentReferencePoint -= 1
+                currentBlock = level.blockAt(x, currentReferencePoint, z)
+                y = currentReferencePoint
+                print(str(y) + "going up")
                 positionDict[x, z] = [y, currentBlock]
                 if (onlyUpdateOnce):
                     onlyUpdateOnce = False
