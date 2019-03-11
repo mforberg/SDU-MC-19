@@ -5,6 +5,7 @@ import datetime
 from multiprocessing import Process
 from pymclevel import alphaMaterials, MCSchematic, MCLevel, BoundingBox
 from mcplatform import *
+from collections import OrderedDict
 
 am = alphaMaterials
 
@@ -43,44 +44,23 @@ dimensionCorrector = -1
 "Dimensions for the different buildings."
 "Dict of all the different buildings which have a dict for their dimensions"
 buildings = {
-    'well': {'xLength': 4, 'zWidth': 4},
-    'normalHouse': {'xLength': 5, 'zWidth': 5},
-    'blackSmith': {'xLength': 8, 'zWidth': 5},
-    'inn': {'xLength': 20, 'zWidth': 10},
-    'smallFarm': {'xLength': 6, 'zWidth': 9},
-    'bigFarm': {'xLength': 13, 'zWidth': 9},
-    'church': {'xLength': 17, 'zWidth': 22}
+    "well": {"amount": 0, "xLength": 4, "zWidth": 4},
+    "normalHouse": {"amount": 0, "xLength": 5, "zWidth": 5},
+    "blackSmith": {"amount": 0, "xLength": 8, "zWidth": 5},
+    "inn": {"amount": 0, "xLength": 20, "zWidth": 10},
+    "smallFarm": {"amount": 0, "xLength": 6, "zWidth": 9},
+    "bigFarm": {"amount": 0, "xLength": 13, "zWidth": 9},
+    "church": {"amount": 0, "xLength": 17, "zWidth": 22}
 }
 
 def perform(level, box, options):
-    """
-    procs = []
-    amountOfProcesses = 4
-    lengthOfChunk = (box.maxx - box.minx) / amountOfProcesses
-    currentStartingPoint = box.minx
-
-    # instantiating process with arguments
-    for process in range(0, amountOfProcesses):
-        currentEndingPoint = currentStartingPoint + lengthOfChunk
-        if process == amountOfProcesses - 1:
-            currentEndingPoint = box.maxx
-        proc = Process(target=create_two_dimensional_height_map(level, box, currentStartingPoint, currentEndingPoint))
-
-        procs.append(proc)
-        proc.start()
-        print("HERERERERERERE123")
-        print(proc.pid)
-        currentStartingPoint = currentEndingPoint + 1
-
-    # complete the processes
-    for proc in procs:
-        proc.join()
-    """
-
+    print("start")
+    """Depending on the size of the box, different amount of buildings needs to be added. x-size = z-size"""
+    initialize_buildings()
     #start = datetime.datetime.now()
-    #print(am.Grass.ID)
     heightMap = create_two_dimensional_height_map(level, box, options)
     startingPoint = {"x": box.minx, "z": box.minz}
+    utilityFunctions.setBlock(level, (am.DiamondOre.ID, 0), startingPoint["x"], 6, startingPoint["z"])
     #print(datetime.datetime.now() - start)
     coor = skidaddle_skidoodle_perform_genetic_algorithm_you_noodle(heightMap, box.maxx - box.minx, box.maxz - box.minz,
                                                              startingPoint, buildings)
@@ -88,17 +68,25 @@ def perform(level, box, options):
         utilityFunctions.setBlock(level, (am.DiamondOre.ID, 0), key[0], coor[key][1], key[1])
 
 
+def initialize_buildings():
+    buildings["well"]["amount"] = 1
+    buildings["normalHouse"]["amount"] = 6
+    buildings["blackSmith"]["amount"] = 2
+    buildings["inn"]["amount"] = 1
+    buildings["smallFarm"]["amount"] = 3
+    buildings["bigFarm"]["amount"] = 1
+    buildings["church"]["amount"] = 1
+
+
 def create_two_dimensional_height_map(level, box, options):
-    positionDict = {}
+    positionDict = OrderedDict()
     xReferencePoint = 200
     """Find the reference point by going down the y-axiz untill there is a block that isn't in the skipBlocks"""
     for y in range(box.maxy + dimensionCorrector, box.miny + dimensionCorrector, -1):
         currentBlock = level.blockAt(box.maxx + dimensionCorrector, y, box.maxz + dimensionCorrector)
         if currentBlock in skipBlocks:
             continue
-        print(y)
         xReferencePoint = y
-        #utilityFunctions.setBlock(level, (am.DiamondOre.ID, 0), box.maxx + dimensionCorrector, y, box.maxz + dimensionCorrector)
         break
 
     """From the reference point, start finding the heights"""
@@ -113,7 +101,6 @@ def create_two_dimensional_height_map(level, box, options):
                     currentReferencePoint -= 1
                     currentBlock = level.blockAt(x, currentReferencePoint, z)
                 y = currentReferencePoint
-                print(str(y) + "going down")
                 positionDict[x, z] = [y, currentBlock]
                 if(onlyUpdateOnce):
                     onlyUpdateOnce = False
@@ -126,7 +113,6 @@ def create_two_dimensional_height_map(level, box, options):
                 currentReferencePoint -= 1
                 currentBlock = level.blockAt(x, currentReferencePoint, z)
                 y = currentReferencePoint
-               # print(str(y) + "going up")
                 positionDict[x, z] = [y, currentBlock]
                 if (onlyUpdateOnce):
                     onlyUpdateOnce = False
@@ -155,45 +141,56 @@ def create_two_dimensional_height_map(level, box, options):
 
     return positionDict
 
-
-dummyData = {}
-
-
 def skidaddle_skidoodle_perform_genetic_algorithm_you_noodle(heightMap, boxWidth, boxHeigth, startingPoint, buildingsCopy):
-    blockedCoordinates = {}
+    blockedCoordinates = OrderedDict()
 
     """Pick a number between ~10 to ~20 if the size is 250*250"""
-    minimumAmountOfHouses = round((boxHeigth * boxWidth) / 6200)
-    maximumAmountOfHouses = round((boxHeigth * boxWidth) / 3100)
-    amountOfHouses = random.randint(minimumAmountOfHouses, maximumAmountOfHouses + 1)
-    print(amountOfHouses)
+    # minimumAmountOfHouses = round((boxHeigth * boxWidth) / 6200)
+    # maximumAmountOfHouses = round((boxHeigth * boxWidth) / 3100)
+    minimumAmountOfHouses = 2
+    maximumAmountOfHouses = 3
+    amountOfHouses = random.randint(minimumAmountOfHouses, maximumAmountOfHouses)
+    #print(amountOfHouses)
     """randomly place them"""
     for houseNumber in range(0, amountOfHouses):
+        avaiableHouse = list()
+        for building in buildingsCopy.keys():
+            if buildingsCopy[building]["amount"] > 0:
+                avaiableHouse.append(building)
         """Pick random house"""
-        currentHouse = random.choice(list(buildingsCopy.keys()))
+        currentHouse = random.choice(avaiableHouse)
         """We need a well at first"""
         if(houseNumber == 0):
             currentHouse = "well"
         """Place the house's point at a random location, and check if the location works out"""
         while True:
             tryAgain = False
-            tempBlockedCoordinates = {}
+            tempBlockedCoordinates = OrderedDict()
             coordintate = place_house_point_randomly(boxWidth, boxHeigth, startingPoint, currentHouse, buildingsCopy)
-            for x in range(coordintate["x"], coordintate["x"] + buildingsCopy[currentHouse]["xLength"]):
-                for z in range(coordintate["z"], coordintate["z"] + buildingsCopy[currentHouse]["zWidth"]):
-                    tempBlockedCoordinates[x, z] = [currentHouse, heightMap[x, z][0]]
-                    if coordintate in blockedCoordinates.keys():
+            for x in range(coordintate["x"],
+                           coordintate["x"] + buildingsCopy[currentHouse]["xLength"]):
+                for z in range(coordintate["z"],
+                               coordintate["z"] + buildingsCopy[currentHouse]["zWidth"]):
+                    convertedCoordinate = (x, z)
+                    if convertedCoordinate in blockedCoordinates.keys():
+                        print("SKIPPY")
                         tryAgain = True
+                        break
+                    else:
+                        tempBlockedCoordinates[x, z] = [currentHouse, heightMap[x, z][0]]
+                if tryAgain:
+                    break
             if tryAgain:
                 continue
             """add the location to blocked coordinates"""
             blockedCoordinates.update(tempBlockedCoordinates)
+            print(blockedCoordinates.keys())
             break
-        """delete the building from the dict"""
+        """decrement the building amount from the dict"""
         print(currentHouse)
-        del buildingsCopy[currentHouse]
+        buildingsCopy[currentHouse]["amount"] -= 1
 
-    """Don't do this, only 4 testing"""
+    """Don't do this, only for testing"""
     return blockedCoordinates
 
 
@@ -207,13 +204,18 @@ def skidaddle_skidoodle_perform_genetic_algorithm_you_noodle(heightMap, boxWidth
 
 
 def place_house_point_randomly(boxWidth, boxHeigth, startingPoint, houseName, buildingsCopy):
+    print(houseName)
+    #print(buildingsCopy.keys())
     if houseName in buildingsCopy:
         """pick a random coordinate"""
-        allowedMaxXArea = startingPoint["x"] + boxWidth - buildings[houseName]["xLength"]
-        allowedMaxZArea = startingPoint["z"] + boxHeigth - buildings[houseName]["zWidth"]
-        randomX = random.randint(startingPoint["x"], allowedMaxXArea + 1)
-        randomZ = random.randint(startingPoint["z"], allowedMaxZArea + 1)
+        allowedMaxXArea = startingPoint["x"] + boxWidth - buildingsCopy[houseName]["xLength"]
+        allowedMaxZArea = startingPoint["z"] + boxHeigth - buildingsCopy[houseName]["zWidth"]
+        randomX = random.randint(startingPoint["x"], allowedMaxXArea)
+        randomZ = random.randint(startingPoint["z"], allowedMaxZArea)
         coordinate = {"x": randomX, "z": randomZ}
+        #print(coordinate)
         return coordinate
-
+    else:
+        print("You tried to place: " + houseName)
+        print("place_house_randomly cant find the house's name")
 
