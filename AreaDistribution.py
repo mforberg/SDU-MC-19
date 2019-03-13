@@ -58,7 +58,7 @@ def perform(level, box, options):
     """Depending on the size of the box, different amount of buildings needs to be added. x-size = z-size"""
     initialize_buildings()
     #start = datetime.datetime.now()
-    heightMap = create_two_dimensional_height_map(level, box, options)
+    heightMap = create_two_dimensional_height_map(level, box)
     startingPoint = {"x": box.minx, "z": box.minz}
     utilityFunctions.setBlock(level, (am.DiamondOre.ID, 0), startingPoint["x"], 6, startingPoint["z"])
     #print(datetime.datetime.now() - start)
@@ -78,7 +78,7 @@ def initialize_buildings():
     buildings["church"]["amount"] = 1
 
 
-def create_two_dimensional_height_map(level, box, options):
+def create_two_dimensional_height_map(level, box):
     positionDict = OrderedDict()
     xReferencePoint = 200
     """Find the reference point by going down the y-axiz untill there is a block that isn't in the skipBlocks"""
@@ -96,8 +96,8 @@ def create_two_dimensional_height_map(level, box, options):
         for z in range(box.maxz + dimensionCorrector, box.minz + dimensionCorrector, -1):
             currentBlock = level.blockAt(x, currentReferencePoint, z)
             """if air is found, go down until there is a non-air block"""
-            if(currentBlock == am.Air.ID):
-                while currentBlock == am.Air.ID:
+            if(currentBlock in skipBlocks):
+                while currentBlock in skipBlocks:
                     currentReferencePoint -= 1
                     currentBlock = level.blockAt(x, currentReferencePoint, z)
                 y = currentReferencePoint
@@ -107,7 +107,7 @@ def create_two_dimensional_height_map(level, box, options):
                     xReferencePoint = y
             else:
                 """if any other block is found, go up until air is found and -1 in the y-coordinate"""
-                while currentBlock != am.Air.ID:
+                while currentBlock not in skipBlocks:
                     currentReferencePoint += 1
                     currentBlock = level.blockAt(x, currentReferencePoint, z)
                 currentReferencePoint -= 1
@@ -213,7 +213,6 @@ def place_house_point_randomly(boxWidth, boxHeigth, startingPoint, houseName, bu
         randomX = random.randint(startingPoint["x"], allowedMaxXArea)
         randomZ = random.randint(startingPoint["z"], allowedMaxZArea)
         coordinate = {"x": randomX, "z": randomZ}
-        #print(coordinate)
         return coordinate
     else:
         print("You tried to place: " + houseName)
