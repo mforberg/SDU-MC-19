@@ -5,7 +5,7 @@ from mcplatform import *
 
 am = alphaMaterials
 
-# naturally occuring materials
+# naturally occurring materials
 blocks = [
     am.Grass.ID,
     am.Dirt.ID,
