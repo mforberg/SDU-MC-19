@@ -1,5 +1,5 @@
+# noinspection PyUnresolvedReferences
 import utilityFunctions
-import numpy as np
 import GeneticAlgorithmMinecraft as GAM
 import MapAnalysis as MA
 
@@ -35,13 +35,3 @@ def initialize_buildings():
     buildings["smallFarm"]["probability"] = 10
     buildings["bigFarm"]["probability"] = 50
     buildings["church"]["probability"] = 10
-
-    #calculate_fitness()
-    #choose_parents()
-    #mate_those_bastards()
-    #add_some_mutation()
-    #check_those_children()
-
-
-
-

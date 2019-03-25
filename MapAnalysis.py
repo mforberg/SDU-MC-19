@@ -1,4 +1,6 @@
+# noinspection PyUnresolvedReferences
 from pymclevel import alphaMaterials, MCSchematic, MCLevel, BoundingBox
+# noinspection PyUnresolvedReferences
 from mcplatform import *
 
 am = alphaMaterials
