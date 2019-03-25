@@ -2,8 +2,11 @@ import random
 
 def run_genetic_algorith(heightMap, boxWidth, boxHeigth, startingPoint, buildingsCopy):
     population = generate_population(heightMap, boxWidth, boxHeigth, startingPoint, buildingsCopy)
-
-    return population
+    fitnessPopulation = calculate_fitness(population, heightMap)
+    #choose_parents()
+    #mate_those_bastards()
+    #add_some_mutation()
+    #check_those_children()
 
 def generate_population(heightMap, boxWidth, boxHeigth, startingPoint, buildingsCopy):
     blockedCoordinates = {}
@@ -75,8 +78,6 @@ def generate_population(heightMap, boxWidth, boxHeigth, startingPoint, buildings
     print(dictOfCoordinates)
     return dictOfCoordinates
 
-
-
 def place_house_point_randomly(boxWidth, boxHeigth, startingPoint, houseName, buildingsCopy):
     print(houseName)
     #print(buildingsCopy.keys())
@@ -91,3 +92,32 @@ def place_house_point_randomly(boxWidth, boxHeigth, startingPoint, houseName, bu
     else:
         print("You tried to place: " + houseName)
         print("place_house_randomly cant find the house's name")
+
+
+def calculate_fitness(population, heightMap):
+    fitnessScore = 0
+    fitnessScore += distance_to_well()
+
+    return fitnessScore
+
+
+def distance_to_well(wellX, wellZ, wellY, house):
+    distanceScore = 0
+    distance = 0
+
+    #calculate distance
+
+    distanceScore += too_close_to_well(distance)
+    distanceScore += too_far_from_well(distance)
+    return distanceScore
+
+
+def too_close_to_well(distance):
+    closeScore = 100
+
+    #substract score the closer
+    return closeScore
+
+
+def too_far_from_well(distance):
+    farScore = 0
