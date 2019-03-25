@@ -1,5 +1,10 @@
 import random
 
+def run_genetic_algorith(heightMap, boxWidth, boxHeigth, startingPoint, buildingsCopy):
+    population = generate_population(heightMap, boxWidth, boxHeigth, startingPoint, buildingsCopy)
+
+    return population
+
 def generate_population(heightMap, boxWidth, boxHeigth, startingPoint, buildingsCopy):
     blockedCoordinates = {}
 
@@ -67,9 +72,8 @@ def generate_population(heightMap, boxWidth, boxHeigth, startingPoint, buildings
         """decrement the building probability from the dict"""
         buildingsCopy[currentHouse]["probability"] = buildingsCopy[currentHouse]["probability"] / 2
 
-    """Don't do this, only for testing"""
     print(dictOfCoordinates)
-    return blockedCoordinates
+    return dictOfCoordinates
 
 
 
