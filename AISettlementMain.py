@@ -21,9 +21,10 @@ def perform(level, box, options):
     initialize_buildings()
     heightMap = MA.create_two_dimensional_height_map(level, box)
     startingPoint = {"x": box.minx, "z": box.minz}
-    coor = GAM.run_genetic_algorith(heightMap, box.maxx - box.minx, box.maxz - box.minz, startingPoint, buildings)
-    for key in coor.keys():
-        print(key)
+    gam = GAM.Genetic_Algorithm()
+    coor = gam.run_genetic_algorithm(heightMap, box.maxx - box.minx, box.maxz - box.minz, startingPoint, buildings)
+    #for key in coor.keys():
+    #    print(key)
         #utilityFunctions.setBlock(level, (am.DiamondOre.ID, 0), key[0], coor[key][1], key[1])
 
 
