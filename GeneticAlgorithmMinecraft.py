@@ -101,23 +101,11 @@ def calculate_fitness(population, heightMap):
     return fitnessScore
 
 
-def distance_to_well(wellX, wellZ, wellY, house):
-    distanceScore = 0
+def distance_to_well(well, house):
     distance = 0
 
     #calculate distance
 
-    distanceScore += too_close_to_well(distance)
-    distanceScore += too_far_from_well(distance)
+
+    distanceScore = -(4/45) * distance ** 2 + (16/3) * distance + 20
     return distanceScore
-
-
-def too_close_to_well(distance):
-    closeScore = 100
-
-    #substract score the closer
-    return closeScore
-
-
-def too_far_from_well(distance):
-    farScore = 0
