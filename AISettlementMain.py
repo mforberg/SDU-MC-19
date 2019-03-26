@@ -22,7 +22,10 @@ def perform(level, box, options):
     heightMap = MA.create_two_dimensional_height_map(level, box)
     startingPoint = {"x": box.minx, "z": box.minz}
     gam = GAM.Genetic_Algorithm()
-    coor = gam.run_genetic_algorithm(heightMap, box.maxx - box.minx, box.maxz - box.minz, startingPoint, buildings)
+    gam.run_genetic_algorithm(heightMap, box.maxx - box.minx, box.maxz - box.minz, startingPoint, buildings)
+    # building1 = GAM.Building(10, 10, "church")
+    # building2 = GAM.Building(8, 0, "well")
+    # print(gam.distance_to_well(building1, building2, buildings))
     #for key in coor.keys():
     #    print(key)
         #utilityFunctions.setBlock(level, (am.DiamondOre.ID, 0), key[0], coor[key][1], key[1])
@@ -30,9 +33,9 @@ def perform(level, box, options):
 
 def initialize_buildings():
     buildings["well"]["probability"] = 0
-    buildings["normalHouse"]["probability"] = 10
+    buildings["normalHouse"]["probability"] = 30
     buildings["blackSmith"]["probability"] = 10
     buildings["inn"]["probability"] = 10
     buildings["smallFarm"]["probability"] = 10
-    buildings["bigFarm"]["probability"] = 50
+    buildings["bigFarm"]["probability"] = 10
     buildings["church"]["probability"] = 10

@@ -75,5 +75,4 @@ def create_two_dimensional_height_map(level, box):
                 if (onlyUpdateOnce):
                     onlyUpdateOnce = False
                     xReferencePoint = y
-
     return positionDict
