@@ -2,8 +2,13 @@ import random
 import math
 import Building
 
-
 class Genetic_Algorithm:
+
+    def __init__(self, gene_size, crossover_rate, mutation_rate, population_size):
+        self.gene_size = gene_size
+        self.crossover_rate = crossover_rate
+        self.mutation_rate = mutation_rate
+        self.population_size = population_size
 
     def run_genetic_algorithm(self, heightMap, boxWidth, boxHeigth, startingPoint, buildingsCopy):
         tempDict = self.generate_population(heightMap, boxWidth, boxHeigth, startingPoint, buildingsCopy)

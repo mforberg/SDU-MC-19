@@ -3,6 +3,7 @@ import utilityFunctions
 import GeneticAlgorithmMinecraft as GAM
 import MapAnalysis as MA
 import Building
+import GA_VALUES as GAV
 
 
 "Dimensions for the different buildings."
@@ -23,7 +24,9 @@ def perform(level, box, options):
     initialize_buildings()
     heightMap = MA.create_two_dimensional_height_map(level, box)
     startingPoint = {"x": box.minx, "z": box.minz}
-    gam = GAM.Genetic_Algorithm()
+
+
+    gam = GAM.Genetic_Algorithm(GAV.GENE_SIZE, GAV.CROSSOVER_RATE, GAV.MUTATION_RATE, GAV.POPULATION_SIZE)
     gam.run_genetic_algorithm(heightMap, box.maxx - box.minx, box.maxz - box.minz, startingPoint, buildings)
     building1 = Building.Building(10, 10, "church")
     building2 = Building.Building(8, 0, "well")
