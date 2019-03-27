@@ -57,7 +57,8 @@ class Genetic_Algorithm:
             while True:
                 tryAgain = False
                 tempBlockedCoordinates = {}
-                coordintate = self.place_house_point_randomly(boxWidth, boxHeigth, startingPoint, currentHouse, buildingsCopy)
+                coordintate = self.place_house_point_randomly(boxWidth, boxHeigth, startingPoint, currentHouse,
+                                                              buildingsCopy)
                 for x in range(coordintate["x"], coordintate["x"] + buildingsCopy[currentHouse]["xLength"]):
                     for z in range(coordintate["z"], coordintate["z"] + buildingsCopy[currentHouse]["zWidth"]):
                         convertedCoordinate = (x, z)
@@ -76,7 +77,7 @@ class Genetic_Algorithm:
                 dictOfCoordinates[(coordintate["x"], coordintate["z"])] = currentHouse
                 break
             """decrement the building probability from the dict, unless it is a normal house"""
-            if(buildingsCopy[currentHouse] == "normalHouse"):
+            if buildingsCopy[currentHouse] == "normalHouse":
                 continue
             buildingsCopy[currentHouse]["probability"] = buildingsCopy[currentHouse]["probability"] / 2
         listOfBuildings = []
@@ -100,7 +101,6 @@ class Genetic_Algorithm:
             print("place_house_randomly cant find the house's name")
 
     def calculate_fitness(self, population, heightMap, buildingsCopy):
-
         fitnessScore = 0
 
         #fitnessScore += distance_between()
@@ -115,3 +115,6 @@ class Genetic_Algorithm:
         c = 20
         distanceScore = a * math.pow(distance, 2) + b * distance + c
         return distanceScore
+
+    def modified_blocks(self, house, buildingsCopy, heightMap):
+        

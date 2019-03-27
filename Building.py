@@ -77,9 +77,6 @@ class Building:
         if thisMiddlePoint["z"] > houseMiddlePoint["z"]:
             down = True
 
-        calculationPoint1 = {}
-        calculationPoint2 = {}
-
         if overlapping:
             pointsDict = self.__inside_case(house, buildingsCopy, thisMiddlePoint, houseMiddlePoint,
                                             overlappingDirectionX)
