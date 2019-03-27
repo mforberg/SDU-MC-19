@@ -15,7 +15,7 @@ def perform(level, box, options):
     gam.run_genetic_algorithm(heightMap, box.maxx - box.minx, box.maxz - box.minz, startingPoint, LIBRARY.buildings)
     building1 = Building.Building(10, 10, "church")
     building2 = Building.Building(8, 0, "well")
-    print(building1.distance_between_building(building2, LIBRARY.buildings))
+    print(building1.distance_between_building(building2))
     #for key in coor.keys():
     #    print(key)
         #utilityFunctions.setBlock(level, (am.DiamondOre.ID, 0), key[0], coor[key][1], key[1])
