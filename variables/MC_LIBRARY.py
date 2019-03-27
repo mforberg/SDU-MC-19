@@ -1,3 +1,5 @@
+import copy
+
 WELL_PROBABILITY        = 0
 NORMALHOUSE_PROBABILITY = 30
 BLACKSMITH_PROBABILITY  = 10
@@ -17,11 +19,16 @@ buildings = {
     "church": {"probability": CHURCH_PROBABILITY, "xLength": 17, "zWidth": 22}
 }
 
+def buildingsCopy():
+    return copy.deepcopy(buildings)
+
 
 
 def totalprobability():
     tp = 0
+    print("CALLED")
     for b in buildings:
+        print(buildings[b]["probability"])
         if b == "well":
             continue
         tp += buildings[b]["probability"]
