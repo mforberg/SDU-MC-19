@@ -20,9 +20,9 @@ buildings = {
 
 
 def totalprobability():
-    totalprobability = 0
-    for building in buildings.keys():
-        if building == "well":
+    tp = 0
+    for b in buildings:
+        if b == "well":
             continue
-        totalprobability += building["probability"]
-    return totalprobability
+        tp += buildings[b]["probability"]
+    return tp
