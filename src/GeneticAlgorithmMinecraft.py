@@ -2,8 +2,13 @@ import random
 import math
 import Building
 
-
 class Genetic_Algorithm:
+
+    def __init__(self, gene_size, crossover_rate, mutation_rate, population_size):
+        self.gene_size = gene_size
+        self.crossover_rate = crossover_rate
+        self.mutation_rate = mutation_rate
+        self.population_size = population_size
 
     def run_genetic_algorithm(self, heightMap, boxWidth, boxHeigth, startingPoint, buildingsCopy):
         tempDict = self.generate_population(heightMap, boxWidth, boxHeigth, startingPoint, buildingsCopy)
@@ -28,11 +33,11 @@ class Genetic_Algorithm:
         dictOfCoordinates = {}
         """randomly place them"""
         for houseNumber in range(0, amountOfHouses):
-            avaiableHouse = list()
-            for possibleBuilding in buildingsCopy.keys():
-                if possibleBuilding == "well":
+            availableHouse = list()
+            for building in buildingsCopy.keys():
+                if building == "well":
                     continue
-                avaiableHouse.append(possibleBuilding)
+                availableHouse.append(building)
             """calculate total probability"""
             totalProbablility = 0
             for possibleBuilding in buildingsCopy:
@@ -42,14 +47,17 @@ class Genetic_Algorithm:
             """pick a random number between 0 and the total probability"""
             randomPickedNumber = random.randint(0, totalProbablility)
             """Find which house it corresponds to"""
-            currentHouse = avaiableHouse[0]
-            for i in range(0, len(avaiableHouse)):
-                currentHouse = avaiableHouse[i]
+            currentHouse = availableHouse[0]
+            for i in range(0, len(availableHouse)):
+                currentHouse = availableHouse[i]
                 if randomPickedNumber > buildingsCopy[currentHouse]["probability"]:
                     randomPickedNumber -= buildingsCopy[currentHouse]["probability"]
                 else:
-                    currentHouse = avaiableHouse[i]
+                    currentHouse = availableHouse[i]
                     break
+
+            # currentHouse = random.choice(availableHouse)
+
             """We need a well at first"""
             if (houseNumber == 0):
                 currentHouse = "well"
