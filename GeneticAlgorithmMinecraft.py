@@ -27,11 +27,11 @@ class Genetic_Algorithm:
         dictOfCoordinates = {}
         """randomly place them"""
         for houseNumber in range(0, amountOfHouses):
-            avaiableHouse = list()
+            availableHouse = list()
             for building in buildingsCopy.keys():
                 if building == "well":
                     continue
-                avaiableHouse.append(building)
+                availableHouse.append(building)
             """calculate total probability"""
             totalProbablility = 0
             for building in buildingsCopy:
@@ -41,16 +41,16 @@ class Genetic_Algorithm:
             """pick a random number between 0 and the total probability"""
             randomPickedNumber = random.randint(0, totalProbablility)
             """Find which house it corresponds to"""
-            currentHouse = avaiableHouse[0]
-            for i in range(0, len(avaiableHouse)):
-                currentHouse = avaiableHouse[i]
+            currentHouse = availableHouse[0]
+            for i in range(0, len(availableHouse)):
+                currentHouse = availableHouse[i]
                 if randomPickedNumber > buildingsCopy[currentHouse]["probability"]:
                     randomPickedNumber -= buildingsCopy[currentHouse]["probability"]
                 else:
-                    currentHouse = avaiableHouse[i]
+                    currentHouse = availableHouse[i]
                     break
 
-            # currentHouse = random.choice(avaiableHouse)
+            # currentHouse = random.choice(availableHouse)
             """We need a well at first"""
             if (houseNumber == 0):
                 currentHouse = "well"
