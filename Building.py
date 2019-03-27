@@ -101,7 +101,6 @@ class Building:
         x = math.pow(calculationPoint1["x"] - calculationPoint2["x"], 2)
         z = math.pow(calculationPoint1["z"] - calculationPoint2["z"], 2)
         distance = math.sqrt(x + z)
-        print(distance)
         return distance
 
     def __corner_case(self, house, buildingsCopy, thisMiddlePoint, houseMiddlePoint, right, down):
