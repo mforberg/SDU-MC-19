@@ -28,8 +28,8 @@ class Genetic_Algorithm:
         dictOfCoordinates = {}
         buildingsCopy = copy_of_buildings()
 
-        """randomly place them"""
-        for houseNumber in range(0, GENE_SIZE):
+        """Generate single solution"""
+        for houseNumber in xrange(0, GENE_SIZE): # <-- GENE_SIZE should change depending on map size?
             availableHouse = list()
             for building in buildingsCopy.keys():
                 if building == "well":
@@ -41,7 +41,7 @@ class Genetic_Algorithm:
 
             """Find which house it corresponds to"""
             currentHouse = availableHouse[0]
-            for i in range(0, len(availableHouse)):
+            for i in xrange(0, len(availableHouse)):
                 currentHouse = availableHouse[i]
                 if randomPickedNumber > buildingsCopy[currentHouse]["probability"]:
                     randomPickedNumber -= buildingsCopy[currentHouse]["probability"]
@@ -57,8 +57,8 @@ class Genetic_Algorithm:
                 tryAgain = False
                 tempBlockedCoordinates = {}
                 coordintate = self.place_house_point_randomly(boxWidth, boxHeigth, startingPoint, currentHouse, buildingsCopy)
-                for x in range(coordintate["x"], coordintate["x"] + buildingsCopy[currentHouse]["xLength"]):
-                    for z in range(coordintate["z"], coordintate["z"] + buildingsCopy[currentHouse]["zWidth"]):
+                for x in xrange(coordintate["x"], coordintate["x"] + buildingsCopy[currentHouse]["xLength"]):
+                    for z in xrange(coordintate["z"], coordintate["z"] + buildingsCopy[currentHouse]["zWidth"]):
                         convertedCoordinate = (x, z)
                         if convertedCoordinate in blockedCoordinates.keys():
                             print("SKIPPY")
