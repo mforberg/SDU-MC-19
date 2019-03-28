@@ -11,13 +11,15 @@ class Genetic_Algorithm:
     population_size = POPULATION_SIZE
 
     def run_genetic_algorithm(self, heightMap, boxWidth, boxHeigth, startingPoint):
-        tempDict = self.generate_population(heightMap, boxWidth, boxHeigth, startingPoint)
-        blockedCoordinates = tempDict["blockedCoordinates"]
-        listOfBuildings = tempDict["listOfBuildings"]
-        building = listOfBuildings[0]
-        self.modified_blocks(building, heightMap)
+        fitnessList = list()
+        for i in range(0, 10):
+            tempDict = self.generate_population(heightMap, boxWidth, boxHeigth, startingPoint)
+            blockedCoordinates = tempDict["blockedCoordinates"]
+            listOfBuildings = tempDict["listOfBuildings"]
+            fitness = self.calculate_fitness(listOfBuildings, heightMap)
+            fitnessList.append(fitness)
+        print(fitnessList)
 
-        fitnessPopulation = self.calculate_fitness(listOfBuildings, heightMap)
 
         # choose_parents()
         # mate_those_bastards()
@@ -57,9 +59,6 @@ class Genetic_Algorithm:
                 blockedCoordinates.update(tempBlockedCoordinates)
                 dictOfCoordinates[(coordintate["x"], coordintate["z"])] = currentHouse
                 break
-            """decrement the building probability from the dict, unless it is a normal house"""
-            if currentHouse == "normalHouse":
-                continue
             """The probability of normal houses should not be lowered"""
             if currentHouse == "normalHouse":
                 continue
@@ -92,27 +91,44 @@ class Genetic_Algorithm:
 
     def calculate_fitness(self, population, heightMap):
         fitnessScore = 0
-
-        #fitnessScore += distance_between()
-
+        alreadyCalculated = list()
+        for building in population:
+            fitnessScore += self.check_area(building, heightMap)
+            if building.typeOfHouse == "well":
+                continue
+            for building2 in population:
+                if building == building2 or building2 in alreadyCalculated:
+                    continue
+                elif building2.typeOfHouse == "well":
+                    fitnessScore += 2 * (self.distance_between(building, building2))
+                else:
+                    fitnessScore += self.distance_between(building, building2)
+            alreadyCalculated.append(building)
         return fitnessScore
 
     def distance_between(self, house1, house2):
-        distance = house1.distance_between_building(house2, buildings)
+        distance = house1.distance_between_building(house2)
         """distance score is calculated using an quadratic equation"""
         a = float(-4) / 45
         b = float(16)/3
         c = 20
         distanceScore = a * math.pow(distance, 2) + b * distance + c
+        """we dont want score under zero"""
+        if distanceScore < 0:
+            distanceScore = 0
         return distanceScore
 
-    def modified_blocks(self, building, heightMap):
+    def check_area(self, building, heightMap):
         totalArea = buildings[building.typeOfHouse]["xLength"] * buildings[building.typeOfHouse]["zWidth"]
         listOfHeights = []
         unique = set()
         amount = 0
+        amountOfWater = 0
         for x in xrange(building.x, building.x + buildings[building.typeOfHouse]["xLength"]):
             for z in xrange(building.z, building.z + buildings[building.typeOfHouse]["zWidth"]):
+                """check for water"""
+                if heightMap[x, z][1] == 9:
+                    amountOfWater += 1
                 amount += heightMap[x, z][0]
                 listOfHeights.append(heightMap[x, z][0])
                 unique.add(heightMap[x, z][0])
@@ -120,4 +136,11 @@ class Genetic_Algorithm:
         blocksModified = 0
         for number in unique:
             blocksModified += listOfHeights.count(number) * abs(average - number)
-        return blocksModified
+        """the score is calculated here. Maximum score is 100"""
+        score = 100 - int(round(blocksModified/10))
+        """subtract extra for water"""
+        score -= amountOfWater * 6
+        """we dont want score under zero"""
+        if score < 0:
+            score = 0
+        return score
