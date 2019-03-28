@@ -1,12 +1,18 @@
 import random
 import math
 import Building
-
+from variables.MC_LIBRARY import *
+from variables.GA_VALUES import *
 
 class Genetic_Algorithm:
 
+    #gene_size = GENE_SIZE
+    crossover_rate = CROSSOVER_RATE
+    mutation_rate = MUTATION_RATE
+    population_size = POPULATION_SIZE
+
     def run_genetic_algorithm(self, heightMap, boxWidth, boxHeigth, startingPoint, buildingsCopy):
-        tempDict = self.generate_population(heightMap, boxWidth, boxHeigth, startingPoint, buildingsCopy)
+        tempDict = self.generate_population(heightMap, boxWidth, boxHeigth, startingPoint)
         blockedCoordinates = tempDict["blockedCoordinates"]
         listOfBuildings = tempDict["listOfBuildings"]
 
@@ -17,39 +23,16 @@ class Genetic_Algorithm:
         # add_some_mutation()
         # check_those_children()
 
-    def generate_population(self, heightMap, boxWidth, boxHeigth, startingPoint, buildingsCopy):
+    def generate_population(self, heightMap, boxWidth, boxHeigth, startingPoint):
         blockedCoordinates = {}
-        """Pick a number between ~10 to ~20 if the size is 250*250"""
-        # minimumAmountOfHouses = round((boxHeigth * boxWidth) / 6200)
-        # maximumAmountOfHouses = round((boxHeigth * boxWidth) / 3100)
-        minimumAmountOfHouses = 10
-        maximumAmountOfHouses = 20
-        amountOfHouses = random.randint(minimumAmountOfHouses, maximumAmountOfHouses)
         dictOfCoordinates = {}
-        """randomly place them"""
-        for houseNumber in range(0, amountOfHouses):
-            avaiableHouse = list()
-            for possibleBuilding in buildingsCopy.keys():
-                if possibleBuilding == "well":
-                    continue
-                avaiableHouse.append(possibleBuilding)
-            """calculate total probability"""
-            totalProbablility = 0
-            for possibleBuilding in buildingsCopy:
-                if possibleBuilding == "well":
-                    continue
-                totalProbablility += buildingsCopy[possibleBuilding]["probability"]
-            """pick a random number between 0 and the total probability"""
-            randomPickedNumber = random.randint(0, totalProbablility)
-            """Find which house it corresponds to"""
-            currentHouse = avaiableHouse[0]
-            for i in range(0, len(avaiableHouse)):
-                currentHouse = avaiableHouse[i]
-                if randomPickedNumber > buildingsCopy[currentHouse]["probability"]:
-                    randomPickedNumber -= buildingsCopy[currentHouse]["probability"]
-                else:
-                    currentHouse = avaiableHouse[i]
-                    break
+        buildingsCopy = copy_of_buildings()
+
+        """Generate single solution"""
+        for houseNumber in xrange(0, GENE_SIZE): # <-- GENE_SIZE should change depending on map size?
+
+            currentHouse = get_random_house()
+
             """We need a well at first"""
             if (houseNumber == 0):
                 currentHouse = "well"
@@ -58,11 +41,11 @@ class Genetic_Algorithm:
                 tryAgain = False
                 tempBlockedCoordinates = {}
                 coordintate = self.place_house_point_randomly(boxWidth, boxHeigth, startingPoint, currentHouse, buildingsCopy)
-                for x in range(coordintate["x"], coordintate["x"] + buildingsCopy[currentHouse]["xLength"]):
-                    for z in range(coordintate["z"], coordintate["z"] + buildingsCopy[currentHouse]["zWidth"]):
+                for x in xrange(coordintate["x"], coordintate["x"] + buildingsCopy[currentHouse]["xLength"]):
+                    for z in xrange(coordintate["z"], coordintate["z"] + buildingsCopy[currentHouse]["zWidth"]):
                         convertedCoordinate = (x, z)
                         if convertedCoordinate in blockedCoordinates.keys():
-                            print("SKIPPY")
+                            print("SKIPPED: " + currentHouse)
                             tryAgain = True
                             break
                         else:
@@ -76,14 +59,22 @@ class Genetic_Algorithm:
                 dictOfCoordinates[(coordintate["x"], coordintate["z"])] = currentHouse
                 break
             """decrement the building probability from the dict, unless it is a normal house"""
-            if(buildingsCopy[currentHouse] == "normalHouse"):
+            if(buildingsCopy[currentHouse].viewkeys() == "normalHouse"):
                 continue
+            print("- - - - - - - - - -")
+            print(currentHouse)
+            print("BEFORE:")
+            print(buildingsCopy[currentHouse]["probability"])
             buildingsCopy[currentHouse]["probability"] = buildingsCopy[currentHouse]["probability"] / 2
+            print("AFTER:")
+            print(buildingsCopy[currentHouse]["probability"])
         listOfBuildings = []
         for key, value in dictOfCoordinates.iteritems():
             building = Building.Building(key[0], key[1], value)
             listOfBuildings.append(building)
         returnDict = {"blockedCoordinates": blockedCoordinates, "listOfBuildings": listOfBuildings}
+        for x in listOfBuildings:
+            print x.typeOfHouse,
         return returnDict
 
     def place_house_point_randomly(self, boxWidth, boxHeigth, startingPoint, houseName, buildingsCopy):
