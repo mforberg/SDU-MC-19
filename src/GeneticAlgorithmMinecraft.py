@@ -1,6 +1,5 @@
 import math
 import Building
-from variables.LIBRARY import buildings
 from variables.MC_LIBRARY import *
 from variables.GA_VALUES import *
 
@@ -120,9 +119,7 @@ class Genetic_Algorithm:
                 listOfHeights.append(heightMap[x, z][0])
                 unique.add(heightMap[x, z][0])
         average = int(round(amount / float(totalArea)))
-        print(average)
-        print(unique)
         blocksModified = 0
         for number in unique:
             blocksModified += listOfHeights.count(number) * abs(average - number)
-        print(blocksModified)
+        return blocksModified
