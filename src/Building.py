@@ -1,12 +1,12 @@
 import math
-from variables import LIBRARY
+from variables import MC_LIBRARY
 
 class Building:
     def __init__(self, x, z, typeOfHouse):
         self.x = x
         self.z = z
         self.typeOfHouse = typeOfHouse
-        self.buildingsCopy = LIBRARY.buildings
+        self.buildingsCopy = MC_LIBRARY.buildings
 
     def distance_between_building(self, house):
         # find the middle of each building
@@ -21,7 +21,7 @@ class Building:
         thisMinZ = self.z
         thisMaxZ = self.z + self.buildingsCopy[self.typeOfHouse]["zWidth"]
         houseMinX = house.x
-        houseMaxX = house.x + self.uildingsCopy[house.typeOfHouse]["xLength"]
+        houseMaxX = house.x + self.buildingsCopy[house.typeOfHouse]["xLength"]
         houseMinZ = house.z
         houseMaxZ = house.z + self.buildingsCopy[house.typeOfHouse]["zWidth"]
 
@@ -78,9 +78,6 @@ class Building:
          else if they are the same"""
         if thisMiddlePoint["z"] > houseMiddlePoint["z"]:
             down = True
-
-        calculationPoint1 = {}
-        calculationPoint2 = {}
 
         if overlapping:
             pointsDict = self.__inside_case(house, thisMiddlePoint, houseMiddlePoint,
