@@ -2,7 +2,7 @@ import utilityFunctions
 import numpy as np
 import datetime
 from src import GeneticAlgorithmMinecraft as GAM
-from variables.LIBRARY import buildings as buildingCopy
+from variables.MC_LIBRARY import buildings as buildingCopy
 from multiprocessing import Process
 from pymclevel import alphaMaterials, MCSchematic, MCLevel, BoundingBox
 from mcplatform import *
