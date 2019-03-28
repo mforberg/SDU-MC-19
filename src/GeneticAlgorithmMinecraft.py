@@ -1,17 +1,18 @@
 import random
 import math
 import Building
+from variables.MC_LIBRARY import *
+from variables.GA_VALUES import *
 
 class Genetic_Algorithm:
 
-    def __init__(self, gene_size, crossover_rate, mutation_rate, population_size):
-        self.gene_size = gene_size
-        self.crossover_rate = crossover_rate
-        self.mutation_rate = mutation_rate
-        self.population_size = population_size
+    #gene_size = GENE_SIZE
+    crossover_rate = CROSSOVER_RATE
+    mutation_rate = MUTATION_RATE
+    population_size = POPULATION_SIZE
 
     def run_genetic_algorithm(self, heightMap, boxWidth, boxHeigth, startingPoint, buildingsCopy):
-        tempDict = self.generate_population(heightMap, boxWidth, boxHeigth, startingPoint, buildingsCopy)
+        tempDict = self.generate_population(heightMap, boxWidth, boxHeigth, startingPoint)
         blockedCoordinates = tempDict["blockedCoordinates"]
         listOfBuildings = tempDict["listOfBuildings"]
 
@@ -22,30 +23,22 @@ class Genetic_Algorithm:
         # add_some_mutation()
         # check_those_children()
 
-    def generate_population(self, heightMap, boxWidth, boxHeigth, startingPoint, buildingsCopy):
+    def generate_population(self, heightMap, boxWidth, boxHeigth, startingPoint):
         blockedCoordinates = {}
-        """Pick a number between ~10 to ~20 if the size is 250*250"""
-        # minimumAmountOfHouses = round((boxHeigth * boxWidth) / 6200)
-        # maximumAmountOfHouses = round((boxHeigth * boxWidth) / 3100)
-        minimumAmountOfHouses = 10
-        maximumAmountOfHouses = 20
-        amountOfHouses = random.randint(minimumAmountOfHouses, maximumAmountOfHouses)
         dictOfCoordinates = {}
+        buildingsCopy = copy_of_buildings()
+
         """randomly place them"""
-        for houseNumber in range(0, amountOfHouses):
+        for houseNumber in range(0, GENE_SIZE):
             availableHouse = list()
             for building in buildingsCopy.keys():
                 if building == "well":
                     continue
                 availableHouse.append(building)
-            """calculate total probability"""
-            totalProbablility = 0
-            for possibleBuilding in buildingsCopy:
-                if possibleBuilding == "well":
-                    continue
-                totalProbablility += buildingsCopy[possibleBuilding]["probability"]
-            """pick a random number between 0 and the total probability"""
-            randomPickedNumber = random.randint(0, totalProbablility)
+
+            """Pick a house based on the total probability"""
+            randomPickedNumber = random.randint(0, totalprobability())
+
             """Find which house it corresponds to"""
             currentHouse = availableHouse[0]
             for i in range(0, len(availableHouse)):
@@ -55,8 +48,6 @@ class Genetic_Algorithm:
                 else:
                     currentHouse = availableHouse[i]
                     break
-
-            # currentHouse = random.choice(availableHouse)
 
             """We need a well at first"""
             if (houseNumber == 0):

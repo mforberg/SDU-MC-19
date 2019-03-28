@@ -14,7 +14,7 @@ def perform(level, box, options):
     startingPoint = {"x": box.minx, "z": box.minz}
 
 
-    gam = GAM.Genetic_Algorithm(GAV.GENE_SIZE, GAV.CROSSOVER_RATE, GAV.MUTATION_RATE, GAV.POPULATION_SIZE)
+    gam = GAM.Genetic_Algorithm()
     test = copy_of_buildings()
     gam.run_genetic_algorithm(heightMap, box.maxx - box.minx, box.maxz - box.minz, startingPoint, copy_of_buildings())
     building1 = Building.Building(10, 10, "church")

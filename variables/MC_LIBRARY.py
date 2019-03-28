@@ -26,9 +26,7 @@ def copy_of_buildings():
 
 def totalprobability():
     tp = 0
-    print("CALLED")
     for b in buildings:
-        print(buildings[b]["probability"])
         if b == "well":
             continue
         tp += buildings[b]["probability"]
