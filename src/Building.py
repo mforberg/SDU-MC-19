@@ -1,12 +1,12 @@
 import math
-import LIBRARY
+from variables import MC_LIBRARY
 
 class Building:
     def __init__(self, x, z, typeOfHouse):
         self.x = x
         self.z = z
         self.typeOfHouse = typeOfHouse
-        self.buildingsCopy = LIBRARY.buildings
+        self.buildingsCopy = MC_LIBRARY.buildings
 
     def distance_between_building(self, house):
         # find the middle of each building
