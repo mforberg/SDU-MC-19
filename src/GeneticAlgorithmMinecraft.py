@@ -77,6 +77,7 @@ class Genetic_Algorithm:
         returnDict = {"blockedCoordinates": blockedCoordinates, "listOfBuildings": listOfBuildings}
         for x in listOfBuildings:
             print x.typeOfHouse,
+        print("")
         return returnDict
 
     def place_house_point_randomly(self, boxWidth, boxHeigth, startingPoint, houseName):
