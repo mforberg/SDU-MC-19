@@ -1,6 +1,7 @@
 import random
 import math
 import Building
+from variables.LIBRARY import buildings as buildingsCopy
 
 class Genetic_Algorithm:
 
@@ -10,19 +11,19 @@ class Genetic_Algorithm:
         self.mutation_rate = mutation_rate
         self.population_size = population_size
 
-    def run_genetic_algorithm(self, heightMap, boxWidth, boxHeigth, startingPoint, buildingsCopy):
-        tempDict = self.generate_population(heightMap, boxWidth, boxHeigth, startingPoint, buildingsCopy)
+    def run_genetic_algorithm(self, heightMap, boxWidth, boxHeigth, startingPoint):
+        tempDict = self.generate_population(heightMap, boxWidth, boxHeigth, startingPoint)
         blockedCoordinates = tempDict["blockedCoordinates"]
         listOfBuildings = tempDict["listOfBuildings"]
-
-        fitnessPopulation = self.calculate_fitness(listOfBuildings, heightMap, buildingsCopy)
+        return listOfBuildings
+        fitnessPopulation = self.calculate_fitness(listOfBuildings, heightMap)
 
         # choose_parents()
         # mate_those_bastards()
         # add_some_mutation()
         # check_those_children()
 
-    def generate_population(self, heightMap, boxWidth, boxHeigth, startingPoint, buildingsCopy):
+    def generate_population(self, heightMap, boxWidth, boxHeigth, startingPoint):
         blockedCoordinates = {}
         """Pick a number between ~10 to ~20 if the size is 250*250"""
         # minimumAmountOfHouses = round((boxHeigth * boxWidth) / 6200)
@@ -65,7 +66,7 @@ class Genetic_Algorithm:
             while True:
                 tryAgain = False
                 tempBlockedCoordinates = {}
-                coordintate = self.place_house_point_randomly(boxWidth, boxHeigth, startingPoint, currentHouse, buildingsCopy)
+                coordintate = self.place_house_point_randomly(boxWidth, boxHeigth, startingPoint, currentHouse)
                 for x in range(coordintate["x"], coordintate["x"] + buildingsCopy[currentHouse]["xLength"]):
                     for z in range(coordintate["z"], coordintate["z"] + buildingsCopy[currentHouse]["zWidth"]):
                         convertedCoordinate = (x, z)
@@ -94,7 +95,7 @@ class Genetic_Algorithm:
         returnDict = {"blockedCoordinates": blockedCoordinates, "listOfBuildings": listOfBuildings}
         return returnDict
 
-    def place_house_point_randomly(self, boxWidth, boxHeigth, startingPoint, houseName, buildingsCopy):
+    def place_house_point_randomly(self, boxWidth, boxHeigth, startingPoint, houseName):
         if houseName in buildingsCopy:
             """pick a random coordinate"""
             allowedMaxXArea = startingPoint["x"] + boxWidth - buildingsCopy[houseName]["xLength"]
@@ -115,8 +116,8 @@ class Genetic_Algorithm:
 
         return fitnessScore
 
-    def distance_between(self, house1, house2, buildingsCopy):
-        distance = house1.distance_between_building(house2, buildingsCopy)
+    def distance_between(self, house1, house2):
+        distance = house1.distance_between_building(house2)
         """distance score is calculated using an quadratic equation"""
         a = float(-4) / 45
         b = float(16)/3
