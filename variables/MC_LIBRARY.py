@@ -19,8 +19,8 @@ buildings = {
     "church": {"probability": CHURCH_PROBABILITY, "xLength": 17, "zWidth": 22}
 }
 
-def buildingsCopy():
-    return copy.deepcopy(buildings)
+def copy_of_buildings():
+    return copy.deepcopy(buildings) #buildings.copy() returns the same object
 
 
 
