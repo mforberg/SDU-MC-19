@@ -60,14 +60,21 @@ class Genetic_Algorithm:
             """decrement the building probability from the dict, unless it is a normal house"""
             if currentHouse == "normalHouse":
                 continue
+            """The probability of normal houses should not be lowered"""
+            if currentHouse == "normalHouse":
+                continue
+            """Reduce the probability of specialty buildings"""
             buildingsCopy[currentHouse]["probability"] = buildingsCopy[currentHouse]["probability"] / 2
         listOfBuildings = []
         for key, value in dictOfCoordinates.iteritems():
             building = Building.Building(key[0], key[1], value)
             listOfBuildings.append(building)
         returnDict = {"blockedCoordinates": blockedCoordinates, "listOfBuildings": listOfBuildings}
+        print("- - - - - - - - - -")
         for x in listOfBuildings:
             print x.typeOfHouse,
+        print("")
+        print("- - - - - - - - - -")
         return returnDict
 
     def place_house_point_randomly(self, boxWidth, boxHeigth, startingPoint, houseName):
