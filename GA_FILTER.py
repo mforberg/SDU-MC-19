@@ -13,14 +13,11 @@ def perform(level, box, options):
     heightMap = MA.create_two_dimensional_height_map(level, box)
     startingPoint = {"x": box.minx, "z": box.minz}
 
-
     gam = GAM.Genetic_Algorithm()
-    test = copy_of_buildings()
     gam.run_genetic_algorithm(heightMap, box.maxx - box.minx, box.maxz - box.minz, startingPoint, copy_of_buildings())
     building1 = Building.Building(10, 10, "church")
     building2 = Building.Building(8, 0, "well")
     print(building1.distance_between_building(building2))
-    print(totalprobability())
 
     #for key in coor.keys():
     #    print(key)

@@ -1,4 +1,5 @@
 import copy
+import random
 
 WELL_PROBABILITY        = 0
 NORMALHOUSE_PROBABILITY = 30
@@ -31,3 +32,25 @@ def totalprobability():
             continue
         tp += buildings[b]["probability"]
     return tp
+
+def get_placeable_buildings():
+    availableList = list()
+    for building in buildings.keys():
+        if building == "well":
+            continue
+        availableList.append(building)
+    return availableList
+
+def get_random_house():
+    randomnumber = random.randint(0, totalprobability())
+    availableHouse = get_placeable_buildings()
+    currentHouse = availableHouse[0]
+    for i in xrange(0, len(get_placeable_buildings())):
+        currentHouse = availableHouse[i]
+        if randomnumber > buildings[currentHouse]["probability"]:
+            randomnumber -= buildings[currentHouse]["probability"]
+        else:
+            currentHouse = availableHouse[i]
+            break
+    return currentHouse
+
