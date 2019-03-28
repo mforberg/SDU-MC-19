@@ -1,5 +1,5 @@
 import math
-from variables import LIBRARY
+import LIBRARY
 
 class Building:
     def __init__(self, x, z, typeOfHouse):
@@ -21,7 +21,7 @@ class Building:
         thisMinZ = self.z
         thisMaxZ = self.z + self.buildingsCopy[self.typeOfHouse]["zWidth"]
         houseMinX = house.x
-        houseMaxX = house.x + self.uildingsCopy[house.typeOfHouse]["xLength"]
+        houseMaxX = house.x + self.buildingsCopy[house.typeOfHouse]["xLength"]
         houseMinZ = house.z
         houseMaxZ = house.z + self.buildingsCopy[house.typeOfHouse]["zWidth"]
 
