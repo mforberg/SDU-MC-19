@@ -78,7 +78,7 @@ def generate_population(heightMap, boxWidth, boxHeigth, startingPoint, buildings
 
 
 def place_house_point_randomly(boxWidth, boxHeigth, startingPoint, houseName, buildingsCopy):
-    print(houseName)
+    #print(houseName)
     #print(buildingsCopy.keys())
     if houseName in buildingsCopy:
         """pick a random coordinate"""

@@ -2,18 +2,21 @@ import utilityFunctions
 import numpy as np
 import GeneticAlgorithmMinecraft as GAM
 import MapAnalysis as MA
+import BuildHouses as BH
 
 "Dimensions for the different buildings."
 "Dict of all the different buildings which have a dict for their dimensions"
 buildings = {
     "well": {"probability": 0, "xLength": 4, "zWidth": 4},
     "normalHouse": {"probability": 0, "xLength": 5, "zWidth": 5},
-    "blackSmith": {"probability": 0, "xLength": 8, "zWidth": 5},
+    "blackSmith": {"probability": 0, "xLength": 8, "zWidth": 6},
     "inn": {"probability": 0, "xLength": 20, "zWidth": 10},
     "smallFarm": {"probability": 0, "xLength": 6, "zWidth": 9},
     "bigFarm": {"probability": 0, "xLength": 13, "zWidth": 9},
     "church": {"probability": 0, "xLength": 17, "zWidth": 22}
 }
+
+
 
 def perform(level, box, options):
     print("start")
@@ -21,10 +24,11 @@ def perform(level, box, options):
     initialize_buildings()
     heightMap = MA.create_two_dimensional_height_map(level, box)
     startingPoint = {"x": box.minx, "z": box.minz}
-    coor = GAM.run_genetic_algorith(heightMap, box.maxx - box.minx, box.maxz - box.minz, startingPoint, buildings)
-    for key in coor.keys():
-        print(key)
+   # coor = GAM.run_genetic_algorith(heightMap, box.maxx - box.minx, box.maxz - box.minz, startingPoint, buildings)
+   # for key in coor.keys():
+    #    print(key)
         #utilityFunctions.setBlock(level, (am.DiamondOre.ID, 0), key[0], coor[key][1], key[1])
+    BH.build(level, heightMap, box.maxx - box.minx, box.maxz - box.minz, box.miny, startingPoint, buildings)
 
 
 def initialize_buildings():
