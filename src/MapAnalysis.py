@@ -1,9 +1,11 @@
+# noinspection PyUnresolvedReferences
 from pymclevel import alphaMaterials, MCSchematic, MCLevel, BoundingBox
+# noinspection PyUnresolvedReferences
 from mcplatform import *
 
 am = alphaMaterials
 
-# naturally occuring materials
+# naturally occurring materials
 blocks = [
     am.Grass.ID,
     am.Dirt.ID,
@@ -73,5 +75,4 @@ def create_two_dimensional_height_map(level, box):
                 if (onlyUpdateOnce):
                     onlyUpdateOnce = False
                     xReferencePoint = y
-
     return positionDict
