@@ -8,17 +8,9 @@ def perform(level, box, options):
     print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _")
     print("_ _ _ _\t\tstart\t\t_ _ _ _")
     print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _")
-    """Depending on the size of the box, different amount of buildings needs to be added. x-size = z-size"""
 
     heightMap = MA.create_two_dimensional_height_map(level, box)
     startingPoint = {"x": box.minx, "z": box.minz}
 
     gam = GAM.Genetic_Algorithm()
-    gam.run_genetic_algorithm(heightMap, box.maxx - box.minx, box.maxz - box.minz, startingPoint, copy_of_buildings())
-    building1 = Building.Building(10, 10, "church")
-    building2 = Building.Building(8, 0, "well")
-    print(building1.distance_between_building(building2))
-
-    #for key in coor.keys():
-    #    print(key)
-        #utilityFunctions.setBlock(level, (am.DiamondOre.ID, 0), key[0], coor[key][1], key[1])
+    gam.run_genetic_algorithm(heightMap, box.maxx - box.minx, box.maxz - box.minz, startingPoint)
