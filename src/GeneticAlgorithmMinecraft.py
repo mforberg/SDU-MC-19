@@ -58,18 +58,9 @@ class Genetic_Algorithm:
                 dictOfCoordinates[(coordintate["x"], coordintate["z"])] = currentHouse
                 break
             """decrement the building probability from the dict, unless it is a normal house"""
-            # this not work
-            #
-            #
-            if buildingsCopy[currentHouse] == "normalHouse":
+            if currentHouse == "normalHouse":
                 continue
-            print("- - - - - - - - - -")
-            print(currentHouse)
-            print("BEFORE:")
-            print(buildingsCopy[currentHouse]["probability"])
             buildingsCopy[currentHouse]["probability"] = buildingsCopy[currentHouse]["probability"] / 2
-            print("AFTER:")
-            print(buildingsCopy[currentHouse]["probability"])
         listOfBuildings = []
         for key, value in dictOfCoordinates.iteritems():
             building = Building.Building(key[0], key[1], value)
