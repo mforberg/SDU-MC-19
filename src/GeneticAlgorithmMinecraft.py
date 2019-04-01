@@ -14,6 +14,7 @@ class Genetic_Algorithm:
 
         fullButthole = self.generate_population(heightMap, boxWidth, boxHeigth, startingPoint)
         withFitness = self.population_fitness(fullButthole, heightMap)
+        self.min_max_avg(withFitness)
 
 
         #blockedCoordinates = tempDict["blockedCoordinates"]
@@ -25,10 +26,11 @@ class Genetic_Algorithm:
         # check_those_children()
 
     def generate_population(self, heightMap, boxWidth, boxHeigth, startingPoint):
-        fullpop = {}
+        fullpop = list()
         for i in xrange(POPULATION_SIZE):
             i = self.generate_solution(heightMap, boxWidth, boxHeigth, startingPoint)
-            fullpop[i] = 0
+            tuple = (i,0)
+            fullpop.append(tuple)
         return fullpop
 
     def generate_solution(self, heightMap, boxWidth, boxHeigth, startingPoint):
@@ -95,11 +97,20 @@ class Genetic_Algorithm:
             print("You tried to place: " + houseName)
             print("place_house_randomly cant find the house's name")
 
+    def min_max_avg(self, list):
+        minimum = min(list, key=lambda t: t[1])
+        maximum = max(list, key=lambda t: t[1])
+        print(minimum[1], maximum[1])
+
     def population_fitness(self, population, heightMap):
-        for solution in population.keys:
-            listOfBuildings = solution["listOfBuildings"]
-            fitness = self.calculate_fitness(listOfBuildings, heightMap)
-            population[solution] = fitness
+        fullpop_with_fitness = list()
+        for solution in population:
+            dict = solution[0]
+
+            fitness = self.calculate_fitness(dict["listOfBuildings"], heightMap)
+            tuple = (dict, fitness)
+            fullpop_with_fitness.append(tuple)
+            del solution
         return population
 
 
