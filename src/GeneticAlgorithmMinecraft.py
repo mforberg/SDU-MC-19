@@ -13,12 +13,11 @@ class Genetic_Algorithm:
     def run_genetic_algorithm(self, heightMap, boxWidth, boxHeigth, startingPoint):
 
         fullButthole = self.generate_population(heightMap, boxWidth, boxHeigth, startingPoint)
+        withFitness = self.population_fitness(fullButthole, heightMap)
 
-        # fitnessList = list()
-        # blockedCoordinates = tempDict["blockedCoordinates"]
-        # listOfBuildings = tempDict["listOfBuildings"]
-        #fitness = self.calculate_fitness(listOfBuildings, heightMap)
-        #fitnessList.append(fitness)
+
+        #blockedCoordinates = tempDict["blockedCoordinates"]
+
 
         # choose_parents()
         # mate_those_bastards()
@@ -26,10 +25,10 @@ class Genetic_Algorithm:
         # check_those_children()
 
     def generate_population(self, heightMap, boxWidth, boxHeigth, startingPoint):
-        fullpop = list()
+        fullpop = {}
         for i in xrange(POPULATION_SIZE):
             i = self.generate_solution(heightMap, boxWidth, boxHeigth, startingPoint)
-            fullpop.append(i)
+            fullpop[i] = 0
         return fullpop
 
     def generate_solution(self, heightMap, boxWidth, boxHeigth, startingPoint):
@@ -57,6 +56,7 @@ class Genetic_Algorithm:
                             break
                         else:
                             tempBlockedCoordinates[x, z] = [currentHouse, heightMap[x, z][0]]
+                            # TODO: Maybe change this ^
                     if tryAgain:
                         break
                 if tryAgain:
@@ -94,6 +94,14 @@ class Genetic_Algorithm:
         else:
             print("You tried to place: " + houseName)
             print("place_house_randomly cant find the house's name")
+
+    def population_fitness(self, population, heightMap):
+        for solution in population.keys:
+            listOfBuildings = solution["listOfBuildings"]
+            fitness = self.calculate_fitness(listOfBuildings, heightMap)
+            population[solution] = fitness
+        return population
+
 
     def calculate_fitness(self, population, heightMap):
         fitnessScore = 0

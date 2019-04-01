@@ -15,5 +15,5 @@ def perform(level, box, options):
 
     gam = GAM.Genetic_Algorithm()
     blockedCoordinates = gam.run_genetic_algorithm(heightMap, box.maxx - box.minx, box.maxz - box.minz, startingPoint)
-    for block in blockedCoordinates.keys():
-        utilityFunctions.setBlock(level, (am.DiamondOre.ID, 0), block[0], blockedCoordinates[block][1], block[1])
+    #for block in blockedCoordinates.keys():
+    #    utilityFunctions.setBlock(level, (am.DiamondOre.ID, 0), block[0], blockedCoordinates[block][1], block[1])
