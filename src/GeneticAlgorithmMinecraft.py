@@ -17,7 +17,8 @@ class Genetic_Algorithm:
         fullButthole = self.generate_population(heightMap, boxWidth, boxHeigth, startingPoint)
         withFitness = self.population_fitness(fullButthole, heightMap)
         print self.min_max_avg(withFitness)
-        self.mutate_population(withFitness)
+        postMutation = self.mutate_population(withFitness)
+        print self.min_max_avg(postMutation)
 
 
         #blockedCoordinates = tempDict["blockedCoordinates"]
@@ -121,7 +122,7 @@ class Genetic_Algorithm:
                 minimum = item
             average += item[1]
         average = average/len(data)
-        return "MIN: {0}\tMAX: {1}\tAVG: {2}".format(round(minimum[1], 2), round(maximum[1], 2), round(average, 2))
+        return "MIN: {0}\tMAX: {1}\tAVG: {2}".format(round(minimum[1], 8), round(maximum[1], 8), round(average, 8))
 
 
     def population_fitness(self, population, heightMap):
@@ -129,21 +130,28 @@ class Genetic_Algorithm:
         for solution in population:
             dict = solution[0]
 
-            fitness = self.calculate_fitness(dict["listOfBuildings"], heightMap)
+            fitness = self.solution_fitness(dict["listOfBuildings"], heightMap)
             tuple = (dict, fitness)
             fullpop_with_fitness.append(tuple)
             del solution
         return fullpop_with_fitness
 
 
-    def calculate_fitness(self, population, heightMap):
+    def solution_fitness(self, solution, heightMap):
         fitnessScore = 0
+
+        """ GLOBAL WEIGHTS """
+        variance_weight = 1.0
+        variance_max_score = 1000
+        """ END OF WEIGHTS """
+
         alreadyCalculated = list()
-        for building in population:
+        unique_buildings = set()
+        for building in solution:
             fitnessScore += self.check_area(building, heightMap)
             if building.typeOfHouse == "well":
                 continue
-            for building2 in population:
+            for building2 in solution:
                 if building == building2 or building2 in alreadyCalculated:
                     continue
                 elif building2.typeOfHouse == "well":
@@ -151,7 +159,16 @@ class Genetic_Algorithm:
                 else:
                     fitnessScore += self.distance_between(building, building2)
             alreadyCalculated.append(building)
+
+            """" FITNESS FOR BUILDING VARIANCE """
+            unique_buildings.add(building.typeOfHouse)
+        float_length = len(unique_buildings)
+        percent_of_max_possible = float(float_length) / len(get_placeable_buildings())
+        fitnessScore += variance_weight*(variance_max_score*math.pow(percent_of_max_possible, 2))
+
+        """ END OF VARIANCE FITNESS """
         return fitnessScore
+
 
     def distance_between(self, house1, house2):
         distance = house1.distance_between_building(house2)
@@ -203,6 +220,7 @@ class Genetic_Algorithm:
             buildinglist = dict["listOfBuildings"]
 
             mutation_trigger = int(MUTATION_RATE * 100)
+            print(mutation_trigger)
 
             for i in buildinglist:
                 randomnumber = random.randint(1, 100)
@@ -225,3 +243,4 @@ class Genetic_Algorithm:
         number = float(mutation_count)/((POPULATION_SIZE*GENE_SIZE))*100
         percent = round(number, 3)
         print "MUTATION TRIGGERED {0}/{1} TIMES ({2}%)".format(mutation_count, POPULATION_SIZE*GENE_SIZE, percent)
+        return population
