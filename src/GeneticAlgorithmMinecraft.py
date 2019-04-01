@@ -27,8 +27,8 @@ class Genetic_Algorithm:
     def generate_population(self, heightMap, boxWidth, boxHeigth, startingPoint):
         fullpop = {}
         for i in xrange(POPULATION_SIZE):
-            i = self.generate_solution(heightMap, boxWidth, boxHeigth, startingPoint)
-            fullpop[i] = 0
+            x = self.generate_solution(heightMap, boxWidth, boxHeigth, startingPoint)
+            fullpop[x] = 0
         return fullpop
 
     def generate_solution(self, heightMap, boxWidth, boxHeigth, startingPoint):
@@ -102,7 +102,6 @@ class Genetic_Algorithm:
             population[solution] = fitness
         return population
 
-
     def calculate_fitness(self, population, heightMap):
         fitnessScore = 0
         alreadyCalculated = list()
@@ -160,3 +159,38 @@ class Genetic_Algorithm:
         if score < 0:
             score = 0
         return score
+
+    def choose_parents(self, population):
+        popList = list()
+        totalFitness = 0
+        """create wheel of fortune"""
+        for solution in population:
+            popList.append(solution)
+            totalFitness += solution[1]
+
+        """find parents pair"""
+        parents = list()
+        for i in range(0, self.population_size/2):
+            parents.append(self.find_ma_and_pa(totalFitness, popList))
+        return parents
+
+    def find_ma_and_pa(self, totalFitness, popList):
+        ma = popList[0]
+        randomNumber = random.randint(0, totalFitness)
+        for i in xrange(0, self.population_size):
+            ma = popList[i]
+            if randomNumber > popList[i][1]:
+                randomNumber -= popList[i][1]
+            else:
+                ma = popList[i]
+                break
+        pa = popList[0]
+        randomNumber = random.randint(0, totalFitness)
+        for i in xrange(0, self.population_size):
+            pa = popList[i]
+            if randomNumber > popList[i][1]:
+                randomNumber -= popList[i][1]
+            else:
+                pa = popList[i]
+                break
+        return {"ma": ma, "pa": pa}
