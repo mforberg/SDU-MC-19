@@ -2,6 +2,7 @@ import math
 import Building
 from variables.MC_LIBRARY import *
 from variables.GA_VALUES import *
+import operator
 
 class Genetic_Algorithm:
 
@@ -97,10 +98,20 @@ class Genetic_Algorithm:
             print("You tried to place: " + houseName)
             print("place_house_randomly cant find the house's name")
 
-    def min_max_avg(self, list):
-        minimum = min(list, key=lambda t: t[1])
-        maximum = max(list, key=lambda t: t[1])
-        print(minimum[1], maximum[1])
+    def min_max_avg(self, data):
+        maximum = data[0]
+        minimum = data[0]
+        average = 0
+
+        for item in data:
+            if item[1] > maximum[1]:
+                maximum = item
+            if item[1] < minimum[1]:
+                minimum = item
+            average += item[1]
+        average = average/len(data)
+        print(minimum[1], maximum[1], average)
+
 
     def population_fitness(self, population, heightMap):
         fullpop_with_fitness = list()
@@ -111,7 +122,7 @@ class Genetic_Algorithm:
             tuple = (dict, fitness)
             fullpop_with_fitness.append(tuple)
             del solution
-        return population
+        return fullpop_with_fitness
 
 
     def calculate_fitness(self, population, heightMap):
