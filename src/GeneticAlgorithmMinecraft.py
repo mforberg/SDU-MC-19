@@ -12,13 +12,18 @@ class Genetic_Algorithm:
 
     def run_genetic_algorithm(self, heightMap, boxWidth, boxHeigth, startingPoint):
         fitnessList = list()
-        for i in range(0, 10):
-            tempDict = self.generate_population(heightMap, boxWidth, boxHeigth, startingPoint)
-            blockedCoordinates = tempDict["blockedCoordinates"]
-            listOfBuildings = tempDict["listOfBuildings"]
-            fitness = self.calculate_fitness(listOfBuildings, heightMap)
-            fitnessList.append(fitness)
-        print(fitnessList)
+        highest = 0
+        #for i in range(0, self.population_size):
+        tempDict = self.generate_population(heightMap, boxWidth, boxHeigth, startingPoint)
+        blockedCoordinates = tempDict["blockedCoordinates"]
+        listOfBuildings = tempDict["listOfBuildings"]
+        fitness = self.calculate_fitness(listOfBuildings, heightMap)
+        fitnessList.append(fitness)
+        if fitnessList > highest:
+            highest = fitness
+            best = blockedCoordinates
+        #return best
+
 
 
         # choose_parents()
@@ -46,7 +51,7 @@ class Genetic_Algorithm:
                     for z in range(coordintate["z"], coordintate["z"] + buildings[currentHouse]["zWidth"]):
                         convertedCoordinate = (x, z)
                         if convertedCoordinate in blockedCoordinates.keys():
-                            print("SKIPPED: " + currentHouse)
+                            #print("SKIPPED: " + currentHouse)
                             tryAgain = True
                             break
                         else:
@@ -69,11 +74,11 @@ class Genetic_Algorithm:
             building = Building.Building(key[0], key[1], value)
             listOfBuildings.append(building)
         returnDict = {"blockedCoordinates": blockedCoordinates, "listOfBuildings": listOfBuildings}
-        print("- - - - - - - - - -")
-        for x in listOfBuildings:
-            print x.typeOfHouse,
-        print("")
-        print("- - - - - - - - - -")
+        # print("- - - - - - - - - -")
+        # for x in listOfBuildings:
+        #     print x.typeOfHouse,
+        # print("")
+        # print("- - - - - - - - - -")
         return returnDict
 
     def place_house_point_randomly(self, boxWidth, boxHeigth, startingPoint, houseName):
@@ -111,11 +116,13 @@ class Genetic_Algorithm:
         """distance score is calculated using an quadratic equation"""
         a = float(-4) / 45
         b = float(16)/3
-        c = 20
+        c = 0
         distanceScore = a * math.pow(distance, 2) + b * distance + c
         """we dont want score under zero"""
         if distanceScore < 0:
             distanceScore = 0
+        elif distanceScore > 50:
+            distanceScore = 100
         return distanceScore
 
     def check_area(self, building, heightMap):
