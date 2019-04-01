@@ -2,7 +2,8 @@ import math
 import Building
 from variables.MC_LIBRARY import *
 from variables.GA_VALUES import *
-import operator
+import random
+import datetime
 
 class Genetic_Algorithm:
 
@@ -15,7 +16,8 @@ class Genetic_Algorithm:
 
         fullButthole = self.generate_population(heightMap, boxWidth, boxHeigth, startingPoint)
         withFitness = self.population_fitness(fullButthole, heightMap)
-        self.min_max_avg(withFitness)
+        print self.min_max_avg(withFitness)
+        self.mutate_population(withFitness)
 
 
         #blockedCoordinates = tempDict["blockedCoordinates"]
@@ -25,6 +27,15 @@ class Genetic_Algorithm:
         # mate_those_bastards()
         # add_some_mutation()
         # check_those_children()
+
+        """
+        Runtimes for sections
+        FULLBUTTHOLE: 9.985
+        FITNESS: 2.163
+        MINMAXAVG: 0.0
+        MUTATE: 0.007
+        """
+
 
     def generate_population(self, heightMap, boxWidth, boxHeigth, startingPoint):
         fullpop = list()
@@ -110,7 +121,7 @@ class Genetic_Algorithm:
                 minimum = item
             average += item[1]
         average = average/len(data)
-        print(minimum[1], maximum[1], average)
+        return "MIN: {0}\tMAX: {1}\tAVG: {2}".format(round(minimum[1], 2), round(maximum[1], 2), round(average, 2))
 
 
     def population_fitness(self, population, heightMap):
@@ -182,3 +193,35 @@ class Genetic_Algorithm:
         if score < 0:
             score = 0
         return score
+
+    def mutate_population(self, population):
+
+        mutation_count = 0
+
+        for item in population:
+            dict = item[0]
+            buildinglist = dict["listOfBuildings"]
+
+            mutation_trigger = int(MUTATION_RATE * 100)
+
+            for i in buildinglist:
+                randomnumber = random.randint(1, 100)
+                if randomnumber == mutation_trigger:
+                    mutation_count += 1
+
+                    x_or_z_decider = random.randint(1, 100)
+                    add_or_subtract_decider = random.randint(1, 100)
+
+                    if x_or_z_decider <= 50:
+                        if add_or_subtract_decider >= 50:
+                            i.x = i.x + 1
+                        else:
+                            i.x = i.x - 1
+                    else:
+                        if add_or_subtract_decider >= 50:
+                            i.z = i.z + 1
+                        else:
+                            i.z = i.z - 1
+        number = float(mutation_count)/((POPULATION_SIZE*GENE_SIZE))*100
+        percent = round(number, 3)
+        print "MUTATION TRIGGERED {0}/{1} TIMES ({2}%)".format(mutation_count, POPULATION_SIZE*GENE_SIZE, percent)
