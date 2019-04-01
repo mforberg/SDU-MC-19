@@ -10,7 +10,7 @@ BIGFARM_PROBABILITY     = 10
 CHURCH_PROBABILITY      = 10
 
 
-buildings = {
+buildingscopy = {
     "well": {"probability": WELL_PROBABILITY, "xLength": 4, "zWidth": 4},
     "normalHouse": {"probability": NORMALHOUSE_PROBABILITY, "xLength": 5, "zWidth": 5},
     "blackSmith": {"probability": BLACKSMITH_PROBABILITY, "xLength": 8, "zWidth": 5},
@@ -22,33 +22,33 @@ buildings = {
 
 
 def copy_of_buildings():
-    return copy.deepcopy(buildings) #buildings.copy() returns the same object
+    return copy.deepcopy(buildingscopy) #buildings.copy() returns the same object
 
 
 def totalprobability():
     tp = 0
-    for b in buildings:
+    for b in buildingscopy:
         if b == "well":
             continue
-        tp += buildings[b]["probability"]
+        tp += buildingscopy[b]["probability"]
     return tp
 
 def get_placeable_buildings():
     availableList = list()
-    for building in buildings.keys():
+    for building in buildingscopy.keys():
         if building == "well":
             continue
         availableList.append(building)
     return availableList
 
-def get_random_house():
+def get_random_house(buildingscopy):
     randomnumber = random.randint(0, totalprobability())
     availableHouse = get_placeable_buildings()
     currentHouse = availableHouse[0]
     for i in xrange(0, len(get_placeable_buildings())):
         currentHouse = availableHouse[i]
-        if randomnumber > buildings[currentHouse]["probability"]:
-            randomnumber -= buildings[currentHouse]["probability"]
+        if randomnumber > buildingscopy[currentHouse]["probability"]:
+            randomnumber -= buildingscopy[currentHouse]["probability"]
         else:
             currentHouse = availableHouse[i]
             break
