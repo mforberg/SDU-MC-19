@@ -10,7 +10,7 @@ BIGFARM_PROBABILITY     = 10
 CHURCH_PROBABILITY      = 10
 
 
-buildingscopy = {
+buildings = {
     "well": {"probability": WELL_PROBABILITY, "xLength": 4, "zWidth": 4},
     "normalHouse": {"probability": NORMALHOUSE_PROBABILITY, "xLength": 5, "zWidth": 5},
     "blackSmith": {"probability": BLACKSMITH_PROBABILITY, "xLength": 8, "zWidth": 5},
@@ -22,20 +22,20 @@ buildingscopy = {
 
 
 def copy_of_buildings():
-    return copy.deepcopy(buildingscopy) #buildings.copy() returns the same object
+    return copy.deepcopy(buildings) #buildings.copy() returns the same object
 
 
 def totalprobability():
     tp = 0
-    for b in buildingscopy:
+    for b in buildings:
         if b == "well":
             continue
-        tp += buildingscopy[b]["probability"]
+        tp += buildings[b]["probability"]
     return tp
 
 def get_placeable_buildings():
     availableList = list()
-    for building in buildingscopy.keys():
+    for building in buildings.keys():
         if building == "well":
             continue
         availableList.append(building)

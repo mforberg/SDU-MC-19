@@ -69,13 +69,10 @@ class Building:
         """depending on the relation to each other, calculation of distance points changes"""
         right = False
         down = False
-        """if this building is more east of the other building 
-        else if they are the same"""
+        """if this building is more east of the other building"""
         if thisMiddlePoint["x"] > houseMiddlePoint["x"]:
-            print("right")
             right = True
-        """if this building is more south of the other building
-         else if they are the same"""
+        """if this building is more south of the other building"""
         if thisMiddlePoint["z"] > houseMiddlePoint["z"]:
             down = True
 
