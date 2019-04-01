@@ -11,20 +11,14 @@ class Genetic_Algorithm:
     population_size = POPULATION_SIZE
 
     def run_genetic_algorithm(self, heightMap, boxWidth, boxHeigth, startingPoint):
-        fitnessList = list()
-        highest = 0
-        #for i in range(0, self.population_size):
-        tempDict = self.generate_population(heightMap, boxWidth, boxHeigth, startingPoint)
-        blockedCoordinates = tempDict["blockedCoordinates"]
-        listOfBuildings = tempDict["listOfBuildings"]
-        fitness = self.calculate_fitness(listOfBuildings, heightMap)
-        fitnessList.append(fitness)
-        if fitnessList > highest:
-            highest = fitness
-            best = blockedCoordinates
-        #return best
 
+        fullButthole = self.generate_population(heightMap, boxWidth, boxHeigth, startingPoint)
 
+        # fitnessList = list()
+        # blockedCoordinates = tempDict["blockedCoordinates"]
+        # listOfBuildings = tempDict["listOfBuildings"]
+        #fitness = self.calculate_fitness(listOfBuildings, heightMap)
+        #fitnessList.append(fitness)
 
         # choose_parents()
         # mate_those_bastards()
@@ -32,13 +26,20 @@ class Genetic_Algorithm:
         # check_those_children()
 
     def generate_population(self, heightMap, boxWidth, boxHeigth, startingPoint):
+        fullpop = list()
+        for i in xrange(POPULATION_SIZE):
+            i = self.generate_solution(heightMap, boxWidth, boxHeigth, startingPoint)
+            fullpop.append(i)
+        return fullpop
+
+    def generate_solution(self, heightMap, boxWidth, boxHeigth, startingPoint):
         blockedCoordinates = {}
         dictOfCoordinates = {}
         buildingsCopy = copy_of_buildings()
 
         """Generate single solution"""
         for houseNumber in xrange(0, GENE_SIZE): # <-- GENE_SIZE should change depending on map size?
-            currentHouse = get_random_house()
+            currentHouse = get_random_house(buildingsCopy)
             """We need a well at first"""
             if (houseNumber == 0):
                 currentHouse = "well"
@@ -47,8 +48,8 @@ class Genetic_Algorithm:
                 tryAgain = False
                 tempBlockedCoordinates = {}
                 coordintate = self.place_house_point_randomly(boxWidth, boxHeigth, startingPoint, currentHouse)
-                for x in range(coordintate["x"], coordintate["x"] + buildings[currentHouse]["xLength"]):
-                    for z in range(coordintate["z"], coordintate["z"] + buildings[currentHouse]["zWidth"]):
+                for x in range(coordintate["x"], coordintate["x"] + buildingsCopy[currentHouse]["xLength"]):
+                    for z in range(coordintate["z"], coordintate["z"] + buildingsCopy[currentHouse]["zWidth"]):
                         convertedCoordinate = (x, z)
                         if convertedCoordinate in blockedCoordinates.keys():
                             #print("SKIPPED: " + currentHouse)

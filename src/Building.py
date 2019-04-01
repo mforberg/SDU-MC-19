@@ -6,7 +6,7 @@ class Building:
         self.x = x
         self.z = z
         self.typeOfHouse = typeOfHouse
-        self.buildingsCopy = MC_LIBRARY.buildings
+        self.buildingsCopy = MC_LIBRARY.buildingscopy
 
     def distance_between_building(self, house):
         # find the middle of each building
