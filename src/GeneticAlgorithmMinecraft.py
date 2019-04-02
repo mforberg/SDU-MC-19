@@ -14,7 +14,9 @@ class Genetic_Algorithm:
 
         fullButthole = self.generate_population(heightMap, boxWidth, boxHeigth, startingPoint)
         withFitness = self.population_fitness(fullButthole, heightMap)
-
+        self.min_max_avg(withFitness)
+        parents = self.choose_parents(withFitness)
+        self.it_is_baby_time(parents[0]["ma"], parents[0]["pa"])
 
         #blockedCoordinates = tempDict["blockedCoordinates"]
 
@@ -25,10 +27,11 @@ class Genetic_Algorithm:
         # check_those_children()
 
     def generate_population(self, heightMap, boxWidth, boxHeigth, startingPoint):
-        fullpop = {}
+        fullpop = list()
         for i in xrange(POPULATION_SIZE):
             x = self.generate_solution(heightMap, boxWidth, boxHeigth, startingPoint)
-            fullpop[x] = 0
+            tuple = (x, 0)
+            fullpop.append(tuple)
         return fullpop
 
     def generate_solution(self, heightMap, boxWidth, boxHeigth, startingPoint):
@@ -95,21 +98,40 @@ class Genetic_Algorithm:
             print("You tried to place: " + houseName)
             print("place_house_randomly cant find the house's name")
 
-    def population_fitness(self, population, heightMap):
-        for solution in population.keys:
-            listOfBuildings = solution["listOfBuildings"]
-            fitness = self.calculate_fitness(listOfBuildings, heightMap)
-            population[solution] = fitness
-        return population
+    def min_max_avg(self, data):
+        maximum = data[0]
+        minimum = data[0]
+        average = 0
 
-    def calculate_fitness(self, population, heightMap):
+        for item in data:
+            if item[1] > maximum[1]:
+                maximum = item
+            if item[1] < minimum[1]:
+                minimum = item
+            average += item[1]
+        average = average/len(data)
+        print(minimum[1], maximum[1], average)
+
+
+    def population_fitness(self, population, heightMap):
+        fullpop_with_fitness = list()
+        for solution in population:
+            dict = solution[0]
+
+            fitness = self.calculate_fitness(dict["listOfBuildings"], heightMap)
+            tuple = (dict, fitness)
+            fullpop_with_fitness.append(tuple)
+            del solution
+        return fullpop_with_fitness
+
+    def calculate_fitness(self, solution, heightMap):
         fitnessScore = 0
         alreadyCalculated = list()
-        for building in population:
+        for building in solution:
             fitnessScore += self.check_area(building, heightMap)
             if building.typeOfHouse == "well":
                 continue
-            for building2 in population:
+            for building2 in solution:
                 if building == building2 or building2 in alreadyCalculated:
                     continue
                 elif building2.typeOfHouse == "well":
@@ -176,7 +198,7 @@ class Genetic_Algorithm:
 
     def find_ma_and_pa(self, totalFitness, popList):
         ma = popList[0]
-        randomNumber = random.randint(0, totalFitness)
+        randomNumber = random.randint(0, int(totalFitness))
         for i in xrange(0, self.population_size):
             ma = popList[i]
             if randomNumber > popList[i][1]:
@@ -185,7 +207,7 @@ class Genetic_Algorithm:
                 ma = popList[i]
                 break
         pa = popList[0]
-        randomNumber = random.randint(0, totalFitness)
+        randomNumber = random.randint(0, int(totalFitness))
         for i in xrange(0, self.population_size):
             pa = popList[i]
             if randomNumber > popList[i][1]:
@@ -194,3 +216,24 @@ class Genetic_Algorithm:
                 pa = popList[i]
                 break
         return {"ma": ma, "pa": pa}
+
+    def it_is_baby_time(self, ma, pa):
+        maList = ma[0]["listOfBuildings"]
+        paList = pa[0]["listOfBuildings"]
+
+        child1 = []
+        child2 = []
+
+        """single-point crossover (random)"""
+        point = random.randint(0, len(maList))
+        geneChanger = False
+        for i in range(0, len(maList)):
+            if point == i:
+                geneChanger = not geneChanger
+            if geneChanger:
+                child1.append(maList[i])
+                child2.append(paList[i])
+            else:
+                child2.append(maList[i])
+                child1.append(paList[i])
+        return {child1, child2}
