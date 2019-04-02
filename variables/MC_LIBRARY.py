@@ -47,7 +47,7 @@ def get_random_house(buildingscopy):
     randomnumber = random.randint(0, totalprobability())
     availableHouse = get_placeable_buildings()
     currentHouse = availableHouse[0]
-    for i in xrange(0, len(get_placeable_buildings())): # TODO: get_placeable_building() method call again? ^^
+    for i in xrange(0, len(availableHouse)):
         currentHouse = availableHouse[i]
         if randomnumber > buildingscopy[currentHouse]["probability"]:
             randomnumber -= buildingscopy[currentHouse]["probability"]

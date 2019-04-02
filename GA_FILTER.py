@@ -1,8 +1,6 @@
 # noinspection PyUnresolvedReferences
 import utilityFunctions
 from src import Building, GeneticAlgorithmMinecraft as GAM, MapAnalysis as MA
-from variables import GA_VALUES as GAV
-from variables.MC_LIBRARY import *
 from pymclevel import alphaMaterials as am
 
 def perform(level, box, options):
@@ -14,6 +12,11 @@ def perform(level, box, options):
     startingPoint = {"x": box.minx, "z": box.minz}
 
     gam = GAM.Genetic_Algorithm()
-    blockedCoordinates = gam.run_genetic_algorithm(heightMap, box.maxx - box.minx, box.maxz - box.minz, startingPoint)
+    result = gam.run_genetic_algorithm(heightMap, box.maxx - box.minx, box.maxz - box.minz, startingPoint)
+
+    """result = list of buildings (Type = Building)"""
+    """Monika code is called under here (should use result):"""
+
+
     #for block in blockedCoordinates.keys():
     #    utilityFunctions.setBlock(level, (am.DiamondOre.ID, 0), block[0], blockedCoordinates[block][1], block[1])
