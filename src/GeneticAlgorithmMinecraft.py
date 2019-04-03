@@ -19,6 +19,8 @@ class Genetic_Algorithm:
 
         fitnessPopulation = self.calculate_fitness(listOfBuildings, heightMap)
 
+        return listOfBuildings
+
         # choose_parents()
         # mate_those_bastards()
         # add_some_mutation()

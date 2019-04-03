@@ -14,5 +14,6 @@ def perform(level, box, options):
     startingPoint = {"x": box.minx, "z": box.minz}
 
     gam = GAM.Genetic_Algorithm()
-    monika = gam.run_genetic_algorithm(heightMap, box.maxx - box.minx, box.maxz - box.minz, startingPoint)
-    BH.build(level, box.miny, monika)
+    #monika = gam.run_genetic_algorithm(heightMap, box.maxx - box.minx, box.maxz - box.minz, startingPoint)
+    gam.run_genetic_algorithm(heightMap, box.maxx - box.minx, box.maxz - box.minz, startingPoint)
+    #BH.build(level, box.miny, monika)
