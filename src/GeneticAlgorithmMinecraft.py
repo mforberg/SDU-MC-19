@@ -9,18 +9,19 @@ class Genetic_Algorithm:
 
     def run_genetic_algorithm(self, heightMap, boxWidth, boxHeigth, startingPoint):
 
-        initGeneration = Generation.generate_population(heightMap, boxWidth, boxHeigth, startingPoint)
-        currentGeneration = initGeneration
+        #initGeneration = Generation.generate_population(heightMap, boxWidth, boxHeigth, startingPoint)
+        #currentGeneration = initGeneration
         """start of for-loop"""
         #for x in range(0, GENERATIONS):
-        generationWithFitness = Fitness.population_fitness(currentGeneration, heightMap)
-        newGenerationWithoutFitness = Crossover.create_new_population_from_old_one(generationWithFitness)
+        #generationWithFitness = Fitness.population_fitness(currentGeneration, heightMap)
+        #newGenerationWithoutFitness = Crossover.create_new_population_from_old_one(generationWithFitness)
 
         """properly skip mutation on last (maybe even couple of last??)"""
         #if x == GENERATIONS - 1:
         #    finalGeneration = newGenerationWithoutFitness
         #else:
-        mutatedGeneration = Mutation.mutate_population(newGenerationWithoutFitness)
+        #mutatedGeneration = Mutation.mutate_population(newGenerationWithoutFitness)
+        print Mutation.decide_block_amount()
 
         #currentGeneration = mutatedGeneration
 
