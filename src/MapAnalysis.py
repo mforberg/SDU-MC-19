@@ -27,6 +27,7 @@ blocks = [
     am.Water.ID
 ]
 
+# blocks we dont want to account for in the height map
 skipBlocks = [
     am.Air.ID,
     am.Wood.ID,

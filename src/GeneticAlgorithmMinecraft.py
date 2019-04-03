@@ -1,123 +1,54 @@
-import math
-import Building
-from variables.MC_LIBRARY import *
-from variables.GA_VALUES import *
+import Generation
+import Fitness
+import Crossover
+import Mutation
+import datetime
+
 
 class Genetic_Algorithm:
 
-    #gene_size = GENE_SIZE
-    crossover_rate = CROSSOVER_RATE
-    mutation_rate = MUTATION_RATE
-    population_size = POPULATION_SIZE
-
     def run_genetic_algorithm(self, heightMap, boxWidth, boxHeigth, startingPoint):
-        tempDict = self.generate_population(heightMap, boxWidth, boxHeigth, startingPoint)
-        blockedCoordinates = tempDict["blockedCoordinates"]
-        listOfBuildings = tempDict["listOfBuildings"]
-        building = listOfBuildings[0]
-        self.modified_blocks(building, heightMap)
+        
+        initGeneration = Generation.generate_population(heightMap, boxWidth, boxHeigth, startingPoint)
+        currentGeneration = initGeneration
+        """start of for-loop"""
+        #for x in range(0, GENERATIONS):
+        generationWithFitness = Fitness.population_fitness(currentGeneration, heightMap)
+        newGenerationWithoutFitness = Crossover.create_new_population_from_old_one(generationWithFitness)
 
-        fitnessPopulation = self.calculate_fitness(listOfBuildings, heightMap)
+        """properly skip mutation on last (maybe even couple of last??)"""
+        #if x == GENERATIONS - 1:
+        #    finalGeneration = newGenerationWithoutFitness
+        #else:
 
-        return listOfBuildings
+        mutatedGeneration = Mutation.mutate_population(newGenerationWithoutFitness)
+        #currentGeneration = mutatedGeneration
 
-        # choose_parents()
-        # mate_those_bastards()
-        # add_some_mutation()
-        # check_those_children()
+        """end of for-loop"""
 
-    def generate_population(self, heightMap, boxWidth, boxHeigth, startingPoint):
-        blockedCoordinates = {}
-        dictOfCoordinates = {}
-        buildingsCopy = copy_of_buildings()
+        #print self.min_max_avg(withFitness)
+        #print self.min_max_avg(postMutation)
 
-        """Generate single solution"""
-        for houseNumber in xrange(0, GENE_SIZE): # <-- GENE_SIZE should change depending on map size?
-            currentHouse = get_random_house()
-            """We need a well at first"""
-            if (houseNumber == 0):
-                currentHouse = "well"
-            """Place the house's point at a random location, and check if the location works out"""
-            while True:
-                tryAgain = False
-                tempBlockedCoordinates = {}
-                coordintate = self.place_house_point_randomly(boxWidth, boxHeigth, startingPoint, currentHouse)
-                for x in range(coordintate["x"], coordintate["x"] + buildings[currentHouse]["xLength"]):
-                    for z in range(coordintate["z"], coordintate["z"] + buildings[currentHouse]["zWidth"]):
-                        convertedCoordinate = (x, z)
-                        if convertedCoordinate in blockedCoordinates.keys():
-                            print("SKIPPED: " + currentHouse)
-                            tryAgain = True
-                            break
-                        else:
-                            tempBlockedCoordinates[x, z] = [currentHouse, heightMap[x, z][0]]
-                    if tryAgain:
-                        break
-                if tryAgain:
-                    continue
-                """add the location to blocked coordinates"""
-                blockedCoordinates.update(tempBlockedCoordinates)
-                dictOfCoordinates[(coordintate["x"], coordintate["z"])] = currentHouse
-                break
 
-            """The probability of normal houses should not be lowered"""
-            if currentHouse == "normalHouse":
-                continue
-            """Reduce the probability of specialty buildings"""
 
-        listOfBuildings = []
-        for key, value in dictOfCoordinates.iteritems():
-            building = Building.Building(key[0], key[1], value)
-            listOfBuildings.append(building)
-        returnDict = {"blockedCoordinates": blockedCoordinates, "listOfBuildings": listOfBuildings}
-        print("- - - - - - - - - -")
-        for x in listOfBuildings:
-            print x.typeOfHouse,
-        print("")
-        print("- - - - - - - - - -")
-        return returnDict
+        """
+        Runtimes for sections
+        InitGeneration: 9.985
+        FITNESS: 2.163
+        MINMAXAVG: 0.0
+        MUTATE: 0.007
+        """
 
-    def place_house_point_randomly(self, boxWidth, boxHeigth, startingPoint, houseName):
-        if houseName in buildings:
-            """pick a random coordinate"""
-            allowedMaxXArea = startingPoint["x"] + boxWidth - buildings[houseName]["xLength"]
-            allowedMaxZArea = startingPoint["z"] + boxHeigth - buildings[houseName]["zWidth"]
-            randomX = random.randint(startingPoint["x"], allowedMaxXArea)
-            randomZ = random.randint(startingPoint["z"], allowedMaxZArea)
-            coordinate = {"x": randomX, "z": randomZ}
-            return coordinate
-        else:
-            print("You tried to place: " + houseName)
-            print("place_house_randomly cant find the house's name")
+    def min_max_avg(self, data):
+        maximum = data[0]
+        minimum = data[0]
+        average = 0
 
-    def calculate_fitness(self, population, heightMap):
-        fitnessScore = 0
-
-        #fitnessScore += distance_between()
-
-        return fitnessScore
-
-    def distance_between(self, house1, house2):
-        distance = house1.distance_between_building(house2, buildings)
-        """distance score is calculated using an quadratic equation"""
-        a = float(-4) / 45
-        b = float(16)/3
-        c = 20
-        distanceScore = a * math.pow(distance, 2) + b * distance + c
-        return distanceScore
-
-    def modified_blocks(self, building, heightMap):
-        totalArea = buildings[building.typeOfHouse]["xLength"] * buildings[building.typeOfHouse]["zWidth"]
-        listOfHeights = []
-        unique = set()
-        amount = 0
-        for x in xrange(building.x, building.x + buildings[building.typeOfHouse]["xLength"]):
-            for z in xrange(building.z, building.z + buildings[building.typeOfHouse]["zWidth"]):
-                amount += heightMap[x, z][0]
-                listOfHeights.append(heightMap[x, z][0])
-                unique.add(heightMap[x, z][0])
-        average = int(round(amount / float(totalArea)))
-        blocksModified = 0
-        for number in unique:
-            blocksModified += listOfHeights.count(number) * abs(average - number)
-        return blocksModified
+        for item in data:
+            if item[1] > maximum[1]:
+                maximum = item
+            if item[1] < minimum[1]:
+                minimum = item
+            average += item[1]
+        average = average/len(data)
+        return "MIN: {0}\tMAX: {1}\tAVG: {2}".format(round(minimum[1], 8), round(maximum[1], 8), round(average, 8))

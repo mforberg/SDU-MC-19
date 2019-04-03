@@ -1,9 +1,9 @@
 # noinspection PyUnresolvedReferences
 import utilityFunctions
 from src import Building, GeneticAlgorithmMinecraft as GAM, MapAnalysis as MA
-from variables import GA_VALUES as GAV
-from variables.MC_LIBRARY import *
+
 import BuildHouses as BH
+from pymclevel import alphaMaterials as am
 
 def perform(level, box, options):
     print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _")
@@ -14,6 +14,5 @@ def perform(level, box, options):
     startingPoint = {"x": box.minx, "z": box.minz}
 
     gam = GAM.Genetic_Algorithm()
-    #monika = gam.run_genetic_algorithm(heightMap, box.maxx - box.minx, box.maxz - box.minz, startingPoint)
-    gam.run_genetic_algorithm(heightMap, box.maxx - box.minx, box.maxz - box.minz, startingPoint)
-    #BH.build(level, box.miny, monika)
+    result = gam.run_genetic_algorithm(heightMap, box.maxx - box.minx, box.maxz - box.minz, startingPoint)
+    BH.build(level, box.miny, result)
