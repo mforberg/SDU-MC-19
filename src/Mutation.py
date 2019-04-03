@@ -5,7 +5,7 @@ def mutate_population(population):
     mutation_count = 0
 
     for solution in population:
-        buildinglist = solution[0]
+        buildinglist = solution
 
         mutation_trigger = int(MUTATION_RATE * 100)
 
