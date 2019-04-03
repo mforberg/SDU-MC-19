@@ -4,10 +4,11 @@ from variables.MC_LIBRARY import *
 def population_fitness(population, heightMap):
     fullpop_with_fitness = list()
     for solution in population:
-        fitness = solution_fitness(solution[0], heightMap)
-        tuple = (solution, fitness)
-        fullpop_with_fitness.append(tuple)
-        del solution
+        fitness = solution_fitness(solution, heightMap)
+        innerList = list()
+        innerList.append(solution)
+        innerList.append(fitness)
+        fullpop_with_fitness.append(innerList)
     return fullpop_with_fitness
 
 def solution_fitness(solution, heightMap):
@@ -75,7 +76,7 @@ def check_area(building, heightMap):
     for number in unique:
         blocksModified += listOfHeights.count(number) * abs(average - number)
     """the score is calculated here. Maximum score is 100"""
-    score = 100 - int(round(blocksModified /10))
+    score = 100 - int(round(blocksModified / 10))
     """subtract extra for water"""
     score -= amountOfWater * 6
     """we dont want score under zero"""
