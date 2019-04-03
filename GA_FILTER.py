@@ -1,6 +1,7 @@
 # noinspection PyUnresolvedReferences
 import utilityFunctions
-from src import Building, GeneticAlgorithmMinecraft as GAM, MapAnalysis as MA
+from src import GeneticAlgorithmMinecraft as GAM, MapAnalysis as MA
+# noinspection PyUnresolvedReferences
 from pymclevel import alphaMaterials as am
 
 def perform(level, box, options):

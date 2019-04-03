@@ -6,8 +6,7 @@ def generate_population(heightMap, boxWidth, boxHeigth, startingPoint):
     fullpop = list()
     for i in xrange(POPULATION_SIZE):
         x = generate_solution(heightMap, boxWidth, boxHeigth, startingPoint)
-        tuple = (x, 0)
-        fullpop.append(tuple)
+        fullpop.append(x)
     return fullpop
 
 
@@ -50,7 +49,7 @@ def generate_solution(heightMap, boxWidth, boxHeigth, startingPoint):
             continue
         """Reduce the probability of specialty buildings"""
         buildingsCopy[currentHouse]["probability"] = buildingsCopy[currentHouse]["probability"] / 2
-    listOfBuildings = []
+    listOfBuildings = list()
     for key, value in dictOfCoordinates.iteritems():
         building = Building.Building(key[0], key[1], value)
         listOfBuildings.append(building)
