@@ -34,3 +34,18 @@ def mutate_population(population):
     number = float(mutation_count) / ((POPULATION_SIZE * GENE_SIZE * 2)) * 100
     percent = round(number, 3)
     print "MUTATION TRIGGERED {0}/{1} TIMES ({2}%)".format(mutation_count, POPULATION_SIZE * GENE_SIZE * 2, percent)
+
+
+def decide_block_amount():
+    max_block_move = 3
+    total_block_move = (max_block_move*(max_block_move+1))/2
+
+    random_number = random.randint(1, max_block_move)
+    print random_number
+    floaty = float(total_block_move)
+    percent = (random_number/floaty)
+    print percent
+    stuff = float(1)-percent
+    return stuff
+
+
