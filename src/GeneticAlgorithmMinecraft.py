@@ -15,20 +15,20 @@ class Genetic_Algorithm:
         #for x in range(0, GENERATIONS):
         generationWithFitness = Fitness.population_fitness(currentGeneration, heightMap)
         newGenerationWithoutFitness = Crossover.create_new_population_from_old_one(generationWithFitness)
-
         """properly skip mutation on last (maybe even couple of last??)"""
         #if x == GENERATIONS - 1:
         #    finalGeneration = newGenerationWithoutFitness
         #else:
 
         mutatedGeneration = Mutation.mutate_population(newGenerationWithoutFitness)
-        #currentGeneration = mutatedGeneration
+        currentGeneration = mutatedGeneration
 
         """end of for-loop"""
 
         #print self.min_max_avg(withFitness)
         #print self.min_max_avg(postMutation)
 
+        return mutatedGeneration
 
 
         """
