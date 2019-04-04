@@ -46,7 +46,7 @@ def decide_block_amount():
     elif random_number <= 5:
         return 2
     elif random_number <= 6:
-        return 6
+        return 3
     else:
         return 0
 
