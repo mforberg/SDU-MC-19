@@ -1,6 +1,7 @@
 import math
 from variables.MC_LIBRARY import *
 
+
 def population_fitness(population, heightMap):
     fullpop_with_fitness = list()
     for solution in population:
@@ -10,6 +11,7 @@ def population_fitness(population, heightMap):
         innerList.append(fitness)
         fullpop_with_fitness.append(innerList)
     return fullpop_with_fitness
+
 
 def solution_fitness(solution, heightMap):
     fitnessScore = 0
