@@ -4,6 +4,7 @@ from src import GeneticAlgorithmMinecraft as GAM, MapAnalysis as MA
 # noinspection PyUnresolvedReferences
 from pymclevel import alphaMaterials as am
 
+
 def perform(level, box, options):
     print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _")
     print("_ _ _ _\t\tstart\t\t_ _ _ _")
@@ -19,5 +20,5 @@ def perform(level, box, options):
     """Monika code is called under here (should use result):"""
 
 
-    #for block in blockedCoordinates.keys():
-    #    utilityFunctions.setBlock(level, (am.DiamondOre.ID, 0), block[0], blockedCoordinates[block][1], block[1])
+    #utilityFunctions.setBlock(level, (64, 1), box.minx, 10, box.minz)
+    #utilityFunctions.setBlock(level, (64, 1), box.minx, 11, box.minz)
