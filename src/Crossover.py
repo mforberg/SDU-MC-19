@@ -70,11 +70,12 @@ def find_ma_and_pa(totalFitness, popList):
 
 
 def it_is_baby_time(ma, pa):
-    maList = ma[0]
-    paList = pa[0]
-
+    maList = well_first(ma[0])
+    paList = well_first(pa[0])
     child1 = []
     child2 = []
+    """find which of ma and pa is smaller, set ma to the smaller"""
+    #if len(maList) > len(paList):
 
     """single-point crossover (random point)"""
     point = random.randint(0, len(maList))
@@ -101,3 +102,16 @@ def get_elites(oldGeneration):
     for i in range(0, amount):
         elites.append(elitesFirst[i])
     return elites
+
+
+def well_first(parent):
+    newList = list()
+    extraList = list()
+    for building in parent:
+        if building.typeOfHouse == "well":
+            newList.append(building)
+        else:
+            extraList.append(building)
+    for building in extraList:
+        newList.append(building)
+    return newList
