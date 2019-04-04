@@ -1,7 +1,8 @@
 # noinspection PyUnresolvedReferences
 import utilityFunctions
-from src import GeneticAlgorithmMinecraft as GAM, MapAnalysis as MA
-# noinspection PyUnresolvedReferences
+from src import Building, GeneticAlgorithmMinecraft as GAM, MapAnalysis as MA
+
+import BuildHouses as BH
 from pymclevel import alphaMaterials as am
 
 
@@ -15,10 +16,4 @@ def perform(level, box, options):
 
     gam = GAM.Genetic_Algorithm()
     result = gam.run_genetic_algorithm(heightMap, box.maxx - box.minx, box.maxz - box.minz, startingPoint)
-
-    """result = list of buildings (Type = Building)"""
-    """Monika code is called under here (should use result):"""
-
-
-    #utilityFunctions.setBlock(level, (64, 1), box.minx, 10, box.minz)
-    #utilityFunctions.setBlock(level, (64, 1), box.minx, 11, box.minz)
+    BH.build(level, box.miny, result)

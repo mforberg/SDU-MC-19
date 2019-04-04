@@ -3,7 +3,7 @@ GENE_SIZE = 15
 """The percent chance of crossover"""
 CROSSOVER_RATE = 0.05  # 5%
 """The percent chance of mutation"""
-MUTATION_RATE = 0.01  # 1%
+MUTATION_RATE = float(1)/GENE_SIZE
 """The amount of "solutions" in a population"""
 POPULATION_SIZE = 50
 """The amount of generations the algorithm should be run"""

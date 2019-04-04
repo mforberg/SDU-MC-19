@@ -8,7 +8,7 @@ import datetime
 class Genetic_Algorithm:
 
     def run_genetic_algorithm(self, heightMap, boxWidth, boxHeigth, startingPoint):
-
+        
         initGeneration = Generation.generate_population(heightMap, boxWidth, boxHeigth, startingPoint)
         currentGeneration = initGeneration
         """start of for-loop"""
@@ -25,6 +25,7 @@ class Genetic_Algorithm:
         #print self.min_max_avg(withFitness)
         #print self.min_max_avg(postMutation)
 
+        return newGenerationWithoutFitness
 
 
         """
