@@ -16,9 +16,9 @@ class Genetic_Algorithm:
         generationWithFitness = Fitness.population_fitness(currentGeneration, heightMap)
         """properly skip mutation and new generation on last"""
         newGenerationWithoutFitness = Crossover.create_new_population_from_old_one(generationWithFitness)
-        mutatedGeneration = Mutation.mutate_population(newGenerationWithoutFitness)
+        Mutation.mutate_population(newGenerationWithoutFitness)
 
-        #currentGeneration = mutatedGeneration
+        #currentGeneration = newGenerationWithoutFitness
 
         """end of for-loop"""
 
