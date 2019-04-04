@@ -19,16 +19,16 @@ class Genetic_Algorithm:
         #if x == GENERATIONS - 1:
         #    finalGeneration = newGenerationWithoutFitness
         #else:
+        Mutation.mutate_population(newGenerationWithoutFitness)
 
-        mutatedGeneration = Mutation.mutate_population(newGenerationWithoutFitness)
-        currentGeneration = mutatedGeneration
+        #currentGeneration = mutatedGeneration
 
         """end of for-loop"""
 
         #print self.min_max_avg(withFitness)
         #print self.min_max_avg(postMutation)
 
-        return mutatedGeneration
+        return newGenerationWithoutFitness
 
 
         """
