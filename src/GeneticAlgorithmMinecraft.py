@@ -14,13 +14,10 @@ class Genetic_Algorithm:
         """start of for-loop"""
         #for x in range(0, GENERATIONS):
         generationWithFitness = Fitness.population_fitness(currentGeneration, heightMap)
-        """properly skip mutation on last (maybe even couple of last??)"""
-        # if x == GENERATIONS - 1:
+        """properly skip mutation and new generation on last"""
         newGenerationWithoutFitness = Crossover.create_new_population_from_old_one(generationWithFitness)
-        #    finalGeneration = newGenerationWithoutFitness
-        #else:
-
         mutatedGeneration = Mutation.mutate_population(newGenerationWithoutFitness)
+
         #currentGeneration = mutatedGeneration
 
         """end of for-loop"""
