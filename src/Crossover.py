@@ -1,6 +1,7 @@
 import random
 from variables.GA_VALUES import *
 
+
 def create_new_population_from_old_one(oldGeneration):
     newPopulation = list()
     for x in range(0, POPULATION_SIZE/2):

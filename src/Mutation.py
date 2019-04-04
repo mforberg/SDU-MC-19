@@ -31,6 +31,6 @@ def mutate_population(population):
                 else:
                     i.z = i.z - 1
 
-    number = float(mutation_count) / ((POPULATION_SIZE * GENE_SIZE * 2)) * 100
+    number = float(mutation_count) / (POPULATION_SIZE * GENE_SIZE * 2) * 100
     percent = round(number, 3)
     print "MUTATION TRIGGERED {0}/{1} TIMES ({2}%)".format(mutation_count, POPULATION_SIZE * GENE_SIZE * 2, percent)
