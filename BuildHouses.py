@@ -11,16 +11,16 @@ from collections import OrderedDict
 am = alphaMaterials
 
 def build(level, boxHeight, xbuildings):
-    buildings = xbuildings[0][0]
+    buildings = xbuildings[0]
+  #  MAT_DOOR = [(193, 1), (193, 3)]
+   # utilityFunctions.setBlock(level, (64, 1), box.minx, 10, box.minz)
 
-    print buildings
-    print xbuildings
+
     for building in buildings:
         if building.typeOfHouse == "well":
             wellX = building.x
             wellZ = building.z
 
-    listof = list()
     for building in buildings:
 
         heightOfBuilding = buildingCopy[building.typeOfHouse]["yHeight"]
@@ -47,7 +47,6 @@ def build(level, boxHeight, xbuildings):
                 utilityFunctions.setBlockToGround(level, (am.Wood.ID, 0), building.x, heightOfBuilding + boxHeight, z,
                                               boxHeight)
 
-    print listof
 
 
 def build_floor(level, lengthOfBuilding, widthOfBuilding, heightOfBuilding, boxHeight, building):
