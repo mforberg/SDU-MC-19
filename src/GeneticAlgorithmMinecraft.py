@@ -25,9 +25,6 @@ class Genetic_Algorithm:
         #print self.min_max_avg(withFitness)
         #print self.min_max_avg(postMutation)
 
-        return newGenerationWithoutFitness
-
-
         """
         Runtimes for sections
         InitGeneration: 9.985
@@ -35,6 +32,8 @@ class Genetic_Algorithm:
         MINMAXAVG: 0.0
         MUTATE: 0.007
         """
+
+        return newGenerationWithoutFitness
 
     def min_max_avg(self, data):
         maximum = data[0]
