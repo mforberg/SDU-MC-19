@@ -13,30 +13,16 @@ def mutate_population(population):
         buildinglist = solution
 
         for i in buildinglist: # TODO: separate repeated code into method
+
             random_number_x = random_number_between_one_to_hundred()
-
-            if random_number_x <= mutation_trigger:
-                mutation_count += 1
-
-                add_or_subtract_decider = random_number_between_one_to_hundred()
-                if add_or_subtract_decider > 50:
-                    i.x += decide_block_amount()
-                else:
-                    i.x -= decide_block_amount()
             random_number_z = random_number_between_one_to_hundred()
 
-            if random_number_z <= mutation_trigger:
-                mutation_count += 1
-
-                add_or_subtract_decider = random_number_between_one_to_hundred()
-                if add_or_subtract_decider > 50:
-                    i.z += decide_block_amount()
-                else:
-                    i.z -= decide_block_amount()
+            mutate_coordinate(random_number_x, mutation_trigger, mutation_count, i.x) #mutate x
+            mutate_coordinate(random_number_z, mutation_trigger, mutation_count, i.z) #mutate z
 
             random_number_house = random_number_between_one_to_hundred()
 
-            if random_number_house <= 100: # TODO: make correct trigger amount |testing purposes atm
+            if random_number_house <= mutation_trigger: # TODO: buildings might overlap post mutation not sure where to handle
                 mutation_count += 1
                 if i.typeOfHouse == "well": #Do not mutate the well
                     continue
@@ -48,6 +34,18 @@ def mutate_population(population):
 
 def random_number_between_one_to_hundred():
     return random.randint(1, 100)
+
+
+def mutate_coordinate(random_number, mutation_trigger, mutation_count, coordinate):
+    if random_number <= mutation_trigger:
+        mutation_count += 1
+
+        add_or_subtract_decider = random_number_between_one_to_hundred()
+        if add_or_subtract_decider > 50:
+            coordinate += decide_block_amount()
+        else:
+            coordinate -= decide_block_amount()
+
 
 # TODO: Possibly change decide_block_amount() back to 1 instead of 1..3, ~900 mutations seems excessive
 def decide_block_amount():
@@ -67,16 +65,22 @@ def decide_block_amount():
 
 
 # TODO: Random increment or decrement
+# TODO: Fix ERROR -> return sorted_buildings[index_plus_1][1] IndexError: list index out of range
 def mutate_house(house_to_mutate):
     sorted_buildings = get_buildings_by_size()
     for item in xrange(0, len(sorted_buildings)): #item is tuple (area_size, type)
         if sorted_buildings[item][1] == house_to_mutate:
             index_plus_1 = item+1
-            if index_plus_1 <= len(sorted_buildings)-1:
+            index_minus_1 = item-1
+            print index_plus_1, "<-->", len(sorted_buildings)
+            if index_plus_1 <= len(sorted_buildings):
                 return sorted_buildings[index_plus_1][1]
             else:
-                print "OUT OF BOUNDS"
-                return sorted_buildings[item][1]
+                print "- - - - - -"
+                print index_minus_1, "<-->", len(sorted_buildings)
+                print sorted_buildings[index_minus_1][1]
+                return sorted_buildings[item-1][1]
+
 
 def get_buildings_by_size():
     size_list = list()
