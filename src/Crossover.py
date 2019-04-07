@@ -70,25 +70,36 @@ def find_ma_and_pa(totalFitness, popList):
 
 
 def it_is_baby_time(ma, pa):
+    longest = 0
+    shortest = 0
     maList = well_first(ma[0])
     paList = well_first(pa[0])
     child1 = []
     child2 = []
-    """find which of ma and pa is smaller, set ma to the smaller"""
-    #if len(maList) > len(paList):
+    """find which of ma and pa is smaller"""
+    if len(maList) < len(paList):
+        longest = len(paList)
+        shortest = len(maList)
+        """single-point crossover (random point)"""
+        point = random.randint(0, shortest)
+    else:
+        longest = len(maList)
+        shortest = len(paList)
+        """single-point crossover (random point)"""
+        point = random.randint(0, shortest)
 
-    """single-point crossover (random point)"""
-    point = random.randint(0, len(maList))
     geneChanger = False
-    for i in range(0, len(maList)):
+    for i in range(0, longest):
         if point == i:
             geneChanger = not geneChanger
         if geneChanger:
-            child1.append(maList[i])
+            if shortest > i:
+                child1.append(maList[i])
             child2.append(paList[i])
         else:
+            if shortest > i:
+                child1.append(paList[i])
             child2.append(maList[i])
-            child1.append(paList[i])
     return [child1, child2]
 
 

@@ -7,6 +7,6 @@ MUTATION_RATE = float(1)/GENE_SIZE
 """The amount of "solutions" in a population"""
 POPULATION_SIZE = 50
 """The amount of generations the algorithm should be run"""
-GENERATIONS = 500
+GENERATIONS = 2
 """The top percentage of the population who should just continue to next"""
 ELITES_PERCENTAGE = 0.1  # 10%

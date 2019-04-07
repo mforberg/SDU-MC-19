@@ -2,6 +2,7 @@ import Generation
 import Fitness
 import Crossover
 import Mutation
+from variables.GA_VALUES import *
 import datetime
 
 
@@ -12,29 +13,30 @@ class Genetic_Algorithm:
         initGeneration = Generation.generate_population(heightMap, boxWidth, boxHeigth, startingPoint)
         currentGeneration = initGeneration
         """start of for-loop"""
-        #for x in range(0, GENERATIONS):
-        generationWithFitness = Fitness.population_fitness(currentGeneration, heightMap)
-        """properly skip mutation and new generation on last"""
-        newGenerationWithoutFitness = Crossover.create_new_population_from_old_one(generationWithFitness)
-        Mutation.mutate_population(newGenerationWithoutFitness)
-
-        #currentGeneration = newGenerationWithoutFitness
-
+        for x in range(0, GENERATIONS):
+            generationWithFitness = Fitness.population_fitness(currentGeneration, heightMap)
+            """properly skip mutation and new generation on last"""
+            if x < GENERATIONS - 1:
+                newGenerationWithoutFitness = Crossover.create_new_population_from_old_one(generationWithFitness)
+                Mutation.mutate_population(newGenerationWithoutFitness)
+                currentGeneration = newGenerationWithoutFitness
+            else:
+                finalGeneration = self.find_best_solution(generationWithFitness)
         """end of for-loop"""
 
         #print self.min_max_avg(withFitness)
         #print self.min_max_avg(postMutation)
 
-        return newGenerationWithoutFitness
+        return finalGeneration
 
 
-        """
-        Runtimes for sections
-        InitGeneration: 9.985
-        FITNESS: 2.163
-        MINMAXAVG: 0.0
-        MUTATE: 0.007
-        """
+        # """
+        # Runtimes for sections
+        # InitGeneration: 9.985
+        # FITNESS: 2.163
+        # MINMAXAVG: 0.0
+        # MUTATE: 0.007
+        # """
 
     def min_max_avg(self, data):
         maximum = data[0]
@@ -49,3 +51,6 @@ class Genetic_Algorithm:
             average += item[1]
         average = average/len(data)
         return "MIN: {0}\tMAX: {1}\tAVG: {2}".format(round(minimum[1], 8), round(maximum[1], 8), round(average, 8))
+
+    def find_best_solution(self, fitnessGeneration):
+        print("jo")
