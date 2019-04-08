@@ -16,4 +16,4 @@ def perform(level, box, options):
 
     gam = GAM.Genetic_Algorithm()
     result = gam.run_genetic_algorithm(heightMap, box.maxx - box.minx, box.maxz - box.minz, startingPoint)
-    BH.build(level, box.miny, result)
+    #BH.build(level, box.miny, result)
