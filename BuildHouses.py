@@ -10,9 +10,8 @@ from collections import OrderedDict
 
 am = alphaMaterials
 
-def build(level, box_height, xbuildings):
-    buildings = xbuildings[0]
 
+def build(level, box_height, buildings):
 
     for building in buildings:
         if building.typeOfHouse == "well":
