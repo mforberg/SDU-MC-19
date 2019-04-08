@@ -6,6 +6,7 @@ def create_new_population_from_old_one(oldGeneration):
     newPopulation = list()
     """Find the elites"""
     elites = get_elites(oldGeneration)
+    newPopulation.extend(elites)
     """calculate the remaining space"""
     remainingSpace = POPULATION_SIZE - len(elites)
     """if there is any space left in the population, run the while loop"""
@@ -74,21 +75,34 @@ def it_is_baby_time(ma, pa):
     paList = well_first(pa[0])
     child1 = []
     child2 = []
-    """find which of ma and pa is smaller, set ma to the smaller"""
-    #if len(maList) > len(paList):
-
-    """single-point crossover (random point)"""
-    point = random.randint(0, len(maList))
+    """find which of ma and pa is smaller"""
+    if len(maList) < len(paList):
+        longestnr = len(paList)
+        shortestnr = len(maList)
+        first = maList
+        second = paList
+        """single-point crossover (random point)"""
+        point = random.randint(0, shortestnr)
+    else:
+        longestnr = len(maList)
+        shortestnr = len(paList)
+        first = paList
+        second = maList
+        """single-point crossover (random point)"""
+        point = random.randint(0, shortestnr)
+    """start adding buildings to the children"""
     geneChanger = False
-    for i in range(0, len(maList)):
+    for i in range(0, longestnr):
         if point == i:
             geneChanger = not geneChanger
         if geneChanger:
-            child1.append(maList[i])
-            child2.append(paList[i])
+            if shortestnr > i:
+                child1.append(first[i])
+            child2.append(second[i])
         else:
-            child2.append(maList[i])
-            child1.append(paList[i])
+            if shortestnr > i:
+                child2.append(first[i])
+            child1.append(second[i])
     return [child1, child2]
 
 
@@ -100,7 +114,7 @@ def get_elites(oldGeneration):
     amount = int(round(ELITES_PERCENTAGE * POPULATION_SIZE))
     """get the elites and put them in another list"""
     for i in range(0, amount):
-        elites.append(elitesFirst[i])
+        elites.append(elitesFirst[i][0])
     return elites
 
 

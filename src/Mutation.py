@@ -28,7 +28,7 @@ def mutate_population(population):
     full_count = mutation_count_building+mutation_count_coord
     number = float(full_count) / ((POPULATION_SIZE * GENE_SIZE * 2)+GENE_SIZE*POPULATION_SIZE) * 100
     percent = round(number, 3)
-    print "{0} coordinates mutated, {1} buildings mutated".format(mutation_count_coord, mutation_count_building)
+    #print "{0} coordinates mutated, {1} buildings mutated".format(mutation_count_coord, mutation_count_building)
     print "MUTATION TRIGGERED {0}/{1} TIMES ({2}%)".format(full_count, (POPULATION_SIZE * GENE_SIZE * 2)+GENE_SIZE*POPULATION_SIZE, percent)
 
 def random_number_between_one_to_hundred():
