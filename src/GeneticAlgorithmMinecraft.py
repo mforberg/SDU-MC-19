@@ -14,7 +14,11 @@ class Genetic_Algorithm:
         currentGeneration = initGeneration
         """start of for-loop"""
         for x in range(0, GENERATIONS):
+            print "- - - - - - - - - - - -"
+            print len(currentGeneration)
+            print "CURRENT GEN: ", x
             generationWithFitness = Fitness.population_fitness(currentGeneration, heightMap)
+            print self.min_max_avg(generationWithFitness)
             """properly skip mutation and new generation on last"""
             if x < GENERATIONS - 1:
                 newGenerationWithoutFitness = Crossover.create_new_population_from_old_one(generationWithFitness)
@@ -24,9 +28,6 @@ class Genetic_Algorithm:
                 finalGeneration = self.find_best_solution(generationWithFitness)
                 print(finalGeneration)
         """end of for-loop"""
-
-        #print self.min_max_avg(withFitness)
-        #print self.min_max_avg(postMutation)
 
         return finalGeneration
 
@@ -51,7 +52,7 @@ class Genetic_Algorithm:
                 minimum = item
             average += item[1]
         average = average/len(data)
-        return "MIN: {0}\tMAX: {1}\tAVG: {2}".format(round(minimum[1], 8), round(maximum[1], 8), round(average, 8))
+        return "MIN: {0}\tMAX: {1}\tAVG: {2}".format(round(minimum[1], 3), round(maximum[1], 3), round(average, 3))
 
     def find_best_solution(self, fitnessGeneration):
         currentTop = 0

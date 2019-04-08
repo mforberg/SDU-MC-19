@@ -1,5 +1,5 @@
 """The amount of houses in a single solution"""
-GENE_SIZE = 15
+GENE_SIZE = 10
 """The percent chance of crossover"""
 CROSSOVER_RATE = 0.05  # 5%
 """The percent chance of mutation"""

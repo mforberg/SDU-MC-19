@@ -6,6 +6,7 @@ def create_new_population_from_old_one(oldGeneration):
     newPopulation = list()
     """Find the elites"""
     elites = get_elites(oldGeneration)
+    newPopulation.extend(elites)
     """calculate the remaining space"""
     remainingSpace = POPULATION_SIZE - len(elites)
     """if there is any space left in the population, run the while loop"""
@@ -100,8 +101,8 @@ def it_is_baby_time(ma, pa):
             child2.append(second[i])
         else:
             if shortestnr > i:
-                child1.append(first[i])
-            child2.append(second[i])
+                child2.append(first[i])
+            child1.append(second[i])
     return [child1, child2]
 
 
@@ -113,7 +114,7 @@ def get_elites(oldGeneration):
     amount = int(round(ELITES_PERCENTAGE * POPULATION_SIZE))
     """get the elites and put them in another list"""
     for i in range(0, amount):
-        elites.append(elitesFirst[i])
+        elites.append(elitesFirst[i][0])
     return elites
 
 
