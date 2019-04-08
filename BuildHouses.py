@@ -23,8 +23,8 @@ def build(level, heightmap, buildings):
         width_of_building = building_copy[building.typeOfHouse]["zWidth"]
 
         houseType = building_copy[building.typeOfHouse]["floorAndRoof"]
-        print heightmap
-        y = heightmap[(building.x, building.z)][0]
+        y = heightmap[building.x, building.z][0]
+
         if building.typeOfHouse == "blackSmith":
             build_floor_bs(level, length_of_building, width_of_building, height_of_building, y, building)
             build_black_smith(level, length_of_building, width_of_building, height_of_building, y, building)
