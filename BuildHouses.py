@@ -2,7 +2,7 @@ import utilityFunctions
 import numpy as np
 import datetime
 from src import GeneticAlgorithmMinecraft as GAM
-from variables.MC_LIBRARY import buildings as buildingCopy
+from variables.MC_LIBRARY import buildings as building_copy
 from multiprocessing import Process
 from pymclevel import alphaMaterials, MCSchematic, MCLevel, BoundingBox
 from mcplatform import *
@@ -10,84 +10,95 @@ from collections import OrderedDict
 
 am = alphaMaterials
 
-def build(level, boxHeight, buildings):
-  #  MAT_DOOR = [(193, 1), (193, 3)]
-   # utilityFunctions.setBlock(level, (64, 1), box.minx, 10, box.minz)
 
+def build(level, box_height, buildings):
 
     for building in buildings:
         if building.typeOfHouse == "well":
-            wellX = building.x
-            wellZ = building.z
+            well_z = building.z
 
     for building in buildings:
 
-        heightOfBuilding = buildingCopy[building.typeOfHouse]["yHeight"]
-        lengthOfBuilding = buildingCopy[building.typeOfHouse]["xLength"]
-        widthOfBuilding = buildingCopy[building.typeOfHouse]["zWidth"]
-        houseType = buildingCopy[building.typeOfHouse]["floorAndRoof"]
+        height_of_building = building_copy[building.typeOfHouse]["yHeight"]
+        length_of_building = building_copy[building.typeOfHouse]["xLength"]
+        width_of_building = building_copy[building.typeOfHouse]["zWidth"]
+
+        houseType = building_copy[building.typeOfHouse]["floorAndRoof"]
 
         if building.typeOfHouse == "blackSmith":
-            build_floor_bs(level, lengthOfBuilding, widthOfBuilding, heightOfBuilding, boxHeight, building)
-            build_black_smith(level, lengthOfBuilding, widthOfBuilding, heightOfBuilding, boxHeight, building)
+            build_floor_bs(level, length_of_building, width_of_building, height_of_building, box_height, building)
+            build_black_smith(level, length_of_building, width_of_building, height_of_building, box_height, building)
+            build_door(level, length_of_building, width_of_building, box_height, well_z, building)
         else:
+            build_walls(level, length_of_building, width_of_building, height_of_building, box_height, building)
             if houseType:
-                build_floor(level, lengthOfBuilding, widthOfBuilding, heightOfBuilding, boxHeight, building)
-            for x in range(building.x, building.x + lengthOfBuilding):
-                utilityFunctions.setBlockToGround(level, (am.Wood.ID, 0), x, heightOfBuilding + boxHeight, building.z,
-                                              boxHeight)
-                utilityFunctions.setBlockToGround(level, (am.Wood.ID, 0), x, heightOfBuilding + boxHeight,
-                                              building.z + widthOfBuilding - 1,
-                                              boxHeight)
-            for z in range(building.z, building.z + widthOfBuilding):
-                utilityFunctions.setBlockToGround(level, (am.Wood.ID, 0), building.x + lengthOfBuilding - 1,
-                                                  heightOfBuilding + boxHeight, z,
-                                              boxHeight)
-                utilityFunctions.setBlockToGround(level, (am.Wood.ID, 0), building.x, heightOfBuilding + boxHeight, z,
-                                              boxHeight)
+                build_floor(level, length_of_building, width_of_building, height_of_building, box_height, building)
+
+                build_door(level, length_of_building, width_of_building, box_height, well_z, building)
 
 
+def build_walls(level, length_of_building, width_of_building, height_of_building, box_height, building):
+    for x in range(building.x, building.x + length_of_building):
+        utilityFunctions.setBlockToGround(level, (am.Wood.ID, 0), x, height_of_building + box_height, building.z,
+                                          box_height)
+        utilityFunctions.setBlockToGround(level, (am.Wood.ID, 0), x, height_of_building + box_height,
+                                          building.z + width_of_building - 1,
+                                          box_height)
+    for z in range(building.z, building.z + width_of_building):
+        utilityFunctions.setBlockToGround(level, (am.Wood.ID, 0), building.x + length_of_building - 1,
+                                          height_of_building + box_height, z,
+                                          box_height)
+        utilityFunctions.setBlockToGround(level, (am.Wood.ID, 0), building.x, height_of_building + box_height, z,
+                                          box_height)
 
-def build_floor(level, lengthOfBuilding, widthOfBuilding, heightOfBuilding, boxHeight, building):
-    for x in range(building.x, building.x + lengthOfBuilding):
-        for z in range(building.z,  building.z + widthOfBuilding):
-            utilityFunctions.setBlock(level, (am.Wood.ID, 0), x, boxHeight, z)
-            utilityFunctions.setBlock(level, (am.Obsidian.ID, 0), x, boxHeight + heightOfBuilding, z)
+def build_floor(level, length_of_building, width_of_building, height_of_building, box_height, building):
+    for x in range(building.x, building.x + length_of_building):
+        for z in range(building.z, building.z + width_of_building):
+            utilityFunctions.setBlock(level, (am.Wood.ID, 0), x, box_height, z)
+            utilityFunctions.setBlock(level, (am.Obsidian.ID, 0), x, box_height + height_of_building, z)
 
-def build_black_smith(level, lengthOfBuilding, widthOfBuilding, heightOfBuilding, boxHeight, building):
+def build_black_smith(level, length_of_building, width_of_building, height_of_building, box_height, building):
 
-    removeTopSquareX = building.x + lengthOfBuilding - 3
+    removeTopSquareX = building.x + length_of_building - 3
     removeTopSquareZ = building.z + 2
 
     for x in range(building.x, removeTopSquareX):
-            utilityFunctions.setBlockToGround(level, (am.Wood.ID, 0), x, heightOfBuilding + boxHeight, building.z,
-                                          boxHeight)
-    for x in range(building.x, building.x + lengthOfBuilding):
-            utilityFunctions.setBlockToGround(level, (am.Wood.ID, 0), x, heightOfBuilding + boxHeight,
-                                          building.z + widthOfBuilding - 1,
-                                          boxHeight)
-    for x in range(removeTopSquareX, building.x + lengthOfBuilding):
-            utilityFunctions.setBlockToGround(level, (am.Wood.ID, 0), x, heightOfBuilding + boxHeight,
-                                          removeTopSquareZ,
-                                          boxHeight)
+            utilityFunctions.setBlockToGround(level, (am.Wood.ID, 0), x, height_of_building + box_height, building.z,
+                                              box_height)
+    for x in range(building.x, building.x + length_of_building):
+            utilityFunctions.setBlockToGround(level, (am.Wood.ID, 0), x, height_of_building + box_height,
+                                              building.z + width_of_building - 1,
+                                              box_height)
+    for x in range(removeTopSquareX, building.x + length_of_building):
+            utilityFunctions.setBlockToGround(level, (am.Wood.ID, 0), x, height_of_building + box_height,
+                                              removeTopSquareZ,
+                                              box_height)
 
-    for z in range(building.z, building.z + widthOfBuilding):
-            utilityFunctions.setBlockToGround(level, (am.Wood.ID, 0), building.x, heightOfBuilding + boxHeight, z,
-                                          boxHeight)
+    for z in range(building.z, building.z + width_of_building):
+            utilityFunctions.setBlockToGround(level, (am.Wood.ID, 0), building.x, height_of_building + box_height, z,
+                                              box_height)
     for z in range(building.z, removeTopSquareZ + 1):
             utilityFunctions.setBlockToGround(level, (am.Wood.ID, 0),
-                                          removeTopSquareX, heightOfBuilding + boxHeight, z,
-                                          boxHeight)
-    for z in range(building.z + widthOfBuilding - 1, removeTopSquareZ, -1):
-            utilityFunctions.setBlockToGround(level, (am.Wood.ID, 0), building.x + lengthOfBuilding - 1,
-                                        heightOfBuilding + boxHeight, z, boxHeight)
+                                              removeTopSquareX, height_of_building + box_height, z,
+                                              box_height)
+    for z in range(building.z + width_of_building - 1, removeTopSquareZ, -1):
+            utilityFunctions.setBlockToGround(level, (am.Wood.ID, 0), building.x + length_of_building - 1,
+                                              height_of_building + box_height, z, box_height)
 
-def build_floor_bs(level, lengthOfBuilding, widthOfBuilding, heightOfBuilding, boxHeight, building):
-    for x in range(building.x, building.x + lengthOfBuilding - 2):
-        for z in range(building.z, building.z + widthOfBuilding):
-            utilityFunctions.setBlock(level, (am.Wood.ID, 0), x, boxHeight, z)
-            utilityFunctions.setBlock(level, (am.Obsidian.ID, 0), x, boxHeight + heightOfBuilding, z)
-    for x in range(building.x + lengthOfBuilding - 2, building.x + lengthOfBuilding):
-        for z in range(building.z + widthOfBuilding -1, building.z + 1, -1):
-            utilityFunctions.setBlock(level, (am.Wood.ID, 0), x, boxHeight, z)
-            utilityFunctions.setBlock(level, (am.Obsidian.ID, 0), x, boxHeight + heightOfBuilding, z)
+def build_floor_bs(level, length_of_building, width_of_building, height_of_building, box_height, building):
+    for x in range(building.x, building.x + length_of_building - 2):
+        for z in range(building.z, building.z + width_of_building):
+            utilityFunctions.setBlock(level, (am.Wood.ID, 0), x, box_height, z)
+            utilityFunctions.setBlock(level, (am.Obsidian.ID, 0), x, box_height + height_of_building, z)
+    for x in range(building.x + length_of_building - 2, building.x + length_of_building):
+        for z in range(building.z + width_of_building - 1, building.z + 1, -1):
+            utilityFunctions.setBlock(level, (am.Wood.ID, 0), x, box_height, z)
+            utilityFunctions.setBlock(level, (am.Obsidian.ID, 0), x, box_height + height_of_building, z)
+
+def build_door(level, length_of_building, width_of_building, box_height, well_z, building):
+    if building.z < well_z:
+        building.z = building.z + width_of_building - 1
+
+    door_position = length_of_building / 2
+    for i in range(1, 3):
+        utilityFunctions.setBlock(level, (64, 1), building.x + door_position, box_height + i, building.z)
