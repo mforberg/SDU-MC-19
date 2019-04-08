@@ -2,15 +2,15 @@ import Generation
 import Fitness
 import Crossover
 import Mutation
+import CheckCriterias
 from variables.GA_VALUES import *
 import datetime
 
 
 class Genetic_Algorithm:
 
-    def run_genetic_algorithm(self, heightMap, boxWidth, boxHeigth, startingPoint):
-        
-        initGeneration = Generation.generate_population(heightMap, boxWidth, boxHeigth, startingPoint)
+    def run_genetic_algorithm(self, heightMap, boxX, boxZ, startingPoint):
+        initGeneration = Generation.generate_population(boxX, boxZ, startingPoint)
         currentGeneration = initGeneration
         """start of for-loop"""
         for x in range(0, GENERATIONS):
@@ -19,9 +19,10 @@ class Genetic_Algorithm:
             if x < GENERATIONS - 1:
                 newGenerationWithoutFitness = Crossover.create_new_population_from_old_one(generationWithFitness)
                 Mutation.mutate_population(newGenerationWithoutFitness)
-                currentGeneration = newGenerationWithoutFitness
+                currentGeneration = CheckCriterias.check_population(newGenerationWithoutFitness, boxX, boxZ, startingPoint)
             else:
                 finalGeneration = self.find_best_solution(generationWithFitness)
+                print(finalGeneration)
         """end of for-loop"""
 
         #print self.min_max_avg(withFitness)
@@ -53,4 +54,9 @@ class Genetic_Algorithm:
         return "MIN: {0}\tMAX: {1}\tAVG: {2}".format(round(minimum[1], 8), round(maximum[1], 8), round(average, 8))
 
     def find_best_solution(self, fitnessGeneration):
-        print("jo")
+        currentTop = 0
+        for solution in fitnessGeneration:
+            if solution[1] > currentTop:
+                currentTop = solution[1]
+                currentBest = solution[0]
+        return currentBest

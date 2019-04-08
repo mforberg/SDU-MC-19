@@ -10,8 +10,7 @@ from collections import OrderedDict
 
 am = alphaMaterials
 
-def build(level, boxHeight, xbuildings):
-    buildings = xbuildings[0]
+def build(level, boxHeight, buildings):
   #  MAT_DOOR = [(193, 1), (193, 3)]
    # utilityFunctions.setBlock(level, (64, 1), box.minx, 10, box.minz)
 
