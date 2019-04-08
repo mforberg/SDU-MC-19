@@ -10,8 +10,7 @@ from collections import OrderedDict
 
 am = alphaMaterials
 
-def build(level, box_height, xbuildings):
-    buildings = xbuildings[0]
+def build(level, heightmap, buildings):
 
 
     for building in buildings:
@@ -25,17 +24,18 @@ def build(level, box_height, xbuildings):
         width_of_building = building_copy[building.typeOfHouse]["zWidth"]
 
         houseType = building_copy[building.typeOfHouse]["floorAndRoof"]
-
+        print heightmap
+        y = heightmap[(building.x, building.z)][0]
         if building.typeOfHouse == "blackSmith":
-            build_floor_bs(level, length_of_building, width_of_building, height_of_building, box_height, building)
-            build_black_smith(level, length_of_building, width_of_building, height_of_building, box_height, building)
-            build_door(level, length_of_building, width_of_building, box_height, well_z, building)
+            build_floor_bs(level, length_of_building, width_of_building, height_of_building, y, building)
+            build_black_smith(level, length_of_building, width_of_building, height_of_building, y, building)
+            build_door(level, length_of_building, width_of_building, y, well_z, building)
         else:
-            build_walls(level, length_of_building, width_of_building, height_of_building, box_height, building)
+            build_walls(level, length_of_building, width_of_building, height_of_building, y, building)
             if houseType:
-                build_floor(level, length_of_building, width_of_building, height_of_building, box_height, building)
+                build_floor(level, length_of_building, width_of_building, height_of_building, y, building)
 
-                build_door(level, length_of_building, width_of_building, box_height, well_z, building)
+                build_door(level, length_of_building, width_of_building, y, well_z, building)
 
 
 def build_walls(level, length_of_building, width_of_building, height_of_building, box_height, building):
