@@ -2,15 +2,16 @@ import Generation
 import Fitness
 import Crossover
 import Mutation
+import time
 import CheckCriterias
 from variables.GA_VALUES import *
-import datetime
+
 
 
 class Genetic_Algorithm:
-
     def run_genetic_algorithm(self, heightMap, boxX, boxZ, startingPoint):
         initGeneration = Generation.generate_population(boxX, boxZ, startingPoint)
+
         currentGeneration = initGeneration
         """start of for-loop"""
         for x in range(0, GENERATIONS):
@@ -29,16 +30,22 @@ class Genetic_Algorithm:
                 print(finalGeneration)
         """end of for-loop"""
 
+
+        """
+        Runtimes for sections
+        InitGeneration: 9.985
+        FITNESS: 2.163
+        MINMAXAVG: 0.0
+        MUTATE: 0.007
+        """
+        """
+        11.05799 initGen
+        2.2326 Fitness
+        3.1375 Crossover
+        0.022988 Mutation
+        """
+        """ time testing in future: time.time() - time.time() = x seconds"""
         return finalGeneration
-
-
-        # """
-        # Runtimes for sections
-        # InitGeneration: 9.985
-        # FITNESS: 2.163
-        # MINMAXAVG: 0.0
-        # MUTATE: 0.007
-        # """
 
     def min_max_avg(self, data):
         maximum = data[0]
