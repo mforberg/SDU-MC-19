@@ -4,39 +4,39 @@ from variables.MC_LIBRARY import buildings
 
 
 def mutate_population(population):
-    mutation_count = 0
+    mutation_count_coord = 0
+    mutation_count_building = 0
     mutation_trigger = MUTATION_RATE * 100
-
-    mutate_house("normalHouse")
 
     for solution in population:
         buildinglist = solution
-
-        for i in buildinglist: # TODO: separate repeated code into method
+        for i in buildinglist:
 
             random_number_x = random_number_between_one_to_hundred()
             random_number_z = random_number_between_one_to_hundred()
-
-            mutate_coordinate(random_number_x, mutation_trigger, mutation_count, i.x) #mutate x
-            mutate_coordinate(random_number_z, mutation_trigger, mutation_count, i.z) #mutate z
-
             random_number_house = random_number_between_one_to_hundred()
 
-            if random_number_house <= mutation_trigger: # TODO: buildings might overlap post mutation not sure where to handle
-                mutation_count += 1
+            mutation_count_coord += mutate_coordinate(random_number_x, mutation_trigger, i.x) #mutate x
+            mutation_count_coord += mutate_coordinate(random_number_z, mutation_trigger, i.z) #mutate z
+
+            if random_number_house <= mutation_trigger:
                 if i.typeOfHouse == "well": #Do not mutate the well
                     continue
+                mutation_count_building+= 1
                 i.typeOfHouse = mutate_house(i.typeOfHouse)
 
-    number = float(mutation_count) / (POPULATION_SIZE * GENE_SIZE * 2) * 100
+    full_count = mutation_count_building+mutation_count_coord
+    number = float(full_count) / ((POPULATION_SIZE * GENE_SIZE * 2)+GENE_SIZE*POPULATION_SIZE) * 100
     percent = round(number, 3)
-    print "MUTATION TRIGGERED {0}/{1} TIMES ({2}%)".format(mutation_count, POPULATION_SIZE * GENE_SIZE * 2, percent)
+    print "{0} coordinates mutated, {1} buildings mutated".format(mutation_count_coord, mutation_count_building)
+    print "MUTATION TRIGGERED {0}/{1} TIMES ({2}%)".format(full_count, (POPULATION_SIZE * GENE_SIZE * 2)+GENE_SIZE*POPULATION_SIZE, percent)
 
 def random_number_between_one_to_hundred():
     return random.randint(1, 100)
 
 
-def mutate_coordinate(random_number, mutation_trigger, mutation_count, coordinate):
+def mutate_coordinate(random_number, mutation_trigger, coordinate):
+    mutation_count = 0
     if random_number <= mutation_trigger:
         mutation_count += 1
 
@@ -45,6 +45,7 @@ def mutate_coordinate(random_number, mutation_trigger, mutation_count, coordinat
             coordinate += decide_block_amount()
         else:
             coordinate -= decide_block_amount()
+    return mutation_count
 
 
 # TODO: Possibly change decide_block_amount() back to 1 instead of 1..3, ~900 mutations seems excessive
@@ -64,22 +65,26 @@ def decide_block_amount():
         return 0 # something fucky happened if you hit this
 
 
-# TODO: Random increment or decrement
-# TODO: Fix ERROR -> return sorted_buildings[index_plus_1][1] IndexError: list index out of range
 def mutate_house(house_to_mutate):
     sorted_buildings = get_buildings_by_size()
     for item in xrange(0, len(sorted_buildings)): #item is tuple (area_size, type)
         if sorted_buildings[item][1] == house_to_mutate:
             index_plus_1 = item+1
             index_minus_1 = item-1
-            print index_plus_1, "<-->", len(sorted_buildings)
-            if index_plus_1 <= len(sorted_buildings):
+            random_number = random_number_between_one_to_hundred()
+            if sorted_buildings[item][1] == sorted_buildings[0][1]: # Special case: Small houses shouldn't become churches
+                return sorted_buildings[index_plus_1][1]
+                break
+            if sorted_buildings[item][1] == sorted_buildings[5][1]: # Special case: Churches shouldn't become small houses
+                return sorted_buildings[index_minus_1][1]
+                break
+
+            if random_number > 50:
                 return sorted_buildings[index_plus_1][1]
             else:
-                print "- - - - - -"
-                print index_minus_1, "<-->", len(sorted_buildings)
-                print sorted_buildings[index_minus_1][1]
-                return sorted_buildings[item-1][1]
+                return sorted_buildings[index_minus_1][1]
+            break
+
 
 
 def get_buildings_by_size():
