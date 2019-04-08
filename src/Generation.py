@@ -30,7 +30,6 @@ def place_houses(boxX, boxZ, startingPoint):
         """We need a well at first"""
         if (houseNumber == 0):
             currentHouse = "well"
-            print("WELLLLLLLLLL")
         """Place the house's point at a random location, and check if the location works out"""
         successful = False
         while not successful:
@@ -41,7 +40,6 @@ def place_houses(boxX, boxZ, startingPoint):
                 for z in range(coordintate["z"], coordintate["z"] + buildingsCopy[currentHouse]["zWidth"]):
                     convertedCoordinate = (x, z)
                     if convertedCoordinate in blockedCoordinates.keys():
-                        print("SKIPPED: " + currentHouse)
                         tryAgain = True
                         break
                     else:

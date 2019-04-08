@@ -73,6 +73,7 @@ def find_ma_and_pa(totalFitness, popList):
 def it_is_baby_time(ma, pa):
     maList = well_first(ma[0])
     paList = well_first(pa[0])
+    paList = well_first(pa[0])
     child1 = []
     child2 = []
     """find which of ma and pa is smaller"""
