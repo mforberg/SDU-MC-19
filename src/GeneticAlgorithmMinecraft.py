@@ -16,7 +16,6 @@ class Genetic_Algorithm:
         """start of for-loop"""
         for x in range(0, GENERATIONS):
             print "- - - - - - - - - - - -"
-            print len(currentGeneration)
             print "CURRENT GEN: ", x
             generationWithFitness = Fitness.population_fitness(currentGeneration, heightMap)
             print self.min_max_avg(generationWithFitness)
