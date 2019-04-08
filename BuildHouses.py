@@ -12,7 +12,6 @@ am = alphaMaterials
 
 def build(level, heightmap, buildings):
 
-
     for building in buildings:
         if building.typeOfHouse == "well":
             well_z = building.z
