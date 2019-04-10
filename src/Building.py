@@ -135,6 +135,36 @@ class Building:
                     self.buildingsCopy[house.typeOfHouse]["xLength"] / float(2))
         return {"calculationPoint1": calculationPoint1, "calculationPoint2": calculationPoint2}
 
+    def check_if_house_is_within(self, house):
+        this_min_x = self.x
+        this_max_x = self.x + self.buildingsCopy[self.typeOfHouse]["xLength"]
+        this_min_z = self.z
+        this_max_z = self.z + self.buildingsCopy[self.typeOfHouse]["zWidth"]
+
+        house_min_x = house.x
+        house_max_x = house.x + self.buildingsCopy[house.typeOfHouse]["xLength"]
+        house_min_z = house.z
+        house_max_z = house.z + self.buildingsCopy[house.typeOfHouse]["zWidth"]
+        """simply check if any of the four corners are within this house"""
+        if this_min_x <= house_min_x <= this_max_x and this_min_z <= house_min_z <= this_max_z:
+            return True
+        if this_min_x <= house_min_x <= this_max_x and this_min_z <= house_max_z <= this_max_z:
+            return True
+        if this_min_x <= house_max_x <= this_max_x and this_min_z <= house_min_z <= this_max_z:
+            return True
+        if this_min_x <= house_max_x <= this_max_x and this_min_z <= house_max_z <= this_max_z:
+            return True
+        """simply check if any of the four corners of this is within the other house"""
+        if house_min_x <= this_min_x <= house_max_x and house_min_z <= this_min_z <= house_max_z:
+            return True
+        if house_min_x <= this_min_x <= house_max_x and house_min_z <= this_max_z <= house_max_z:
+            return True
+        if house_min_x <= this_max_x <= house_max_x and house_min_z <= this_min_z <= house_max_z:
+            return True
+        if house_min_x <= this_max_x <= house_max_x and house_min_z <= this_max_z <= house_max_z:
+            return True
+        """if we passed all these if statements, we are not within the building"""
+        return False
 
 
 
