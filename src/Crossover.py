@@ -39,8 +39,8 @@ def choose_parents(population):
     """create wheel of fortune"""
     for solution in population:
         popList.append(solution)
-        totalFitness += solution[1]
-
+        if solution[1] > 0:
+            totalFitness += solution[1]
     """find parents pair"""
     parents = list()
     for i in range(0, POPULATION_SIZE / 2):
@@ -51,13 +51,16 @@ def choose_parents(population):
 def find_ma_and_pa(totalFitness, popList):
     ma = popList[0]
     randomNumber = random.randint(0, int(totalFitness))
+    """find out who the random number corresponds to"""
     for i in xrange(0, POPULATION_SIZE):
         ma = popList[i]
-        if randomNumber > popList[i][1]:
-            randomNumber -= popList[i][1]
-        else:
-            ma = popList[i]
-            break
+        """only if the score is above 0 we will check it"""
+        if popList[i][1] > 0:
+            if randomNumber > popList[i][1]:
+                randomNumber -= popList[i][1]
+            else:
+                ma = popList[i]
+                break
     pa = popList[0]
     randomNumber = random.randint(0, int(totalFitness))
     for i in xrange(0, POPULATION_SIZE):
@@ -72,7 +75,6 @@ def find_ma_and_pa(totalFitness, popList):
 
 def it_is_baby_time(ma, pa):
     maList = well_first(ma[0])
-    paList = well_first(pa[0])
     paList = well_first(pa[0])
     child1 = []
     child2 = []
