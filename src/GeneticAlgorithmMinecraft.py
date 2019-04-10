@@ -11,7 +11,6 @@ from variables.GA_VALUES import *
 class Genetic_Algorithm:
     def run_genetic_algorithm(self, heightMap, boxX, boxZ, startingPoint):
         initGeneration = Generation.generate_population(boxX, boxZ, startingPoint)
-
         currentGeneration = initGeneration
         """start of for-loop"""
         for x in range(0, GENERATIONS):
@@ -26,9 +25,7 @@ class Genetic_Algorithm:
                 currentGeneration = CheckCriterias.check_population(newGenerationWithoutFitness, boxX, boxZ, startingPoint)
             else:
                 finalGeneration = self.find_best_solution(generationWithFitness)
-                print(finalGeneration)
         """end of for-loop"""
-
 
         """
         Runtimes for sections
@@ -42,6 +39,20 @@ class Genetic_Algorithm:
         2.2326 Fitness
         3.1375 Crossover
         0.022988 Mutation
+        """
+        """
+        avg time for fitness:
+        0.631109833717
+        crossover:
+        0.03
+        mutation:
+        0.006
+        checkcriterias with no commented out code:
+        3.52894238063
+        with comment:
+        same
+        
+        
         """
         """ time testing in future: time.time() - time.time() = x seconds"""
         return finalGeneration
