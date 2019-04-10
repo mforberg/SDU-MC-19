@@ -63,7 +63,7 @@ def create_two_dimensional_height_map(level, box):
                     current_block = level.blockAt(x, current_reference_point, z)
                 y = current_reference_point
                 position_dict[x, z] = [y, current_block]
-                if(only_update_once):
+                if only_update_once:
                     only_update_once = False
                     x_reference_point = y
             else:

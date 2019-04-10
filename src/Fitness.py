@@ -3,15 +3,15 @@ import MapAnalysis
 from variables.MC_LIBRARY import *
 
 
-def population_fitness(population, heightMap):
-    fullpop_with_fitness = list()
+def population_fitness(population, height_map):
+    full_pop_with_fitness = list()
     for solution in population:
-        fitness = solution_fitness(solution, heightMap)
-        innerList = list()
-        innerList.append(solution)
-        innerList.append(fitness)
-        fullpop_with_fitness.append(innerList)
-    return fullpop_with_fitness
+        fitness = solution_fitness(solution, height_map)
+        inner_list = list()
+        inner_list.append(solution)
+        inner_list.append(fitness)
+        full_pop_with_fitness.append(inner_list)
+    return full_pop_with_fitness
 
 
 def solution_fitness(solution, height_map):
@@ -39,7 +39,7 @@ def solution_fitness(solution, height_map):
         unique_buildings.add(building.typeOfHouse)
     float_length = len(unique_buildings)
     percent_of_max_possible = float(float_length) / len(get_placeable_buildings())
-    fitness_score += variance_weight *(variance_max_score * math.pow(percent_of_max_possible, 2))
+    fitness_score += variance_weight * (variance_max_score * math.pow(percent_of_max_possible, 2))
     """ END OF VARIANCE FITNESS """
     return fitness_score
 
@@ -50,13 +50,15 @@ def distance_between(house1, house2):
     a = float(-4) / 45
     b = float(16) / 3
     c = 0
-    distanceScore = a * math.pow(distance, 2) + b * distance + c
-    # """we dont want score under zero"""
-    # if distanceScore < 0:
-    #     distanceScore = 0
-    # elif distanceScore > 50:
-    #     distanceScore = 100
-    return distanceScore
+    score = a * math.pow(distance, 2) + b * distance + c
+    """we don't want score too much under zero"""
+    if score < 0:
+        score = 0
+    # if score < 0:
+    #     score = 0
+    # elif score > 50:
+    #     score = 100
+    return score
 
 
 def check_area(building, height_map):
@@ -85,7 +87,7 @@ def check_area(building, height_map):
     score = 100 - int(round(average / 10))
     """subtract extra for water"""
     score -= amount_of_water * 6
-    # """we dont want score under zero"""
-    # if score < 0:
-    #     score = 0
+    """we don't want score too much under zero"""
+    if score < 0:
+        score = 0
     return score

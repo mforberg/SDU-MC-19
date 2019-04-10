@@ -2,133 +2,133 @@ import random
 from variables.GA_VALUES import *
 
 
-def create_new_population_from_old_one(oldGeneration):
-    newPopulation = list()
+def create_new_population_from_old_one(old_generation):
+    new_population = list()
     """Find the elites"""
-    elites = get_elites(oldGeneration)
-    newPopulation.extend(elites)
+    elites = get_elites(old_generation)
+    new_population.extend(elites)
     """calculate the remaining space"""
-    remainingSpace = POPULATION_SIZE - len(elites)
+    remaining_space = POPULATION_SIZE - len(elites)
     """if there is any space left in the population, run the while loop"""
-    if remainingSpace <= 0:
+    if remaining_space <= 0:
         full = True
     else:
         full = False
     """while there is space in the population, fill it up with children"""
     while not full:
-        parents = choose_parents(oldGeneration)
+        parents = choose_parents(old_generation)
         children = it_is_baby_time(parents[0]["ma"], parents[0]["pa"])
         """use both children if the remaining space is even, use only one if it is odd"""
-        if remainingSpace % 2 == 0:
-            newPopulation.append(children[0])
-            newPopulation.append(children[1])
-            remainingSpace -= 2
+        if remaining_space % 2 == 0:
+            new_population.append(children[0])
+            new_population.append(children[1])
+            remaining_space -= 2
         else:
-            newPopulation.append(children[0])
-            remainingSpace -= 1
+            new_population.append(children[0])
+            remaining_space -= 1
         """check if there is any remaining space"""
-        if remainingSpace <= 0:
+        if remaining_space <= 0:
             full = True
     """return the new population"""
-    return newPopulation
+    return new_population
 
 
 def choose_parents(population):
-    popList = list()
-    totalFitness = 0
+    pop_list = list()
+    total_fitness = 0
     """create wheel of fortune"""
     for solution in population:
-        popList.append(solution)
+        pop_list.append(solution)
         if solution[1] > 0:
-            totalFitness += solution[1]
+            total_fitness += solution[1]
     """find parents pair"""
     parents = list()
     for i in range(0, POPULATION_SIZE / 2):
-        parents.append(find_ma_and_pa(totalFitness, popList))
+        parents.append(find_ma_and_pa(total_fitness, pop_list))
     return parents
 
 
-def find_ma_and_pa(totalFitness, popList):
-    ma = popList[0]
-    randomNumber = random.randint(0, int(totalFitness))
+def find_ma_and_pa(total_fitness, pop_list):
+    ma = pop_list[0]
+    random_number = random.randint(1, int(total_fitness))
     """find out who the random number corresponds to"""
     for i in xrange(0, POPULATION_SIZE):
-        ma = popList[i]
-        """only if the score is above 0 we will check it"""
-        if popList[i][1] > 0:
-            if randomNumber > popList[i][1]:
-                randomNumber -= popList[i][1]
+        ma = pop_list[i]
+        """only if the score is above 0 it will be check it"""
+        if pop_list[i][1] > 0:
+            if random_number > pop_list[i][1]:
+                random_number -= pop_list[i][1]
             else:
-                ma = popList[i]
+                ma = pop_list[i]
                 break
-    pa = popList[0]
-    randomNumber = random.randint(0, int(totalFitness))
+    pa = pop_list[0]
+    random_number = random.randint(1, int(total_fitness))
     for i in xrange(0, POPULATION_SIZE):
-        pa = popList[i]
-        if randomNumber > popList[i][1]:
-            randomNumber -= popList[i][1]
+        pa = pop_list[i]
+        if random_number > pop_list[i][1]:
+            random_number -= pop_list[i][1]
         else:
-            pa = popList[i]
+            pa = pop_list[i]
             break
     return {"ma": ma, "pa": pa}
 
 
 def it_is_baby_time(ma, pa):
-    maList = well_first(ma[0])
-    paList = well_first(pa[0])
+    ma_list = well_first(ma[0])
+    pa_list = well_first(pa[0])
     child1 = []
     child2 = []
     """find which of ma and pa is smaller"""
-    if len(maList) < len(paList):
-        longestnr = len(paList)
-        shortestnr = len(maList)
-        first = maList
-        second = paList
+    if len(ma_list) < len(pa_list):
+        longest_nr = len(pa_list)
+        shortest_nr = len(ma_list)
+        first = ma_list
+        second = pa_list
         """single-point crossover (random point)"""
-        point = random.randint(0, shortestnr)
+        point = random.randint(0, shortest_nr)
     else:
-        longestnr = len(maList)
-        shortestnr = len(paList)
-        first = paList
-        second = maList
+        longest_nr = len(ma_list)
+        shortest_nr = len(pa_list)
+        first = pa_list
+        second = ma_list
         """single-point crossover (random point)"""
-        point = random.randint(0, shortestnr)
+        point = random.randint(0, shortest_nr)
     """start adding buildings to the children"""
-    geneChanger = False
-    for i in range(0, longestnr):
+    gene_changer = False
+    for i in range(0, longest_nr):
         if point == i:
-            geneChanger = not geneChanger
-        if geneChanger:
-            if shortestnr > i:
+            gene_changer = not gene_changer
+        if gene_changer:
+            if shortest_nr > i:
                 child1.append(first[i])
             child2.append(second[i])
         else:
-            if shortestnr > i:
+            if shortest_nr > i:
                 child2.append(first[i])
             child1.append(second[i])
     return [child1, child2]
 
 
-def get_elites(oldGeneration):
+def get_elites(old_generation):
     elites = list()
     """sort so the elites are first"""
-    elitesFirst = sorted(oldGeneration, key=lambda solution: solution[1], reverse=True)
+    elites_first = sorted(old_generation, key=lambda solution: solution[1], reverse=True)
     """find how many of the elites is wanted"""
     amount = int(round(ELITES_PERCENTAGE * POPULATION_SIZE))
     """get the elites and put them in another list"""
     for i in range(0, amount):
-        elites.append(elitesFirst[i][0])
+        elites.append(elites_first[i][0])
     return elites
 
 
 def well_first(parent):
-    newList = list()
-    extraList = list()
+    new_list = list()
+    extra_list = list()
     for building in parent:
         if building.typeOfHouse == "well":
-            newList.append(building)
+            new_list.append(building)
         else:
-            extraList.append(building)
-    for building in extraList:
-        newList.append(building)
-    return newList
+            extra_list.append(building)
+    for building in extra_list:
+        new_list.append(building)
+    return new_list
