@@ -11,7 +11,8 @@ def deforest_area(list_of_buildings, list_of_roads, heightmap, level):
 
 
 def find_bounds(list_of_buildings):
-
+    for b in list_of_buildings:
+        print b.typeOfHouse
     min_x = list_of_buildings[0].x
     max_x = list_of_buildings[0].x
 

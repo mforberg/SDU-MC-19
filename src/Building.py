@@ -6,6 +6,7 @@ class Building:
         self.x = x
         self.z = z
         self.typeOfHouse = type_of_house
+        self.path_connection_point = tuple()
         self.buildingsCopy = MC_LIBRARY.buildings
 
     def distance_between_building(self, house):
@@ -137,3 +138,17 @@ class Building:
             return True
         """if we passed all these if statements, we are not within the building"""
         return False
+
+
+    def set_connection_point(self, well):
+        x = self.x
+        z = self.z
+
+        if z < well.z:
+            z += self.buildingsCopy[self.typeOfHouse]["zWidth"] - 1
+        x += self.buildingsCopy[self.typeOfHouse]["xLength"] / 2
+        self.path_connection_point = (x, z)
+
+
+
+

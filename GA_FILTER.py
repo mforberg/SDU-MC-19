@@ -19,3 +19,5 @@ def perform(level, box, options):
     find_bounds(result)
     CA.modify_area(height_map, result, level)
     BH.build(level, height_map, result)
+    for b in result:
+        print b.door_position, "<-- pos"
