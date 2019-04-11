@@ -1,10 +1,11 @@
 # noinspection PyUnresolvedReferences
 import utilityFunctions
-from src import GeneticAlgorithmMinecraft as GAM, MapAnalysis as MA, ClearArea as CA
-import BuildHouses as BH
+from src import MapAnalysis as MA
+from src.genetic_algorithm import ClearArea as CA, GeneticAlgorithmMinecraft as GAM
+from src.build import BuildHouses as BH
 # noinspection PyUnresolvedReferences
 from pymclevel import alphaMaterials as am
-from src.Deforestation import find_bounds
+from src.prepare_solution.Deforestation import find_bounds
 
 
 def perform(level, box, options):
@@ -19,5 +20,3 @@ def perform(level, box, options):
     find_bounds(result)
     CA.modify_area(height_map, result, level)
     BH.build(level, height_map, result)
-    for b in result:
-        print b.door_position, "<-- pos"

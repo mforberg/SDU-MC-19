@@ -1,5 +1,5 @@
 import math
-import MapAnalysis
+import src.MapAnalysis
 from variables.MC_LIBRARY import *
 from variables.GA_VALUES import *
 
@@ -52,7 +52,7 @@ def distance_between(house1, house2):
 
 
 def check_area(building, height_map):
-    analysis = MapAnalysis.find_average_height(building, height_map, True)
+    analysis = src.MapAnalysis.find_average_height(building, height_map, True)
     average = analysis[0]
     amount_of_water = analysis[1]
 
