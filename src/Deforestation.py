@@ -5,8 +5,9 @@ from pymclevel import alphaMaterials
 
 
 
-def deforest_area(list_of_buildings, heightmap, level):
+def deforest_area(list_of_buildings, list_of_roads, heightmap, level):
     print "do stuff"
+    find_bounds(list_of_buildings)
 
 
 def find_bounds(list_of_buildings):
