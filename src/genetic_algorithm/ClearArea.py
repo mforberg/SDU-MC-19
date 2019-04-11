@@ -1,5 +1,5 @@
 from variables.MC_LIBRARY import *
-import MapAnalysis
+import src.MapAnalysis
 # noinspection PyUnresolvedReferences
 import utilityFunctions
 # noinspection PyUnresolvedReferences
@@ -8,7 +8,7 @@ from pymclevel import alphaMaterials as am
 
 def modify_area(height_map, solution, level):
     for building in solution:
-        average_height = MapAnalysis.find_average_height(building, height_map, False)
+        average_height = src.MapAnalysis.find_average_height(building, height_map, False)
         for x in xrange(building.x, building.x + buildings[building.type_of_house]["xLength"]):
             for z in xrange(building.z, building.z + buildings[building.type_of_house]["zWidth"]):
                 zero_difference = False

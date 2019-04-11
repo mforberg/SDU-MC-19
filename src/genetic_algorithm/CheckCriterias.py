@@ -1,5 +1,5 @@
 from variables.MC_LIBRARY import *
-import Generation
+import src.genetic_algorithm.Generation
 
 
 def check_population(population, box_x, box_z, starting_point):
@@ -9,7 +9,7 @@ def check_population(population, box_x, box_z, starting_point):
             checked_population.append(solution)
         else:
             """If the solution does not meet the criterias"""
-            checked_population.append(Generation.generate_solution(box_x, box_z, starting_point))
+            checked_population.append(src.genetic_algorithm.Generation.generate_solution(box_x, box_z, starting_point))
     return checked_population
 
 

@@ -1,4 +1,4 @@
-import Building
+import src.Building
 from variables.MC_LIBRARY import *
 from variables.GA_VALUES import *
 
@@ -34,7 +34,7 @@ def place_building(box_x, box_z, starting_point, current_house, list_of_building
     while not successful:
         try_again = False
         coordinate = place_house_point_randomly(box_x, box_z, starting_point, current_house)
-        building = Building.Building(coordinate["x"], coordinate["z"], current_house)
+        building = src.Building.Building(coordinate["x"], coordinate["z"], current_house)
         for building2 in list_of_buildings:
             if building.check_if_house_is_within(building2):
                 try_again = True

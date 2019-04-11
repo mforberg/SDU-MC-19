@@ -5,13 +5,15 @@ from variables.MC_LIBRARY import buildings as building_copy
 from pymclevel import alphaMaterials as am
 # noinspection PyUnresolvedReferences
 from mcplatform import *
+from src.Building import *
 
 
 def build(level, height_map, buildings):
 
     for building in buildings:
         if building.type_of_house == "well":
-            well_z = building.z
+            well = building
+            break
 
     for building in buildings:
 
@@ -24,14 +26,15 @@ def build(level, height_map, buildings):
 
         if building.type_of_house == "blackSmith":
             build_floor_bs(level, length_of_building, width_of_building, height_of_building, y, building)
+
             build_black_smith(level, length_of_building, width_of_building, height_of_building, y, building)
-            build_door(level, length_of_building, width_of_building, y, well_z, building)
+            #build_door(level, y, well, building)
         else:
             build_walls(level, length_of_building, width_of_building, height_of_building, y, building)
             if house_type:
                 build_floor(level, length_of_building, width_of_building, height_of_building, y, building)
 
-                build_door(level, length_of_building, width_of_building, y, well_z, building)
+                #build_door(level, length_of_building, width_of_building, y, well, building)
 
 
 def build_walls(level, length_of_building, width_of_building, height_of_building, box_height, building):
@@ -96,10 +99,12 @@ def build_floor_bs(level, length_of_building, width_of_building, height_of_build
             utilityFunctions.setBlock(level, (am.Obsidian.ID, 0), x, box_height + height_of_building, z)
 
 
-def build_door(level, length_of_building, width_of_building, box_height, well_z, building):
+def build_door(level, box_height, well, building):
     if building.z < well_z:
         building.z = building.z + width_of_building - 1
 
     door_position = length_of_building / 2
     for i in range(1, 3):
         utilityFunctions.setBlock(level, (64, 1), building.x + door_position, box_height + i, building.z)
+
+    Building.set_connection_point(well)
