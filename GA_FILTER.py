@@ -2,7 +2,7 @@
 import utilityFunctions
 from src import MapAnalysis as MA
 from src.genetic_algorithm import ClearArea as CA, GeneticAlgorithmMinecraft as GAM
-from src.build import BuildHouses as BH
+from src.build_solution import BuildHouses as BH
 # noinspection PyUnresolvedReferences
 from pymclevel import alphaMaterials as am
 from src.prepare_solution.Deforestation import find_bounds
