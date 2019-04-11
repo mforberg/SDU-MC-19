@@ -17,6 +17,9 @@ def perform(level, box, options):
 
     gam = GAM.Genetic_Algorithm()
     result = gam.run_genetic_algorithm(height_map, box.maxx - box.minx, box.maxz - box.minz, starting_point)
-    find_bounds(result)
+    # set connection points
+    # a star
+    # deforest(list_of_buildings, a_star)
     CA.modify_area(height_map, result, level)
+    # place roads
     BH.build(level, height_map, result)
