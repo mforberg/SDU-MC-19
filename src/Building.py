@@ -2,34 +2,31 @@ import math
 from variables import MC_LIBRARY
 
 class Building:
-    def __init__(self, x, z, typeOfHouse):
+    def __init__(self, x, z, type_of_house):
         self.x = x
         self.z = z
-        self.typeOfHouse = typeOfHouse
+        self.typeOfHouse = type_of_house
         self.buildingsCopy = MC_LIBRARY.buildings
 
     def distance_between_building(self, house):
         # find the middle of each building
-        thisMiddlePoint = {"x": self.x + (self.buildingsCopy[self.typeOfHouse]["xLength"] / float(2)),
-                           "z": self.z + (self.buildingsCopy[self.typeOfHouse]["zWidth"] / float(2))}
-        houseMiddlePoint = {"x": house.x + (self.buildingsCopy[house.typeOfHouse]["xLength"] / float(2)),
-                            "z": house.z + (self.buildingsCopy[house.typeOfHouse]["zWidth"] / float(2))}
+        this_middle_point = {"x": self.x + (self.buildingsCopy[self.typeOfHouse]["xLength"] / float(2)),
+                             "z": self.z + (self.buildingsCopy[self.typeOfHouse]["zWidth"] / float(2))}
+        house_middle_point = {"x": house.x + (self.buildingsCopy[house.typeOfHouse]["xLength"] / float(2)),
+                              "z": house.z + (self.buildingsCopy[house.typeOfHouse]["zWidth"] / float(2))}
 
         """Check if there is overlapping"""
-        thisMinX = self.x
-        thisMaxX = self.x + self.buildingsCopy[self.typeOfHouse]["xLength"]
-        thisMinZ = self.z
-        thisMaxZ = self.z + self.buildingsCopy[self.typeOfHouse]["zWidth"]
-        houseMinX = house.x
-        houseMaxX = house.x + self.buildingsCopy[house.typeOfHouse]["xLength"]
-        houseMinZ = house.z
-        houseMaxZ = house.z + self.buildingsCopy[house.typeOfHouse]["zWidth"]
+        this_min_x = self.x
+        this_max_x = self.x + self.buildingsCopy[self.typeOfHouse]["xLength"]
+        this_min_z = self.z
+        this_max_z = self.z + self.buildingsCopy[self.typeOfHouse]["zWidth"]
+        house_min_x = house.x
+        house_max_x = house.x + self.buildingsCopy[house.typeOfHouse]["xLength"]
+        house_min_z = house.z
+        house_max_z = house.z + self.buildingsCopy[house.typeOfHouse]["zWidth"]
 
         overlapping = False
-        #houseInside = False
-        #thisInside = False
-        #insideDirectionX = False
-        overlappingDirectionX = False
+        overlapping_direction_x = False
 
         """overlapping in form of the houses' points being within one another
         1: if the minimum x value for the house parameter the function is being called with is between min and max
@@ -37,101 +34,76 @@ class Building:
         3: if the minimum z value for the house parameter the function is being called with is between min and max
         4: if the maximum z value for the house parameter the function is being called with is between min and max
         """
-        if thisMinX < houseMinX < thisMaxX:
+        if this_min_x < house_min_x < this_max_x:
             overlapping = True
-            overlappingDirectionX = True
-        elif thisMinX < houseMaxX < thisMaxX:
+            overlapping_direction_x = True
+        elif this_min_x < house_max_x < this_max_x:
             overlapping = True
-            overlappingDirectionX = True
-        elif thisMinZ < houseMinZ < thisMaxZ:
+            overlapping_direction_x = True
+        elif this_min_z < house_min_z < this_max_z:
             overlapping = True
-        elif thisMinZ < houseMaxZ < thisMaxZ:
+        elif this_min_z < house_max_z < this_max_z:
             overlapping = True
-
-
-        # """overlapping in form of one house being "inside" the other
-        # 1: if the house the function is being called on is within the other one (x)
-        # 2: if the house the function is being called on is within the other one (z)
-        # 3: if the house parameter the function is being called with is within the other one (x)
-        # 4: if the house parameter the function is being called with is within the other one (z)
-        # """
-        # if thisMinX > houseMinX and thisMaxX < houseMaxX:
-        #     thisInside = True
-        #     insideDirectionX = True
-        # elif thisMinZ > houseMinZ and thisMaxZ < houseMaxZ:
-        #     thisInside = True
-        # elif houseMinX > thisMinX and houseMaxX < thisMaxX:
-        #     houseInside = True
-        #     insideDirectionX = True
-        # elif houseMinZ > thisMinZ and houseMaxZ < thisMaxZ:
-        #     houseInside = True
 
         """depending on the relation to each other, calculation of distance points changes"""
         right = False
         down = False
         """if this building is more east of the other building"""
-        if thisMiddlePoint["x"] > houseMiddlePoint["x"]:
+        if this_middle_point["x"] > house_middle_point["x"]:
             right = True
         """if this building is more south of the other building"""
-        if thisMiddlePoint["z"] > houseMiddlePoint["z"]:
+        if this_middle_point["z"] > house_middle_point["z"]:
             down = True
 
         if overlapping:
-            pointsDict = self.__inside_case(house, thisMiddlePoint, houseMiddlePoint,
-                                            overlappingDirectionX)
-            calculationPoint1 = pointsDict["calculationPoint1"]
-            calculationPoint2 = pointsDict["calculationPoint2"]
-        # elif houseInside:
-        #     right = not right
-        #     down = not down
-        #     pointsDict = self.__inside_case(house, self, buildingsCopy, houseMiddlePoint, thisMiddlePoint,
-        #                                     overlappingDirectionX)
-        #     calculationPoint1 = pointsDict["calculationPoint1"]
-        #     calculationPoint2 = pointsDict["calculationPoint2"]
+            points_dict = self.__inside_case(house, this_middle_point, house_middle_point,
+                                            overlapping_direction_x)
+            calculation_point1 = points_dict["calculation_point1"]
+            calculation_point2 = points_dict["calculation_point2"]
         else:
-            pointsDict = self.__corner_case(house, thisMiddlePoint, houseMiddlePoint, right, down)
-            calculationPoint1 = pointsDict["calculationPoint1"]
-            calculationPoint2 = pointsDict["calculationPoint2"]
+            points_dict = self.__corner_case(house, this_middle_point, house_middle_point, right, down)
+            calculation_point1 = points_dict["calculation_point1"]
+            calculation_point2 = points_dict["calculation_point2"]
 
         """the points have now been found, and pythagoras is used to calculate the distance"""
-        x = math.pow(calculationPoint1["x"] - calculationPoint2["x"], 2)
-        z = math.pow(calculationPoint1["z"] - calculationPoint2["z"], 2)
+        x = math.pow(calculation_point1["x"] - calculation_point2["x"], 2)
+        z = math.pow(calculation_point1["z"] - calculation_point2["z"], 2)
         distance = math.sqrt(x + z)
         return distance
 
-    def __corner_case(self, house, thisMiddlePoint, houseMiddlePoint, right, down):
-        calculationPoint1 = {}
-        calculationPoint2 = {}
+    def __corner_case(self, house, this_middle_point, house_middle_point, right, down):
+        calculation_point1 = {}
+        calculation_point2 = {}
         if right:
-            calculationPoint1["x"] = thisMiddlePoint["x"] - (self.buildingsCopy[self.typeOfHouse]["xLength"] / float(2))
-            calculationPoint2["x"] = houseMiddlePoint["x"] + (self.buildingsCopy[house.typeOfHouse]["xLength"] / float(2))
+            calculation_point1["x"] = this_middle_point["x"] - (self.buildingsCopy[self.typeOfHouse]["xLength"] / float(2))
+            calculation_point2["x"] = house_middle_point["x"] + (self.buildingsCopy[house.typeOfHouse]["xLength"] / float(2))
         else:
-            calculationPoint1["x"] = thisMiddlePoint["x"] + (self.buildingsCopy[self.typeOfHouse]["xLength"] / float(2))
-            calculationPoint2["x"] = houseMiddlePoint["x"] - (self.buildingsCopy[house.typeOfHouse]["xLength"] / float(2))
+            calculation_point1["x"] = this_middle_point["x"] + (self.buildingsCopy[self.typeOfHouse]["xLength"] / float(2))
+            calculation_point2["x"] = house_middle_point["x"] - (self.buildingsCopy[house.typeOfHouse]["xLength"] / float(2))
         if down:
-            calculationPoint1["z"] = thisMiddlePoint["z"] - (self.buildingsCopy[self.typeOfHouse]["zWidth"] / float(2))
-            calculationPoint2["z"] = houseMiddlePoint["z"] + (self.buildingsCopy[house.typeOfHouse]["zWidth"] / float(2))
+            calculation_point1["z"] = this_middle_point["z"] - (self.buildingsCopy[self.typeOfHouse]["zWidth"] / float(2))
+            calculation_point2["z"] = house_middle_point["z"] + (self.buildingsCopy[house.typeOfHouse]["zWidth"] / float(2))
         else:
-            calculationPoint1["z"] = thisMiddlePoint["z"] + (self.buildingsCopy[self.typeOfHouse]["zWidth"] / float(2))
-            calculationPoint2["z"] = houseMiddlePoint["z"] - (self.buildingsCopy[house.typeOfHouse]["zWidth"] / float(2))
-        return {"calculationPoint1": calculationPoint1, "calculationPoint2": calculationPoint2}
+            calculation_point1["z"] = this_middle_point["z"] + (self.buildingsCopy[self.typeOfHouse]["zWidth"] / float(2))
+            calculation_point2["z"] = house_middle_point["z"] - (self.buildingsCopy[house.typeOfHouse]["zWidth"] / float(2))
+        return {"calculation_point1": calculation_point1, "calculation_point2": calculation_point2}
 
-    def __inside_case(self, house, insideMiddlePoint, outsideMiddlePoint, insideDirectionX):
+    def __inside_case(self, house, inside_middle_point, outside_middle_point, inside_direction_x):
         calculationPoint1 = {}
         calculationPoint2 = {}
-        if insideDirectionX:
+        if inside_direction_x:
             calculationPoint1["x"] = 0
             calculationPoint2["x"] = 0
-            calculationPoint1["z"] = insideMiddlePoint["z"] - (
+            calculationPoint1["z"] = inside_middle_point["z"] - (
                     self.buildingsCopy[self.typeOfHouse]["zWidth"] / float(2))
-            calculationPoint2["z"] = outsideMiddlePoint["z"] + (
+            calculationPoint2["z"] = outside_middle_point["z"] + (
                     self.buildingsCopy[house.typeOfHouse]["zWidth"] / float(2))
         else:
             calculationPoint1["z"] = 0
             calculationPoint2["z"] = 0
-            calculationPoint1["x"] = insideMiddlePoint["x"] - (
+            calculationPoint1["x"] = inside_middle_point["x"] - (
                     self.buildingsCopy[self.typeOfHouse]["xLength"] / float(2))
-            calculationPoint2["x"] = outsideMiddlePoint["x"] + (
+            calculationPoint2["x"] = outside_middle_point["x"] + (
                     self.buildingsCopy[house.typeOfHouse]["xLength"] / float(2))
         return {"calculationPoint1": calculationPoint1, "calculationPoint2": calculationPoint2}
 
@@ -165,34 +137,3 @@ class Building:
             return True
         """if we passed all these if statements, we are not within the building"""
         return False
-
-
-
-"""calculationPoint1 = {}
-        calculationPoint2 = {}
-        if insideDirectionX:
-            calculationPoint1["x"] = 0
-            calculationPoint2["x"] = 0
-            if down:
-                calculationPoint1["z"] = insideMiddlePoint["z"] - (
-                        buildingsCopy[insideHouse.typeOfHouse]["zWidth"] / float(2))
-                calculationPoint2["z"] = outsideMiddlePoint["z"] + (
-                        buildingsCopy[outsideHouse.typeOfHouse]["zWidth"] / float(2))
-            else:
-                calculationPoint1["z"] = insideMiddlePoint["z"] + (
-                        buildingsCopy[insideHouse.typeOfHouse]["zWidth"] / float(2))
-                calculationPoint2["z"] = outsideMiddlePoint["z"] - (
-                        buildingsCopy[outsideHouse.typeOfHouse]["zWidth"] / float(2))
-        else:
-            calculationPoint1["z"] = 0
-            calculationPoint2["z"] = 0
-            if right:
-                calculationPoint1["x"] = insideMiddlePoint["x"] - (
-                        buildingsCopy[insideHouse.typeOfHouse]["xLength"] / float(2))
-                calculationPoint2["x"] = outsideMiddlePoint["x"] + (
-                        buildingsCopy[outsideHouse.typeOfHouse]["xLength"] / float(2))
-            else:
-                calculationPoint1["x"] = insideMiddlePoint["x"] + (
-                        buildingsCopy[insideHouse.typeOfHouse]["xLength"] / float(2))
-                calculationPoint2["x"] = outsideMiddlePoint["x"] - (
-                        buildingsCopy[outsideHouse.typeOfHouse]["xLength"] / float(2))"""
