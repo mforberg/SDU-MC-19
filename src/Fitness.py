@@ -21,18 +21,18 @@ def solution_fitness(solution, height_map):
     unique_buildings = set()
     for building in solution:
         fitness_score += check_area(building, height_map)
-        if building.typeOfHouse == "well":
+        if building.type_of_house == "well":
             continue
         for building2 in solution:
             if building == building2 or building2 in already_calculated:
                 continue
-            elif building2.typeOfHouse == "well":
+            elif building2.type_of_house == "well":
                 fitness_score += DISTANCE_TO_WELL_WEIGHT * (distance_between(building, building2))
             else:
                 fitness_score += distance_between(building, building2)
         already_calculated.append(building)
         """" FITNESS FOR BUILDING VARIANCE """
-        unique_buildings.add(building.typeOfHouse)
+        unique_buildings.add(building.type_of_house)
     float_length = len(unique_buildings)
     percent_of_max_possible = float(float_length) / len(get_placeable_buildings())
     fitness_score += VARIANCE_WEIGHT * (VARIANCE_MAX_SCORE * math.pow(percent_of_max_possible, 2))

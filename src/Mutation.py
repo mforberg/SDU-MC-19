@@ -6,10 +6,14 @@ from variables.MC_LIBRARY import buildings
 def mutate_population(population):
     mutation_count_coord = 0
     mutation_count_building = 0
-    mutation_trigger = MUTATION_RATE * 100
 
     for solution in population:
         building_list = solution
+        """The amount of houses in a single solution"""
+        gene_size = len(solution)
+        """The percent chance of mutation"""
+        mutation_rate = float(1) / gene_size
+        mutation_trigger = mutation_rate * 100
         for i in building_list:
 
             random_number_x = random_number_between_one_to_hundred()
@@ -20,16 +24,10 @@ def mutate_population(population):
             mutation_count_coord += mutate_coordinate(random_number_z, mutation_trigger, i.z) #mutate z
 
             if random_number_house <= mutation_trigger:
-                if i.typeOfHouse == "well": #Do not mutate the well
+                if i.type_of_house == "well": #Do not mutate the well
                     continue
                 mutation_count_building += 1
-                i.typeOfHouse = mutate_house(i.typeOfHouse)
-
-    full_count = mutation_count_building+mutation_count_coord
-    number = float(full_count) / ((POPULATION_SIZE * GENE_SIZE * 2) + GENE_SIZE*POPULATION_SIZE) * 100
-    percent = round(number, 3)
-    #print "{0} coordinates mutated, {1} buildings mutated".format(mutation_count_coord, mutation_count_building)
-    print "MUTATION TRIGGERED {0}/{1} TIMES ({2}%)".format(full_count, (POPULATION_SIZE * GENE_SIZE * 2)+GENE_SIZE*POPULATION_SIZE, percent)
+                i.type_of_house = mutate_house(i.type_of_house)
 
 
 def random_number_between_one_to_hundred():
@@ -79,7 +77,6 @@ def mutate_house(house_to_mutate):
             if sorted_buildings[item][1] == sorted_buildings[5][1]: # Special case: Churches shouldn't become small houses
                 return sorted_buildings[index_minus_1][1]
                 break
-
             if random_number > 50:
                 return sorted_buildings[index_plus_1][1]
             else:
