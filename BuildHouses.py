@@ -1,16 +1,13 @@
+# noinspection PyUnresolvedReferences
 import utilityFunctions
-import numpy as np
-import datetime
-from src import GeneticAlgorithmMinecraft as GAM
 from variables.MC_LIBRARY import buildings as building_copy
-from multiprocessing import Process
-from pymclevel import alphaMaterials, MCSchematic, MCLevel, BoundingBox
+# noinspection PyUnresolvedReferences
+from pymclevel import alphaMaterials as am
+# noinspection PyUnresolvedReferences
 from mcplatform import *
-from collections import OrderedDict
 
-am = alphaMaterials
 
-def build(level, heightmap, buildings):
+def build(level, height_map, buildings):
 
     for building in buildings:
         if building.typeOfHouse == "well":
@@ -22,8 +19,8 @@ def build(level, heightmap, buildings):
         length_of_building = building_copy[building.typeOfHouse]["xLength"]
         width_of_building = building_copy[building.typeOfHouse]["zWidth"]
 
-        houseType = building_copy[building.typeOfHouse]["floorAndRoof"]
-        y = heightmap[building.x, building.z][0]
+        house_type = building_copy[building.typeOfHouse]["floorAndRoof"]
+        y = height_map[building.x, building.z][0]
 
         if building.typeOfHouse == "blackSmith":
             build_floor_bs(level, length_of_building, width_of_building, height_of_building, y, building)
@@ -31,7 +28,7 @@ def build(level, heightmap, buildings):
             build_door(level, length_of_building, width_of_building, y, well_z, building)
         else:
             build_walls(level, length_of_building, width_of_building, height_of_building, y, building)
-            if houseType:
+            if house_type:
                 build_floor(level, length_of_building, width_of_building, height_of_building, y, building)
 
                 build_door(level, length_of_building, width_of_building, y, well_z, building)
@@ -51,39 +48,42 @@ def build_walls(level, length_of_building, width_of_building, height_of_building
         utilityFunctions.setBlockToGround(level, (am.Wood.ID, 0), building.x, height_of_building + box_height, z,
                                           box_height)
 
+
 def build_floor(level, length_of_building, width_of_building, height_of_building, box_height, building):
     for x in range(building.x, building.x + length_of_building):
         for z in range(building.z, building.z + width_of_building):
             utilityFunctions.setBlock(level, (am.Wood.ID, 0), x, box_height, z)
             utilityFunctions.setBlock(level, (am.Obsidian.ID, 0), x, box_height + height_of_building, z)
 
+
 def build_black_smith(level, length_of_building, width_of_building, height_of_building, box_height, building):
 
-    removeTopSquareX = building.x + length_of_building - 3
-    removeTopSquareZ = building.z + 2
+    remove_top_square_x = building.x + length_of_building - 3
+    remove_top_square_z = building.z + 2
 
-    for x in range(building.x, removeTopSquareX):
+    for x in range(building.x, remove_top_square_x):
             utilityFunctions.setBlockToGround(level, (am.Wood.ID, 0), x, height_of_building + box_height, building.z,
                                               box_height)
     for x in range(building.x, building.x + length_of_building):
             utilityFunctions.setBlockToGround(level, (am.Wood.ID, 0), x, height_of_building + box_height,
                                               building.z + width_of_building - 1,
                                               box_height)
-    for x in range(removeTopSquareX, building.x + length_of_building):
+    for x in range(remove_top_square_x, building.x + length_of_building):
             utilityFunctions.setBlockToGround(level, (am.Wood.ID, 0), x, height_of_building + box_height,
-                                              removeTopSquareZ,
+                                              remove_top_square_z,
                                               box_height)
 
     for z in range(building.z, building.z + width_of_building):
             utilityFunctions.setBlockToGround(level, (am.Wood.ID, 0), building.x, height_of_building + box_height, z,
                                               box_height)
-    for z in range(building.z, removeTopSquareZ + 1):
+    for z in range(building.z, remove_top_square_z + 1):
             utilityFunctions.setBlockToGround(level, (am.Wood.ID, 0),
-                                              removeTopSquareX, height_of_building + box_height, z,
+                                              remove_top_square_x, height_of_building + box_height, z,
                                               box_height)
-    for z in range(building.z + width_of_building - 1, removeTopSquareZ, -1):
+    for z in range(building.z + width_of_building - 1, remove_top_square_z, -1):
             utilityFunctions.setBlockToGround(level, (am.Wood.ID, 0), building.x + length_of_building - 1,
                                               height_of_building + box_height, z, box_height)
+
 
 def build_floor_bs(level, length_of_building, width_of_building, height_of_building, box_height, building):
     for x in range(building.x, building.x + length_of_building - 2):
@@ -94,6 +94,7 @@ def build_floor_bs(level, length_of_building, width_of_building, height_of_build
         for z in range(building.z + width_of_building - 1, building.z + 1, -1):
             utilityFunctions.setBlock(level, (am.Wood.ID, 0), x, box_height, z)
             utilityFunctions.setBlock(level, (am.Obsidian.ID, 0), x, box_height + height_of_building, z)
+
 
 def build_door(level, length_of_building, width_of_building, box_height, well_z, building):
     if building.z < well_z:

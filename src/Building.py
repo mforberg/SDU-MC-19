@@ -89,23 +89,23 @@ class Building:
         return {"calculation_point1": calculation_point1, "calculation_point2": calculation_point2}
 
     def __inside_case(self, house, inside_middle_point, outside_middle_point, inside_direction_x):
-        calculationPoint1 = {}
-        calculationPoint2 = {}
+        calculation_point1 = {}
+        calculation_point2 = {}
         if inside_direction_x:
-            calculationPoint1["x"] = 0
-            calculationPoint2["x"] = 0
-            calculationPoint1["z"] = inside_middle_point["z"] - (
+            calculation_point1["x"] = 0
+            calculation_point2["x"] = 0
+            calculation_point1["z"] = inside_middle_point["z"] - (
                     self.buildingsCopy[self.typeOfHouse]["zWidth"] / float(2))
-            calculationPoint2["z"] = outside_middle_point["z"] + (
+            calculation_point2["z"] = outside_middle_point["z"] + (
                     self.buildingsCopy[house.typeOfHouse]["zWidth"] / float(2))
         else:
-            calculationPoint1["z"] = 0
-            calculationPoint2["z"] = 0
-            calculationPoint1["x"] = inside_middle_point["x"] - (
+            calculation_point1["z"] = 0
+            calculation_point2["z"] = 0
+            calculation_point1["x"] = inside_middle_point["x"] - (
                     self.buildingsCopy[self.typeOfHouse]["xLength"] / float(2))
-            calculationPoint2["x"] = outside_middle_point["x"] + (
+            calculation_point2["x"] = outside_middle_point["x"] + (
                     self.buildingsCopy[house.typeOfHouse]["xLength"] / float(2))
-        return {"calculationPoint1": calculationPoint1, "calculationPoint2": calculationPoint2}
+        return {"calculation_point1": calculation_point1, "calculation_point2": calculation_point2}
 
     def check_if_house_is_within(self, house):
         this_min_x = self.x

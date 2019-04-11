@@ -31,6 +31,7 @@ def mutate_population(population):
     #print "{0} coordinates mutated, {1} buildings mutated".format(mutation_count_coord, mutation_count_building)
     print "MUTATION TRIGGERED {0}/{1} TIMES ({2}%)".format(full_count, (POPULATION_SIZE * GENE_SIZE * 2)+GENE_SIZE*POPULATION_SIZE, percent)
 
+
 def random_number_between_one_to_hundred():
     return random.randint(1, 100)
 
@@ -92,8 +93,8 @@ def get_buildings_by_size():
         if item == "well":
             continue
         area = buildings[item]["zWidth"] * buildings[item]["xLength"]
-        tuple = (area, item)
-        size_list.append(tuple)
+        area_tuple = (area, item)
+        size_list.append(area_tuple)
     size_list.sort()
     returned_list = size_list
     return returned_list
