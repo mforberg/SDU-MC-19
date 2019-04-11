@@ -4,6 +4,7 @@ from src import GeneticAlgorithmMinecraft as GAM, MapAnalysis as MA, ClearArea a
 import BuildHouses as BH
 # noinspection PyUnresolvedReferences
 from pymclevel import alphaMaterials as am
+from src.Deforestation import find_bounds
 
 
 def perform(level, box, options):
@@ -15,5 +16,6 @@ def perform(level, box, options):
 
     gam = GAM.Genetic_Algorithm()
     result = gam.run_genetic_algorithm(height_map, box.maxx - box.minx, box.maxz - box.minz, starting_point)
+    find_bounds(result)
     CA.modify_area(height_map, result, level)
     BH.build(level, height_map, result)
