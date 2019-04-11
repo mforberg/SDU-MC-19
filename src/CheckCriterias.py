@@ -2,36 +2,35 @@ from variables.MC_LIBRARY import *
 import Generation
 
 
-def check_population(population, boxX, boxZ, startingPoint):
-    checkedPopulation = list()
+def check_population(population, box_x, box_z, starting_point):
+    checked_population = list()
     for solution in population:
-        if check_solution(solution, boxX, boxZ, startingPoint):
-            checkedPopulation.append(solution)
+        if check_solution(solution, box_x, box_z, starting_point):
+            checked_population.append(solution)
         else:
-            checkedPopulation.append(Generation.generate_solution(boxX, boxZ, startingPoint))
-    return checkedPopulation
+            """If the solution does not meet the criterias"""
+            checked_population.append(Generation.generate_solution(box_x, box_z, starting_point))
+    return checked_population
 
 
-def check_solution(solution, boxX, boxZ, startingPoint):
-    blockedCoordinates = list()
+def check_solution(solution, box_x, box_z, starting_point):
+    already_calculated = list()
     for building in solution:
-        if not check_if_within_box(building, boxX, boxZ, startingPoint):
+        if not check_if_within_box(building, box_x, box_z, starting_point):
             return False
-        """check if buildings share the same coordinates"""
-        for x in xrange(building.x, building.x + buildings[building.typeOfHouse]["xLength"]):
-            for z in xrange(building.z, building.z + buildings[building.typeOfHouse]["zWidth"]):
-                convertedCoordinate = (x, z)
-                if convertedCoordinate in blockedCoordinates:
-                    return False
-                blockedCoordinates.append(convertedCoordinate)
+        for building2 in solution:
+            if building == building2 or building2 in already_calculated:
+                continue
+            if building.check_if_house_is_within(building2):
+                return False
     return True
 
 
-def check_if_within_box(building, boxX, boxZ, startingPoint):
-    if building.x < startingPoint["x"] or building.z < startingPoint["z"]:
+def check_if_within_box(building, box_x, box_z, starting_point):
+    if building.x < starting_point["x"] or building.z < starting_point["z"]:
         return False
-    if building.x + buildings[building.typeOfHouse]["xLength"] > startingPoint["x"] + boxX:
+    if building.x + buildings[building.typeOfHouse]["xLength"] > starting_point["x"] + box_x:
         return False
-    if building.z + buildings[building.typeOfHouse]["zWidth"] > startingPoint["z"] + boxZ:
+    if building.z + buildings[building.typeOfHouse]["zWidth"] > starting_point["z"] + box_z:
         return False
     return True
