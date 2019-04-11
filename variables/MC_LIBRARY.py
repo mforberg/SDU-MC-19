@@ -35,24 +35,24 @@ def total_probability():
 
 
 def get_placeable_buildings():
-    availableList = list()
+    available_list = list()
     for building in buildings.keys():
         if building == "well":
             continue
-        availableList.append(building)
-    return availableList
+        available_list.append(building)
+    return available_list
 
 
 def get_random_house(buildingscopy):
-    randomnumber = random.randint(0, total_probability())
-    availableHouse = get_placeable_buildings()
-    currentHouse = availableHouse[0]
-    for i in xrange(0, len(availableHouse)):
-        currentHouse = availableHouse[i]
-        if randomnumber > buildingscopy[currentHouse]["probability"]:
-            randomnumber -= buildingscopy[currentHouse]["probability"]
+    random_number = random.randint(0, total_probability())
+    available_house = get_placeable_buildings()
+    current_house = available_house[0]
+    for i in xrange(0, len(available_house)):
+        current_house = available_house[i]
+        if random_number > buildingscopy[current_house]["probability"]:
+            random_number -= buildingscopy[current_house]["probability"]
         else:
-            currentHouse = availableHouse[i]
+            current_house = available_house[i]
             break
-    return currentHouse
+    return current_house
 
