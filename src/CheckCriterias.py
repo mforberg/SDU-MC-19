@@ -29,8 +29,8 @@ def check_solution(solution, box_x, box_z, starting_point):
 def check_if_within_box(building, box_x, box_z, starting_point):
     if building.x < starting_point["x"] or building.z < starting_point["z"]:
         return False
-    if building.x + buildings[building.typeOfHouse]["xLength"] > starting_point["x"] + box_x:
+    if building.x + buildings[building.type_of_house]["xLength"] > starting_point["x"] + box_x:
         return False
-    if building.z + buildings[building.typeOfHouse]["zWidth"] > starting_point["z"] + box_z:
+    if building.z + buildings[building.type_of_house]["zWidth"] > starting_point["z"] + box_z:
         return False
     return True

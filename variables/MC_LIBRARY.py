@@ -43,14 +43,14 @@ def get_placeable_buildings():
     return available_list
 
 
-def get_random_house(buildingscopy):
+def get_random_house(buildings_copy):
     random_number = random.randint(0, total_probability())
     available_house = get_placeable_buildings()
     current_house = available_house[0]
     for i in xrange(0, len(available_house)):
         current_house = available_house[i]
-        if random_number > buildingscopy[current_house]["probability"]:
-            random_number -= buildingscopy[current_house]["probability"]
+        if random_number > buildings_copy[current_house]["probability"]:
+            random_number -= buildings_copy[current_house]["probability"]
         else:
             current_house = available_house[i]
             break

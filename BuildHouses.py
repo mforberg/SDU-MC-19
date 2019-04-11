@@ -10,19 +10,19 @@ from mcplatform import *
 def build(level, height_map, buildings):
 
     for building in buildings:
-        if building.typeOfHouse == "well":
+        if building.type_of_house == "well":
             well_z = building.z
 
     for building in buildings:
 
-        height_of_building = building_copy[building.typeOfHouse]["yHeight"]
-        length_of_building = building_copy[building.typeOfHouse]["xLength"]
-        width_of_building = building_copy[building.typeOfHouse]["zWidth"]
+        height_of_building = building_copy[building.type_of_house]["yHeight"]
+        length_of_building = building_copy[building.type_of_house]["xLength"]
+        width_of_building = building_copy[building.type_of_house]["zWidth"]
 
-        house_type = building_copy[building.typeOfHouse]["floorAndRoof"]
+        house_type = building_copy[building.type_of_house]["floorAndRoof"]
         y = height_map[building.x, building.z][0]
 
-        if building.typeOfHouse == "blackSmith":
+        if building.type_of_house == "blackSmith":
             build_floor_bs(level, length_of_building, width_of_building, height_of_building, y, building)
             build_black_smith(level, length_of_building, width_of_building, height_of_building, y, building)
             build_door(level, length_of_building, width_of_building, y, well_z, building)

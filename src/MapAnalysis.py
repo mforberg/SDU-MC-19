@@ -82,12 +82,12 @@ def create_two_dimensional_height_map(level, box):
 
 
 def find_average_height(building, height_map, return_amount_of_water):
-    total_area = buildings[building.typeOfHouse]["xLength"] * buildings[building.typeOfHouse]["zWidth"]
+    total_area = buildings[building.type_of_house]["xLength"] * buildings[building.type_of_house]["zWidth"]
     list_of_heights = []
     amount = 0
     amount_of_water = 0
-    for x in xrange(building.x, building.x + buildings[building.typeOfHouse]["xLength"]):
-        for z in xrange(building.z, building.z + buildings[building.typeOfHouse]["zWidth"]):
+    for x in xrange(building.x, building.x + buildings[building.type_of_house]["xLength"]):
+        for z in xrange(building.z, building.z + buildings[building.type_of_house]["zWidth"]):
             """check for water"""
             if height_map[x, z][1] == 9:
                 amount_of_water += 1
