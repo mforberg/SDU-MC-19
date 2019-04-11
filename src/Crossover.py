@@ -125,7 +125,7 @@ def well_first(parent):
     new_list = list()
     extra_list = list()
     for building in parent:
-        if building.typeOfHouse == "well":
+        if building.type_of_house == "well":
             new_list.append(building)
         else:
             extra_list.append(building)

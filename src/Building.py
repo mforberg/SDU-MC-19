@@ -1,29 +1,30 @@
 import math
 from variables import MC_LIBRARY
 
+
 class Building:
     def __init__(self, x, z, type_of_house):
         self.x = x
         self.z = z
-        self.typeOfHouse = type_of_house
+        self.type_of_house = type_of_house
         self.buildingsCopy = MC_LIBRARY.buildings
 
     def distance_between_building(self, house):
         # find the middle of each building
-        this_middle_point = {"x": self.x + (self.buildingsCopy[self.typeOfHouse]["xLength"] / float(2)),
-                             "z": self.z + (self.buildingsCopy[self.typeOfHouse]["zWidth"] / float(2))}
-        house_middle_point = {"x": house.x + (self.buildingsCopy[house.typeOfHouse]["xLength"] / float(2)),
-                              "z": house.z + (self.buildingsCopy[house.typeOfHouse]["zWidth"] / float(2))}
+        this_middle_point = {"x": self.x + (self.buildingsCopy[self.type_of_house]["xLength"] / float(2)),
+                             "z": self.z + (self.buildingsCopy[self.type_of_house]["zWidth"] / float(2))}
+        house_middle_point = {"x": house.x + (self.buildingsCopy[house.type_of_house]["xLength"] / float(2)),
+                              "z": house.z + (self.buildingsCopy[house.type_of_house]["zWidth"] / float(2))}
 
         """Check if there is overlapping"""
         this_min_x = self.x
-        this_max_x = self.x + self.buildingsCopy[self.typeOfHouse]["xLength"]
+        this_max_x = self.x + self.buildingsCopy[self.type_of_house]["xLength"]
         this_min_z = self.z
-        this_max_z = self.z + self.buildingsCopy[self.typeOfHouse]["zWidth"]
+        this_max_z = self.z + self.buildingsCopy[self.type_of_house]["zWidth"]
         house_min_x = house.x
-        house_max_x = house.x + self.buildingsCopy[house.typeOfHouse]["xLength"]
+        house_max_x = house.x + self.buildingsCopy[house.type_of_house]["xLength"]
         house_min_z = house.z
-        house_max_z = house.z + self.buildingsCopy[house.typeOfHouse]["zWidth"]
+        house_max_z = house.z + self.buildingsCopy[house.type_of_house]["zWidth"]
 
         overlapping = False
         overlapping_direction_x = False
@@ -75,17 +76,17 @@ class Building:
         calculation_point1 = {}
         calculation_point2 = {}
         if right:
-            calculation_point1["x"] = this_middle_point["x"] - (self.buildingsCopy[self.typeOfHouse]["xLength"] / float(2))
-            calculation_point2["x"] = house_middle_point["x"] + (self.buildingsCopy[house.typeOfHouse]["xLength"] / float(2))
+            calculation_point1["x"] = this_middle_point["x"] - (self.buildingsCopy[self.type_of_house]["xLength"] / float(2))
+            calculation_point2["x"] = house_middle_point["x"] + (self.buildingsCopy[house.type_of_house]["xLength"] / float(2))
         else:
-            calculation_point1["x"] = this_middle_point["x"] + (self.buildingsCopy[self.typeOfHouse]["xLength"] / float(2))
-            calculation_point2["x"] = house_middle_point["x"] - (self.buildingsCopy[house.typeOfHouse]["xLength"] / float(2))
+            calculation_point1["x"] = this_middle_point["x"] + (self.buildingsCopy[self.type_of_house]["xLength"] / float(2))
+            calculation_point2["x"] = house_middle_point["x"] - (self.buildingsCopy[house.type_of_house]["xLength"] / float(2))
         if down:
-            calculation_point1["z"] = this_middle_point["z"] - (self.buildingsCopy[self.typeOfHouse]["zWidth"] / float(2))
-            calculation_point2["z"] = house_middle_point["z"] + (self.buildingsCopy[house.typeOfHouse]["zWidth"] / float(2))
+            calculation_point1["z"] = this_middle_point["z"] - (self.buildingsCopy[self.type_of_house]["zWidth"] / float(2))
+            calculation_point2["z"] = house_middle_point["z"] + (self.buildingsCopy[house.type_of_house]["zWidth"] / float(2))
         else:
-            calculation_point1["z"] = this_middle_point["z"] + (self.buildingsCopy[self.typeOfHouse]["zWidth"] / float(2))
-            calculation_point2["z"] = house_middle_point["z"] - (self.buildingsCopy[house.typeOfHouse]["zWidth"] / float(2))
+            calculation_point1["z"] = this_middle_point["z"] + (self.buildingsCopy[self.type_of_house]["zWidth"] / float(2))
+            calculation_point2["z"] = house_middle_point["z"] - (self.buildingsCopy[house.type_of_house]["zWidth"] / float(2))
         return {"calculation_point1": calculation_point1, "calculation_point2": calculation_point2}
 
     def __inside_case(self, house, inside_middle_point, outside_middle_point, inside_direction_x):
@@ -95,28 +96,28 @@ class Building:
             calculation_point1["x"] = 0
             calculation_point2["x"] = 0
             calculation_point1["z"] = inside_middle_point["z"] - (
-                    self.buildingsCopy[self.typeOfHouse]["zWidth"] / float(2))
+                    self.buildingsCopy[self.type_of_house]["zWidth"] / float(2))
             calculation_point2["z"] = outside_middle_point["z"] + (
-                    self.buildingsCopy[house.typeOfHouse]["zWidth"] / float(2))
+                    self.buildingsCopy[house.type_of_house]["zWidth"] / float(2))
         else:
             calculation_point1["z"] = 0
             calculation_point2["z"] = 0
             calculation_point1["x"] = inside_middle_point["x"] - (
-                    self.buildingsCopy[self.typeOfHouse]["xLength"] / float(2))
+                    self.buildingsCopy[self.type_of_house]["xLength"] / float(2))
             calculation_point2["x"] = outside_middle_point["x"] + (
-                    self.buildingsCopy[house.typeOfHouse]["xLength"] / float(2))
+                    self.buildingsCopy[house.type_of_house]["xLength"] / float(2))
         return {"calculation_point1": calculation_point1, "calculation_point2": calculation_point2}
 
     def check_if_house_is_within(self, house):
         this_min_x = self.x
-        this_max_x = self.x + self.buildingsCopy[self.typeOfHouse]["xLength"]
+        this_max_x = self.x + self.buildingsCopy[self.type_of_house]["xLength"]
         this_min_z = self.z
-        this_max_z = self.z + self.buildingsCopy[self.typeOfHouse]["zWidth"]
+        this_max_z = self.z + self.buildingsCopy[self.type_of_house]["zWidth"]
 
         house_min_x = house.x
-        house_max_x = house.x + self.buildingsCopy[house.typeOfHouse]["xLength"]
+        house_max_x = house.x + self.buildingsCopy[house.type_of_house]["xLength"]
         house_min_z = house.z
-        house_max_z = house.z + self.buildingsCopy[house.typeOfHouse]["zWidth"]
+        house_max_z = house.z + self.buildingsCopy[house.type_of_house]["zWidth"]
         """simply check if any of the four corners are within this house"""
         if this_min_x <= house_min_x <= this_max_x and this_min_z <= house_min_z <= this_max_z:
             return True
