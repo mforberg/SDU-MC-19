@@ -18,8 +18,12 @@ def perform(level, box, options):
     gam = GAM.Genetic_Algorithm()
     result = gam.run_genetic_algorithm(height_map, box.maxx - box.minx, box.maxz - box.minz, starting_point)
     # set connection points
+    CA.modify_area(height_map, result, level)
     # a star
     # deforest(list_of_buildings, a_star)
-    CA.modify_area(height_map, result, level)
     # place roads
     BH.build(level, height_map, result)
+
+    # TODO: add values to width + length to add "buffer" area to modify area
+    # TODO: modify how to build house with modifier to subtract "buffer"
+    # TODO: change how we calculate door / connection point location
