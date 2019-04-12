@@ -15,11 +15,13 @@ def modify_area(height_map, solution, level):
                 while not zero_difference:
                     current_difference = average_height - height_map[x, z][0]
                     """
-                    if there is no difference
+                    if there is no difference, set a block 
+                    (used because the else statement does not put a block there when it gets to the correct floor)
                     else if average_height is bigger than the height_map location
                     else the average_height is smaller than the height_map location
                     """
                     if current_difference == 0:
+                        utilityFunctions.setBlock(level, (am.Dirt.ID, 0), x, height_map[x, z][0], z)
                         break
                     elif current_difference > 0:
                         utilityFunctions.setBlock(level, (am.Dirt.ID, 0), x, height_map[x, z][0], z)

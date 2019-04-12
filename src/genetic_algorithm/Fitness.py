@@ -17,6 +17,7 @@ def population_fitness(population, height_map):
 
 def solution_fitness(solution, height_map):
     fitness_score = 0
+    fitness_score += normal_houses_in_solution(solution)
     already_calculated = list()
     unique_buildings = set()
     for building in solution:
@@ -63,4 +64,13 @@ def check_area(building, height_map):
     """we don't want score too much under zero"""
     if score < 0:
         score = 0
+    return score
+
+
+def normal_houses_in_solution(solution):
+    amount_of_normal_houses = 0
+    for building in solution:
+        if building.type_of_house == "normalHouse":
+            amount_of_normal_houses += 1
+    score = NORMAL_HOUSE_WEIGHT * (NORMAL_HOUSE_MAX_SCORE - abs(NORMAL_HOUSE_PERCENTAGE - (amount_of_normal_houses / len(solution))))
     return score

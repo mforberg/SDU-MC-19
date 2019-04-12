@@ -6,6 +6,8 @@ POPULATION_SIZE = 100
 GENERATIONS = 1
 """The top percentage of the population who should just continue to next"""
 ELITES_PERCENTAGE = 0.1  # 10%
+"""Percentage of solution that should be normal houses"""
+NORMAL_HOUSE_PERCENTAGE = 0.33  # 33%
 
 """Fitness weights"""
 WATER_WEIGHT = 6    # for each water-block found
@@ -13,6 +15,7 @@ AREA_WEIGHT = 1  # multiply the blocks modified
 DISTANCE_WEIGHT = 1  # What the distance score should be multiplied with
 DISTANCE_TO_WELL_WEIGHT = 2  # The distance to the well multiplied
 VARIANCE_WEIGHT = 2  # How much the variance score should be multiplied
+NORMAL_HOUSE_WEIGHT = 10  # How much the amount of normal houses should be
 
 """Extra variables"""
 CHANGED_BLOCK_PER_POINT = 10  # how many blocks needs to be changed to count as a point
@@ -20,6 +23,7 @@ CHANGED_BLOCK_PER_POINT = 10  # how many blocks needs to be changed to count as 
 """Fitness Max Scores"""
 VARIANCE_MAX_SCORE = 1000  # max score for the variance in buildings
 AREA_MAX_SCORE = 100  # contains both water and blocks modified
+NORMAL_HOUSE_MAX_SCORE = 100  # max score for the right amount of houses
 
 """Quadratic Equation in Fitness"""
 A = float(-4) / 45
