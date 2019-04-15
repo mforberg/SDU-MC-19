@@ -1,6 +1,6 @@
 import src
 import time
-from src import CheckCriterias, Crossover, Fitness, Generation
+from src.genetic_algorithm import CheckCriterias, Crossover, Fitness, Generation
 from variables.GA_VALUES import *
 
 

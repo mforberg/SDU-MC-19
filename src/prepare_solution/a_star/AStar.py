@@ -53,7 +53,7 @@ def is_walkable(x, z):
         max_x = tuple[2]
         min_z = tuple[1]
         max_z = tuple[3]
-        # if the overlap return faæse
+        # if the overlap return false
         if x > min_x & x < max_x & z > min_z & z < max_z:
             return False
     #does not overlap -> it is walkable

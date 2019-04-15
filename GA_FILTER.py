@@ -1,10 +1,12 @@
 # noinspection PyUnresolvedReferences
 import utilityFunctions
 from src import MapAnalysis as MA
-from src import ClearArea as CA, GeneticAlgorithmMinecraft as GAM
-from src import BuildHouses as BH
+from src.genetic_algorithm import ClearArea as CA, GeneticAlgorithmMinecraft as GAM
+from src.build_solution import BuildHouses as BH
 # noinspection PyUnresolvedReferences
 from pymclevel import alphaMaterials as am
+from src.prepare_solution.a_star.AStar import *
+from src.prepare_solution.a_star.PrepareAStar import *
 
 
 def perform(level, box, options):
@@ -18,8 +20,8 @@ def perform(level, box, options):
     result = gam.run_genetic_algorithm(height_map, box.maxx - box.minx, box.maxz - box.minz, starting_point)    # RUN GENETIC ALGORITHM
     CA.modify_area(height_map, result, level)                                                                   # LEVEL AREA FOR BUILDINGS
     set_all_connections_points(result, height_map)                                                              # SET PATH CONNECTION POINTS FOR ALL STRUCTURES
-    manhattan_distance(result)
-    blocked_tiles(result)
+    #manhattan_distance(result)
+    #blocked_tiles(result)
     # a star
     # deforest(list_of_buildings, a_star)
     # place roads
