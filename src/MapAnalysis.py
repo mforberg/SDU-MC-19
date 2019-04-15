@@ -81,19 +81,23 @@ def create_two_dimensional_height_map(level, box):
     return position_dict
 
 
-def find_average_height(building, height_map, return_amount_of_water):
+def find_average_height(building, height_map):
     total_area = buildings[building.type_of_house]["xLength"] * buildings[building.type_of_house]["zWidth"]
     list_of_heights = []
     amount = 0
+    for x in xrange(building.x, building.x + buildings[building.type_of_house]["xLength"]):
+        for z in xrange(building.z, building.z + buildings[building.type_of_house]["zWidth"]):
+            amount += height_map[x, z][0]
+            list_of_heights.append(height_map[x, z][0])
+    average = int(round(amount / float(total_area)))
+    return average
+
+
+def find_amount_of_water(building, height_map):
     amount_of_water = 0
     for x in xrange(building.x, building.x + buildings[building.type_of_house]["xLength"]):
         for z in xrange(building.z, building.z + buildings[building.type_of_house]["zWidth"]):
             """check for water"""
             if height_map[x, z][1] == 9:
                 amount_of_water += 1
-            amount += height_map[x, z][0]
-            list_of_heights.append(height_map[x, z][0])
-    average = int(round(amount / float(total_area)))
-    if return_amount_of_water:
-        return [average, amount_of_water]
-    return average
+    return amount_of_water

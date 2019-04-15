@@ -60,9 +60,6 @@ def place_house_point_randomly(box_x, box_z, starting_point, house_name):
 
 
 def get_amount_of_houses(box_x, box_z):
-    """Pick a number between ~10 to ~20 if the size is 250*250"""
-    minimum_amount_of_houses = round((box_z * box_x) / 6200)
-    maximum_amount_of_houses = round((box_z * box_x) / 3100)
-    amount_of_houses = random.randint(minimum_amount_of_houses, maximum_amount_of_houses)
+    amount_of_houses = random.randint(get_minimum_amount_of_houses(box_x, box_z), get_maximum_amount_of_houses(box_x,
+                                                                                                               box_z))
     return amount_of_houses
-

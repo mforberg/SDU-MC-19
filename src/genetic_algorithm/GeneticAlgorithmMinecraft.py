@@ -2,30 +2,34 @@ import src.genetic_algorithm.Mutation
 import time
 from src.genetic_algorithm import CheckCriterias, Crossover, Fitness, Generation
 from variables.GA_VALUES import *
-
+import copy
 
 
 class Genetic_Algorithm:
     def run_genetic_algorithm(self, height_map, box_x, box_z, starting_point):
         init_generation = Generation.generate_population(box_x, box_z, starting_point)
         current_generation = init_generation
-        """start of for-loop"""
+        highest_fitness = 0
+        """save the overall best"""
         for x in range(0, GENERATIONS):
+            start = time.time()
             print "- - - - - - - - - - - -"
-            print "CURRENT GEN: ", x
-            generation_with_fitness = Fitness.population_fitness(current_generation, height_map)
+            print "CURRENT GEN: ", x + 1
+            generation_with_fitness = Fitness.population_fitness(current_generation, height_map, box_x, box_z)
             print self.min_max_avg(generation_with_fitness)
-            """properly skip mutation and new generation on last"""
+            """save the best solution"""
+            current_best_solution = self.find_best_solution(generation_with_fitness)
+            if current_best_solution[1] > highest_fitness:
+                highest_fitness = current_best_solution[1]
+                overall_best_solution = copy.deepcopy(current_best_solution[0])
+            """skip mutation and new generation on last"""
             if x < GENERATIONS - 1:
                 new_generation_without_fitness = Crossover.create_new_population_from_old_one(generation_with_fitness)
                 src.genetic_algorithm.Mutation.mutate_population(new_generation_without_fitness)
-                start = time.time()
-                current_generation = CheckCriterias.check_population(new_generation_without_fitness, box_x, box_z, starting_point)
-                end = time.time()
-                print end-start, "<-- Time"
-            else:
-                final_generation = self.find_best_solution(generation_with_fitness)
-        """end of for-loop"""
+                current_generation = CheckCriterias.check_population(new_generation_without_fitness, box_x, box_z,
+                                                                     starting_point)
+            end = time.time()
+            print end - start, "<-- Time"
 
         """
         Runtimes for sections
@@ -55,7 +59,7 @@ class Genetic_Algorithm:
         
         """
         """ time testing in future: time.time() - time.time() = x seconds"""
-        return final_generation
+        return overall_best_solution
 
     def min_max_avg(self, data):
         maximum = data[0]
@@ -76,5 +80,5 @@ class Genetic_Algorithm:
         for solution in fitness_generation:
             if solution[1] > current_top:
                 current_top = solution[1]
-                current_best = solution[0]
+                current_best = solution
         return current_best
