@@ -1,5 +1,5 @@
 from variables.MC_LIBRARY import *
-import src.MapAnalysis
+import src
 # noinspection PyUnresolvedReferences
 import utilityFunctions
 # noinspection PyUnresolvedReferences
