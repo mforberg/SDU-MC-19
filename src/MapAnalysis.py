@@ -93,11 +93,11 @@ def find_average_height(building, height_map):
     return average
 
 
-def find_amount_of_water(building, height_map):
-    amount_of_water = 0
+def find_amount_of_water_and_lava(building, height_map):
+    amount = 0
     for x in xrange(building.x, building.x + buildings[building.type_of_house]["xLength"]):
         for z in xrange(building.z, building.z + buildings[building.type_of_house]["zWidth"]):
-            """check for water"""
-            if height_map[x, z][1] == 9:
-                amount_of_water += 1
-    return amount_of_water
+            """check for water or lava"""
+            if height_map[x, z][1] == 9 or height_map[x, z][1] == 11:
+                amount += 1
+    return amount
