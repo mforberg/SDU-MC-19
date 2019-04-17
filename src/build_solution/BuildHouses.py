@@ -5,7 +5,6 @@ from variables.MC_LIBRARY import *
 from pymclevel import alphaMaterials as am
 # noinspection PyUnresolvedReferences
 from mcplatform import *
-from src.Building import *
 
 
 def build(level, height_map, solution):
@@ -28,13 +27,13 @@ def build(level, height_map, solution):
             build_floor_bs(level, length_of_building, width_of_building, height_of_building, y, building)
 
             build_black_smith(level, length_of_building, width_of_building, height_of_building, y, building)
-            #build_door(level, y, well, building)
+            build_door(level, building)
         else:
             build_walls(level, length_of_building, width_of_building, height_of_building, y, building)
             if house_type:
                 build_floor(level, length_of_building, width_of_building, height_of_building, y, building)
 
-                #build_door(level, length_of_building, width_of_building, y, well, building)
+                build_door(level, building)
 
 
 def build_walls(level, length_of_building, width_of_building, height_of_building, box_height, building):
@@ -98,15 +97,8 @@ def build_floor_bs(level, length_of_building, width_of_building, height_of_build
             utilityFunctions.setBlock(level, (am.Obsidian.ID, 0), x, box_height + height_of_building, z)
 
 
-def build_door(level, box_height, well, building):
-    length_of_building = buildings[building.type_of_house]["xLength"] - (2 * BUFFER)
-    width_of_building = buildings[building.type_of_house]["zWidth"] - (2 * BUFFER)
+def build_door(level, building):
+    door_coords = building.path_connection_point # (x, z, y)
 
-    if building.z < well.z:
-        building.z = building.z + width_of_building - 1
-
-    door_position = length_of_building / 2
     for i in range(1, 3):
-        utilityFunctions.setBlock(level, (64, 1), building.x + door_position, box_height + i, building.z)
-
-    Building.set_connection_point(well)
+        utilityFunctions.setBlock(level, (64, 1), door_coords[0], door_coords[2] + i, door_coords[1])

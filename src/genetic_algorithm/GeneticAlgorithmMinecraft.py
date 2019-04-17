@@ -1,4 +1,4 @@
-import src.genetic_algorithm.Mutation
+import src
 import time
 from src.genetic_algorithm import CheckCriterias, Crossover, Fitness, Generation
 from variables.GA_VALUES import *

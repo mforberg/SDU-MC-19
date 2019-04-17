@@ -1,5 +1,5 @@
 import math
-import src.MapAnalysis
+import src
 from variables.MC_LIBRARY import *
 from variables.GA_VALUES import *
 

@@ -141,14 +141,15 @@ class Building:
         return False
 
 
-    def set_connection_point(self, well):
-        x = self.x
-        z = self.z
-
-        if z < well.z:
-            z += self.buildingsCopy[self.type_of_house]["zWidth"] - 1
-        x += self.buildingsCopy[self.type_of_house]["xLength"] / 2
-        self.path_connection_point = (x, z)
+    def set_connection_point(self, well, height_map):
+        x = self.x + (MC_LIBRARY.BUFFER)
+        z = self.z + (MC_LIBRARY.BUFFER)
+        well_z = well.z - (MC_LIBRARY.BUFFER*2)
+        if z < well_z:
+            z += (self.buildingsCopy[self.type_of_house]["zWidth"] - (MC_LIBRARY.BUFFER*2)) - 1
+        x += (self.buildingsCopy[self.type_of_house]["xLength"] - (MC_LIBRARY.BUFFER*2)) / 2
+        y = height_map[x,z][0]
+        self.path_connection_point = (x, z, y)
 
 
 

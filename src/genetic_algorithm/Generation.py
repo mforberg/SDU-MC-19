@@ -1,4 +1,4 @@
-import src.Building
+import src
 from variables.MC_LIBRARY import *
 from variables.GA_VALUES import *
 
