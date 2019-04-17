@@ -73,15 +73,12 @@ def mutate_house(house_to_mutate):
             random_number = random_number_between_one_to_hundred()
             if sorted_buildings[item][1] == sorted_buildings[0][1]: # Special case: Small houses shouldn't become churches
                 return sorted_buildings[index_plus_1][1]
-                break
             if sorted_buildings[item][1] == sorted_buildings[5][1]: # Special case: Churches shouldn't become small houses
                 return sorted_buildings[index_minus_1][1]
-                break
             if random_number > 50:
                 return sorted_buildings[index_plus_1][1]
             else:
                 return sorted_buildings[index_minus_1][1]
-            break
 
 
 def get_buildings_by_size():

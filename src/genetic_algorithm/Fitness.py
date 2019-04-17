@@ -1,7 +1,6 @@
 import math
-import src
-from variables.MC_LIBRARY import *
 from variables.GA_VALUES import *
+from src.MapAnalysis import *
 
 
 def population_fitness(population, height_map, box_x, box_z):
@@ -23,6 +22,7 @@ def solution_fitness(solution, height_map, box_x, box_z):
     fitness_score += distance_score_and_area_check(solution, height_map)
 
     fitness_score -= weight_smaller_solutions(box_x, box_z, solution)
+
     return fitness_score
 
 
@@ -71,8 +71,8 @@ def distance_between(house1, house2):
 
 def check_area(building, height_map):
     building_area = buildings[building.type_of_house]["xLength"] * buildings[building.type_of_house]["zWidth"]
-    average = src.MapAnalysis.find_average_height(building, height_map)
-    amount_of_water_and_lava = src.MapAnalysis.find_amount_of_water_and_lava(building, height_map)
+    average = find_average_height(building, height_map)
+    amount_of_water_and_lava = find_amount_of_water_and_lava(building, height_map)
     """water/lava score is calculated here"""
     water_lava_score = amount_of_water_and_lava * WATER_AND_LAVA_WEIGHT
     changed_blocks = 0
@@ -110,9 +110,9 @@ def y_difference(solution, height_map):
     well_average = 0
     for building in solution:
         if building.type_of_house == "well":
-            well_average = src.MapAnalysis.find_average_height(building, height_map)
+            well_average = find_average_height(building, height_map)
             continue
-        average_list.append(src.MapAnalysis.find_average_height(building, height_map))
+        average_list.append(find_average_height(building, height_map))
     total_difference = 0
     for number in average_list:
         total_difference += abs(well_average - number)

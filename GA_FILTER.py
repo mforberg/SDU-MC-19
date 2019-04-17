@@ -1,7 +1,7 @@
 # noinspection PyUnresolvedReferences
 import utilityFunctions
 from src import MapAnalysis as MA
-from src.genetic_algorithm import ClearArea as CA, GeneticAlgorithmMinecraft as GAM
+from src.genetic_algorithm import PrepareArea as CA, GeneticAlgorithmMinecraft as GAM
 from src.build_solution import BuildHouses as BH
 # noinspection PyUnresolvedReferences
 from pymclevel import alphaMaterials as am
