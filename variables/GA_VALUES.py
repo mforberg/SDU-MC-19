@@ -1,3 +1,4 @@
+USE_FI2POP = True
 """The percent chance of crossover"""
 CROSSOVER_RATE = 0.05  # 5%
 """The amount of "solutions" in a population"""
@@ -32,6 +33,14 @@ DISTANCE_MAX_SCORE = 100  # max score for distance to other houses
 
 """Length of solution variables"""
 DECREASE_PER_EXTRA_BUILDING = 410
+
+
+"""FI2POP variables"""
+COLLISION_MAX_SCORE = 1000
+COLLISION_WEIGHT = 4
+WITHIN_BOX_MAX_SCORE = 1000
+WITHIN_BOX_WEIGHT = 1
+NOT_WITHIN_BOX_MINUS_PER_HOUSE = 250
 
 
 """Quadratic Equation in Fitness"""

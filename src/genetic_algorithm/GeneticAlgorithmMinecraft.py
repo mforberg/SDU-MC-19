@@ -7,6 +7,8 @@ import copy
 class Genetic_Algorithm:
     def run_genetic_algorithm(self, height_map, box_x, box_z, starting_point):
         init_generation = Generation.generate_population(box_x, box_z, starting_point)
+        if USE_FI2POP:
+            extra_generation = Generation.generate_population(box_x, box_z, starting_point)
         current_generation = init_generation
         highest_fitness = 0
         """save the overall best"""
@@ -21,12 +23,23 @@ class Genetic_Algorithm:
             if current_best_solution[1] > highest_fitness:
                 highest_fitness = current_best_solution[1]
                 overall_best_solution = copy.deepcopy(current_best_solution[0])
+            """FI2POP"""
+            if USE_FI2POP:
+                extra_with_fitness = Fitness.extra_population_fitness(extra_generation, box_x, box_z, starting_point)
+                print "extra: " + self.min_max_avg(extra_with_fitness)
+                new_extra_without_fitness = Crossover.create_new_population_from_old_one(extra_with_fitness)
+                Mutation.mutate_population(new_extra_without_fitness)
+                extra_generation = new_extra_without_fitness
             """skip mutation and new generation on last"""
             if x < GENERATIONS - 1:
                 new_generation_without_fitness = Crossover.create_new_population_from_old_one(generation_with_fitness)
                 Mutation.mutate_population(new_generation_without_fitness)
-                current_generation = CheckCriterias.check_population(new_generation_without_fitness, box_x, box_z,
-                                                                     starting_point)
+                if USE_FI2POP:
+                    current_generation = CheckCriterias.fi2pop_check(new_generation_without_fitness, box_x, box_z,
+                                                                     starting_point, extra_generation)
+                else:
+                    current_generation = CheckCriterias.check_population(new_generation_without_fitness, box_x, box_z,
+                                                                         starting_point)
             end = time.time()
             print end - start, "<-- Time"
 

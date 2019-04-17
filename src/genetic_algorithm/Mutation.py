@@ -49,6 +49,7 @@ def mutate_coordinate(random_number, mutation_trigger, coordinate):
 
 # TODO: Possibly change decide_block_amount() back to 1 instead of 1..3, ~900 mutations seems excessive
 def decide_block_amount():
+    return 1
     """ Not gonna lie, I gave up a little on making this pretty """
     max_block_move = 3
     total_block_move = (max_block_move*(max_block_move+1))/2

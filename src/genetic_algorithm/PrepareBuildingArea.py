@@ -1,5 +1,4 @@
-from variables.MC_LIBRARY import *
-import src
+from src.MapAnalysis import *
 # noinspection PyUnresolvedReferences
 import utilityFunctions
 # noinspection PyUnresolvedReferences
@@ -12,7 +11,7 @@ def modify_area(height_map, solution, level):
         """use the average height to create the ground for the building to be build on. This might cause unreachable
         buildings in hill areas"""
         if use_average:
-            target_height = src.MapAnalysis.find_average_height(building, height_map)
+            target_height = find_average_height(building, height_map)
         else:
             target_height = find_most_common_height_around_the_building(height_map, building)
         for x in xrange(building.x, building.x + buildings[building.type_of_house]["xLength"]):
