@@ -59,8 +59,7 @@ class Building:
             down = True
 
         if overlapping:
-            points_dict = self.__inside_case(house, this_middle_point, house_middle_point,
-                                            overlapping_direction_x)
+            points_dict = self.__inside_case(house, this_middle_point, house_middle_point, overlapping_direction_x)
             calculation_point1 = points_dict["calculation_point1"]
             calculation_point2 = points_dict["calculation_point2"]
         else:
@@ -78,17 +77,25 @@ class Building:
         calculation_point1 = {}
         calculation_point2 = {}
         if right:
-            calculation_point1["x"] = this_middle_point["x"] - (self.buildingsCopy[self.type_of_house]["xLength"] / float(2))
-            calculation_point2["x"] = house_middle_point["x"] + (self.buildingsCopy[house.type_of_house]["xLength"] / float(2))
+            calculation_point1["x"] = this_middle_point["x"] - (self.buildingsCopy[self.type_of_house]["xLength"] /
+                                                                float(2))
+            calculation_point2["x"] = house_middle_point["x"] + (self.buildingsCopy[house.type_of_house]["xLength"] /
+                                                                 float(2))
         else:
-            calculation_point1["x"] = this_middle_point["x"] + (self.buildingsCopy[self.type_of_house]["xLength"] / float(2))
-            calculation_point2["x"] = house_middle_point["x"] - (self.buildingsCopy[house.type_of_house]["xLength"] / float(2))
+            calculation_point1["x"] = this_middle_point["x"] + (self.buildingsCopy[self.type_of_house]["xLength"] /
+                                                                float(2))
+            calculation_point2["x"] = house_middle_point["x"] - (self.buildingsCopy[house.type_of_house]["xLength"] /
+                                                                 float(2))
         if down:
-            calculation_point1["z"] = this_middle_point["z"] - (self.buildingsCopy[self.type_of_house]["zWidth"] / float(2))
-            calculation_point2["z"] = house_middle_point["z"] + (self.buildingsCopy[house.type_of_house]["zWidth"] / float(2))
+            calculation_point1["z"] = this_middle_point["z"] - (self.buildingsCopy[self.type_of_house]["zWidth"] /
+                                                                float(2))
+            calculation_point2["z"] = house_middle_point["z"] + (self.buildingsCopy[house.type_of_house]["zWidth"] /
+                                                                 float(2))
         else:
-            calculation_point1["z"] = this_middle_point["z"] + (self.buildingsCopy[self.type_of_house]["zWidth"] / float(2))
-            calculation_point2["z"] = house_middle_point["z"] - (self.buildingsCopy[house.type_of_house]["zWidth"] / float(2))
+            calculation_point1["z"] = this_middle_point["z"] + (self.buildingsCopy[self.type_of_house]["zWidth"] /
+                                                                float(2))
+            calculation_point2["z"] = house_middle_point["z"] - (self.buildingsCopy[house.type_of_house]["zWidth"] /
+                                                                 float(2))
         return {"calculation_point1": calculation_point1, "calculation_point2": calculation_point2}
 
     def __inside_case(self, house, inside_middle_point, outside_middle_point, inside_direction_x):
@@ -141,10 +148,9 @@ class Building:
         """if we passed all these if statements, we are not within the building"""
         return False
 
-
     def set_connection_point(self, well, height_map):
-        x = self.x + (MC_LIBRARY.BUFFER)
-        z = self.z + (MC_LIBRARY.BUFFER)
+        x = self.x + MC_LIBRARY.BUFFER
+        z = self.z + MC_LIBRARY.BUFFER
         well_z = well.z - (MC_LIBRARY.BUFFER*2)
         if z < well_z:
             z += (self.buildingsCopy[self.type_of_house]["zWidth"] - (MC_LIBRARY.BUFFER*2)) - 1
@@ -154,7 +160,3 @@ class Building:
         x += (self.buildingsCopy[self.type_of_house]["xLength"] - (MC_LIBRARY.BUFFER*2)) / 2
         y = height_map[x, z][0]
         self.path_connection_point = (x, z, y)
-
-
-
-

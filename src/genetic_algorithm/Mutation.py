@@ -12,7 +12,7 @@ def mutate_population(population):
         """The amount of houses in a single solution"""
         gene_size = len(solution)
         """The percent chance of mutation"""
-        mutation_rate = float(1) / gene_size
+        mutation_rate = float(1) / (gene_size * MUTATION_RATE_MODIFIER)
         mutation_trigger = mutation_rate * 100
         for i in building_list:
 
@@ -20,11 +20,11 @@ def mutate_population(population):
             random_number_z = random_number_between_one_to_hundred()
             random_number_house = random_number_between_one_to_hundred()
 
-            mutation_count_coord += mutate_coordinate(random_number_x, mutation_trigger, i.x) #mutate x
-            mutation_count_coord += mutate_coordinate(random_number_z, mutation_trigger, i.z) #mutate z
+            mutation_count_coord += mutate_coordinate(random_number_x, mutation_trigger, i.x)  # mutate x
+            mutation_count_coord += mutate_coordinate(random_number_z, mutation_trigger, i.z)  # mutate z
 
             if random_number_house <= mutation_trigger:
-                if i.type_of_house == "well": #Do not mutate the well
+                if i.type_of_house == "well":  # Do not mutate the well
                     continue
                 mutation_count_building += 1
                 i.type_of_house = mutate_house(i.type_of_house)
@@ -61,27 +61,29 @@ def decide_block_amount():
     elif random_number <= 6:
         return 3
     else:
-        return 0 # something fucky happened if you hit this
+        return 0  # something wrong happened if you hit this
 
 
 def mutate_house(house_to_mutate):
-    sorted_buildings = get_buildings_by_size()
-    for item in xrange(0, len(sorted_buildings)): #item is tuple (area_size, type)
+    if USE_SIZE_FOR_MUTATION:
+        sorted_buildings = get_buildings_by_size()
+    else:
+        sorted_buildings = get_buildings_by_mutation_number()
+    for item in xrange(0, len(sorted_buildings)):  # item is tuple (area_size/number, type)
         if sorted_buildings[item][1] == house_to_mutate:
             index_plus_1 = item+1
             index_minus_1 = item-1
             random_number = random_number_between_one_to_hundred()
-            if sorted_buildings[item][1] == sorted_buildings[0][1]: # Special case: Small houses shouldn't become churches
+            # Special case: Small houses shouldn't become churches
+            if sorted_buildings[item][1] == sorted_buildings[0][1]:
                 return sorted_buildings[index_plus_1][1]
-                break
-            if sorted_buildings[item][1] == sorted_buildings[5][1]: # Special case: Churches shouldn't become small houses
+            # Special case: Churches shouldn't become small houses
+            if sorted_buildings[item][1] == sorted_buildings[5][1]:
                 return sorted_buildings[index_minus_1][1]
-                break
             if random_number > 50:
                 return sorted_buildings[index_plus_1][1]
             else:
                 return sorted_buildings[index_minus_1][1]
-            break
 
 
 def get_buildings_by_size():
@@ -96,3 +98,15 @@ def get_buildings_by_size():
     returned_list = size_list
     return returned_list
 
+
+def get_buildings_by_mutation_number():
+    number_list = list()
+    for item in buildings:
+        if item == "well":
+            continue
+        number = buildings[item]["mutationNumber"]
+        number_tuple = (number, item)
+        number_list.append(number_tuple)
+    number_list.sort()
+    returned_list = number_list
+    return returned_list
