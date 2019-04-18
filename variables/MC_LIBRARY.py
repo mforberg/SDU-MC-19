@@ -12,7 +12,7 @@ BUFFER                  = 1
 
 
 buildings = {
-    "well": {"probability": WELL_PROBABILITY, "xLength": 4 + (BUFFER * 2), "zWidth": 4 + (BUFFER * 2), "yHeight": 4, "floorAndRoof": False},
+    "well": {"probability": WELL_PROBABILITY, "xLength": 5 + (BUFFER * 2), "zWidth": 5 + (BUFFER * 2), "yHeight": 4, "floorAndRoof": False},
     "normalHouse": {"probability": NORMALHOUSE_PROBABILITY, "xLength": 7 + (BUFFER * 2), "zWidth": 7 + (BUFFER * 2), "yHeight": 6, "floorAndRoof": True},
     "blackSmith": {"probability": BLACKSMITH_PROBABILITY, "xLength": 9 + (BUFFER * 2), "zWidth": 7 + (BUFFER * 2), "yHeight": 5, "floorAndRoof": True},
     "inn": {"probability": INN_PROBABILITY, "xLength": 20 + (BUFFER * 2), "zWidth": 10 + (BUFFER * 2), "yHeight": 12, "floorAndRoof": True},

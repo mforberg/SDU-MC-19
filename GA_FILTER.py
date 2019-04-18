@@ -8,6 +8,7 @@ from src.build_solution import BuldingTest as BT
 from pymclevel import alphaMaterials as am
 from src.prepare_solution.a_star.AStar import *
 from src.prepare_solution.a_star.PrepareAStar import *
+from heapq import *
 
 
 def perform(level, box, options):
@@ -16,22 +17,18 @@ def perform(level, box, options):
     print("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _")
     height_map = MA.create_two_dimensional_height_map(level, box)
     starting_point = {"x": box.minx, "z": box.minz}
+    box_width = box.maxz - box.minz
+    box_length = box.maxx - box.minx
 
     gam = GAM.Genetic_Algorithm()
-    result = gam.run_genetic_algorithm(height_map, box.maxx - box.minx, box.maxz - box.minz, starting_point)    # RUN GENETIC ALGORITHM
-    CA.modify_area(height_map, result, level)                                                                   # LEVEL AREA FOR BUILDINGS
-    set_all_connections_points(result, height_map)                                                              # SET PATH CONNECTION POINTS FOR ALL STRUCTURES
-    #manhattan_distance(result)
-    #blocked_tiles(result)
-    """ TESTING FOR A_STAR / MANHATTAN POOP """
-    empty = list()
-    start = (0, (0,0,height_map[0,0][0]))
-    end = (5,5,height_map[5,5][0])
-    utilityFunctions.setBlock(level, (am.Wood.ID, 0), end[0], end[2], end[1])
-    neighbors = find_neighbors_for_current_node(start, end, height_map)
-    #BT.build_points(level, empty)
-    #print empty
-    print neighbors
+    result = gam.run_genetic_algorithm(height_map, box_length, box_width, starting_point)
+    CA.modify_area(height_map, result, level)
+    set_all_connections_points(result, height_map)
+    start = time.time()
+    neighbors = run(result, height_map, level, box_length, box_width, starting_point)
+    end = time.time()
+
+    print end-start, "TOTAL TIME FOR A-STAR"
     """"""
     # a star
     # deforest(list_of_buildings, a_star)

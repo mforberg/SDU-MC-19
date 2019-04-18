@@ -1,6 +1,6 @@
-import src
+
 import time
-from src.genetic_algorithm import CheckCriterias, Crossover, Fitness, Generation
+from src.genetic_algorithm import CheckCriterias, Crossover, Fitness, Generation, Mutation
 from variables.GA_VALUES import *
 
 
@@ -18,7 +18,7 @@ class Genetic_Algorithm:
             """properly skip mutation and new generation on last"""
             if x < GENERATIONS - 1:
                 new_generation_without_fitness = Crossover.create_new_population_from_old_one(generation_with_fitness)
-                src.genetic_algorithm.Mutation.mutate_population(new_generation_without_fitness)
+                Mutation.mutate_population(new_generation_without_fitness)
                 start = time.time()
                 current_generation = CheckCriterias.check_population(new_generation_without_fitness, box_x, box_z, starting_point)
                 end = time.time()
