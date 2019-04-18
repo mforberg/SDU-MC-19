@@ -9,6 +9,7 @@ class Building:
         self.path_connection_point = tuple()
         self.type_of_house = type_of_house
         self.buildingsCopy = MC_LIBRARY.buildings
+        self.buffer_direction = 0
 
     def distance_between_building(self, house):
         # find the middle of each building
@@ -153,6 +154,9 @@ class Building:
         well_z = well.z - (MC_LIBRARY.BUFFER*2)
         if z < well_z:
             z += (self.buildingsCopy[self.type_of_house]["zWidth"] - (MC_LIBRARY.BUFFER*2)) - 1
+            self.buffer_direction = 3
+        else:
+            self.buffer_direction = -3
         x += (self.buildingsCopy[self.type_of_house]["xLength"] - (MC_LIBRARY.BUFFER*2)) / 2
         y = height_map[x, z][0]
         self.path_connection_point = (x, z, y)

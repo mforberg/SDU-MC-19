@@ -12,7 +12,7 @@ BUFFER = 1
 
 
 buildings = {
-    "well": {"probability": WELL_PROBABILITY, "xLength": 4 + (BUFFER * 2), "zWidth": 4 + (BUFFER * 2),
+    "well": {"probability": WELL_PROBABILITY, "xLength": 5 + (BUFFER * 2), "zWidth": 5 + (BUFFER * 2),
              "yHeight": 4, "floorAndRoof": False, "mutationNumber": 0},
     "normalHouse": {"probability": NORMAL_HOUSE_PROBABILITY, "xLength": 7 + (BUFFER * 2), "zWidth": 7 + (BUFFER * 2),
                     "yHeight": 6, "floorAndRoof": True, "mutationNumber": 2},
