@@ -1,5 +1,5 @@
 # noinspection PyUnresolvedReferences
-from pymclevel import alphaMaterials, MCSchematic, MCLevel, BoundingBox
+from pymclevel import alphaMaterials
 # noinspection PyUnresolvedReferences
 from mcplatform import *
 from variables.MC_LIBRARY import *
@@ -28,21 +28,21 @@ blocks = [
     am.Water.ID
 ]
 
-# blocks we dont want to account for in the height map
+# blocks we do not want to account for in the height map
 skip_blocks = [
     am.Air.ID,
     am.Wood.ID,
     am.Leaves.ID
 ]
 
-#zero indexed coordinates in the box
+# zero indexed coordinates in the box
 dimension_corrector = -1
 
 
 def create_two_dimensional_height_map(level, box):
     position_dict = {}
     x_reference_point = 200
-    """Find the reference point by going down the y-axiz untill there is a block that isn't in the skipBlocks"""
+    """Find the reference point by going down the y-axis until there is a block that isn't in the skipBlocks"""
     for y in range(box.maxy + dimension_corrector, box.miny + dimension_corrector, -1):
         current_block = level.blockAt(box.maxx + dimension_corrector, y, box.maxz + dimension_corrector)
         if current_block in skip_blocks:
@@ -81,19 +81,23 @@ def create_two_dimensional_height_map(level, box):
     return position_dict
 
 
-def find_average_height(building, height_map, return_amount_of_water):
+def find_average_height(building, height_map):
     total_area = buildings[building.type_of_house]["xLength"] * buildings[building.type_of_house]["zWidth"]
     list_of_heights = []
     amount = 0
-    amount_of_water = 0
     for x in xrange(building.x, building.x + buildings[building.type_of_house]["xLength"]):
         for z in xrange(building.z, building.z + buildings[building.type_of_house]["zWidth"]):
-            """check for water"""
-            if height_map[x, z][1] == 9:
-                amount_of_water += 1
             amount += height_map[x, z][0]
             list_of_heights.append(height_map[x, z][0])
     average = int(round(amount / float(total_area)))
-    if return_amount_of_water:
-        return [average, amount_of_water]
     return average
+
+
+def find_amount_of_water_and_lava(building, height_map):
+    amount = 0
+    for x in xrange(building.x, building.x + buildings[building.type_of_house]["xLength"]):
+        for z in xrange(building.z, building.z + buildings[building.type_of_house]["zWidth"]):
+            """check for water or lava"""
+            if height_map[x, z][1] == 9 or height_map[x, z][1] == 11:
+                amount += 1
+    return amount

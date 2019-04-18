@@ -1,6 +1,6 @@
-import src
 from variables.MC_LIBRARY import *
 from variables.GA_VALUES import *
+from src.Building import *
 
 
 def generate_population(box_x, box_z, starting_point):
@@ -31,10 +31,11 @@ def generate_solution(box_x, box_z, starting_point):
 
 def place_building(box_x, box_z, starting_point, current_house, list_of_buildings):
     successful = False
+    building = None
     while not successful:
         try_again = False
         coordinate = place_house_point_randomly(box_x, box_z, starting_point, current_house)
-        building = src.Building.Building(coordinate["x"], coordinate["z"], current_house)
+        building = Building(coordinate["x"], coordinate["z"], current_house)
         for building2 in list_of_buildings:
             if building.check_if_house_is_within(building2):
                 try_again = True
@@ -60,9 +61,6 @@ def place_house_point_randomly(box_x, box_z, starting_point, house_name):
 
 
 def get_amount_of_houses(box_x, box_z):
-    """Pick a number between ~10 to ~20 if the size is 250*250"""
-    minimum_amount_of_houses = round((box_z * box_x) / 6200)
-    maximum_amount_of_houses = round((box_z * box_x) / 3100)
-    amount_of_houses = random.randint(minimum_amount_of_houses, maximum_amount_of_houses)
+    amount_of_houses = random.randint(get_minimum_amount_of_houses(box_x, box_z), get_maximum_amount_of_houses(box_x,
+                                                                                                               box_z))
     return amount_of_houses
-
