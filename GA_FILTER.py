@@ -4,9 +4,10 @@ import time
 from src import MapAnalysis
 from src.genetic_algorithm import PrepareBuildingArea, GeneticAlgorithmMinecraft
 from src.build_solution import BuildHouses
+
 # noinspection PyUnresolvedReferences
 from pymclevel import alphaMaterials as aM
-# from src.prepare_solution.a_star.AStar import *
+from src.prepare_solution.a_star.AStar import *
 from src.prepare_solution.a_star.PrepareAStar import *
 from heapq import *
 
