@@ -4,8 +4,13 @@ from variables.GA_VALUES import *
 import copy
 
 
-class Genetic_Algorithm:
+class GeneticAlgorithm:
+    def __init__(self):
+        pass
+
     def run_genetic_algorithm(self, height_map, box_x, box_z, starting_point):
+        extra_generation = None
+        overall_best_solution = None
         init_generation = Generation.generate_population(box_x, box_z, starting_point)
         if USE_FI2POP:
             extra_generation = Generation.generate_population(box_x, box_z, starting_point)
@@ -26,7 +31,6 @@ class Genetic_Algorithm:
             """FI2POP"""
             if USE_FI2POP:
                 extra_with_fitness = Fitness.extra_population_fitness(extra_generation, box_x, box_z, starting_point)
-                print "extra: " + self.min_max_avg(extra_with_fitness)
                 new_extra_without_fitness = Crossover.create_new_population_from_old_one(extra_with_fitness)
                 Mutation.mutate_population(new_extra_without_fitness)
                 extra_generation = new_extra_without_fitness
@@ -43,37 +47,10 @@ class Genetic_Algorithm:
             end = time.time()
             print end - start, "<-- Time"
 
-        """
-        Runtimes for sections
-        InitGeneration: 9.985
-        FITNESS: 2.163
-        MINMAXAVG: 0.0
-        MUTATE: 0.007
-        """
-        """
-        11.05799 initGen
-        2.2326 Fitness
-        3.1375 Crossover
-        0.022988 Mutation
-        """
-        """
-        avg time for fitness:
-        0.631109833717
-        crossover:
-        0.03
-        mutation:
-        0.006
-        checkcriterias with no commented out code:
-        3.52894238063
-        with comment:
-        same
-        
-        
-        """
-        """ time testing in future: time.time() - time.time() = x seconds"""
         return overall_best_solution
 
-    def min_max_avg(self, data):
+    @staticmethod
+    def min_max_avg(data):
         maximum = data[0]
         minimum = data[0]
         average = 0
@@ -87,10 +64,42 @@ class Genetic_Algorithm:
         average = average/len(data)
         return "MIN: {0}\tMAX: {1}\tAVG: {2}".format(round(minimum[1], 3), round(maximum[1], 3), round(average, 3))
 
-    def find_best_solution(self, fitness_generation):
+    @staticmethod
+    def find_best_solution(fitness_generation):
         current_top = 0
+        current_best = None
         for solution in fitness_generation:
             if solution[1] > current_top:
                 current_top = solution[1]
                 current_best = solution
         return current_best
+
+
+"""
+        Run-times for sections
+        InitGeneration: 9.985
+        FITNESS: 2.163
+        MIN_MAX_AVG: 0.0
+        MUTATE: 0.007
+        """
+"""
+11.05799 initGen
+2.2326 Fitness
+3.1375 Crossover
+0.022988 Mutation
+"""
+"""
+avg time for fitness:
+0.631109833717
+crossover:
+0.03
+mutation:
+0.006
+CheckCriteria with no commented out code:
+3.52894238063
+with comment:
+same
+
+
+"""
+""" time testing in future: time.time() - time.time() = x seconds"""

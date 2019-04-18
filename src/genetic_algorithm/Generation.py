@@ -1,4 +1,3 @@
-import src
 from variables.MC_LIBRARY import *
 from variables.GA_VALUES import *
 from src.Building import *
@@ -32,6 +31,7 @@ def generate_solution(box_x, box_z, starting_point):
 
 def place_building(box_x, box_z, starting_point, current_house, list_of_buildings):
     successful = False
+    building = None
     while not successful:
         try_again = False
         coordinate = place_house_point_randomly(box_x, box_z, starting_point, current_house)

@@ -69,7 +69,7 @@ def building_variance(solution):
     for building in solution:
         unique_buildings.add(building.type_of_house)
     float_length = len(unique_buildings)
-    percent_of_max_possible = float(float_length) / len(get_placeable_buildings())
+    percent_of_max_possible = float(float_length) / len(get_available_buildings())
     score = VARIANCE_WEIGHT * (VARIANCE_MAX_SCORE * math.pow(percent_of_max_possible, 2))
     return score
 

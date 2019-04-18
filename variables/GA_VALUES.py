@@ -1,4 +1,5 @@
 USE_FI2POP = True
+USE_SIZE_FOR_MUTATION = False
 """The percent chance of crossover"""
 CROSSOVER_RATE = 0.05  # 5%
 """The amount of "solutions" in a population"""
@@ -9,6 +10,8 @@ GENERATIONS = 100
 ELITES_PERCENTAGE = 0.1  # 10%
 """Percentage of solution that should be normal houses"""
 NORMAL_HOUSE_PERCENTAGE = 0.33  # 33%
+"""Mutation rate is calculated by (1 / (gene_size * MUTATION_RATE_MODIFIER))"""
+MUTATION_RATE_MODIFIER = 2  # Twice as unlikely to mutate
 
 """Fitness weights"""
 WATER_AND_LAVA_WEIGHT = 12  # For each water/lava-block found
@@ -32,7 +35,7 @@ DISTANCE_MAX_SCORE = 100  # max score for distance to other houses
 
 
 """Length of solution variables"""
-DECREASE_PER_EXTRA_BUILDING = 410
+DECREASE_PER_EXTRA_BUILDING = 410  # the average number of fitness points decreased per building after min length
 
 
 """FI2POP variables"""

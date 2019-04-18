@@ -9,7 +9,7 @@ def check_population(population, box_x, box_z, starting_point):
         if check_solution(solution, box_x, box_z, starting_point):
             checked_population.append(solution)
         else:
-            """If the solution does not meet the criterias"""
+            """If the solution does not meet the basics"""
             checked_population.append(src.genetic_algorithm.Generation.generate_solution(box_x, box_z, starting_point))
     return checked_population
 
@@ -20,7 +20,7 @@ def fi2pop_check(population, box_x, box_z, starting_point, extra_population):
         if check_solution(solution, box_x, box_z, starting_point):
             checked_population.append(solution)
         else:
-            """If the solution does not meet the criterias"""
+            """If the solution does not meet the basics"""
             working_extra_solution = find_working_extra_solution(extra_population, box_x, box_z, starting_point)
             if working_extra_solution is None:
                 checked_population.append(

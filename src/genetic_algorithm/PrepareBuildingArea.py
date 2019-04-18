@@ -2,7 +2,7 @@ from src.MapAnalysis import *
 # noinspection PyUnresolvedReferences
 import utilityFunctions
 # noinspection PyUnresolvedReferences
-from pymclevel import alphaMaterials as am
+from pymclevel import alphaMaterials as aM
 
 
 def modify_area(height_map, solution, level):
@@ -26,13 +26,13 @@ def modify_area(height_map, solution, level):
                     else the target_height is smaller than the height_map location
                     """
                     if current_difference == 0:
-                        utilityFunctions.setBlock(level, (am.Dirt.ID, 0), x, height_map[x, z][0], z)
+                        utilityFunctions.setBlock(level, (aM.Dirt.ID, 0), x, height_map[x, z][0], z)
                         break
                     elif current_difference > 0:
-                        utilityFunctions.setBlock(level, (am.Dirt.ID, 0), x, height_map[x, z][0], z)
+                        utilityFunctions.setBlock(level, (aM.Dirt.ID, 0), x, height_map[x, z][0], z)
                         height_map[x, z][0] += 1
                     else:
-                        utilityFunctions.setBlock(level, (am.Air.ID, 0), x, height_map[x, z][0], z)
+                        utilityFunctions.setBlock(level, (aM.Air.ID, 0), x, height_map[x, z][0], z)
                         height_map[x, z][0] -= 1
 
 
