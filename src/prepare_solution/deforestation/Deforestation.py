@@ -8,7 +8,8 @@ from variables.MC_LIBRARY import *
 def deforest_area(list_of_buildings, list_of_roads, height_map, level):
     for building in list_of_buildings:
         clear_building_area(building, height_map, level)
-    print(list_of_roads)
+    for road in list_of_roads:
+        clear_road(road, level, height_map)
 
 
 def find_bounds(list_of_buildings):
@@ -232,3 +233,16 @@ def clear_z_max_to_min(start_x, end_x, start_z, end_z, start_y, end_y, level):
                 utilityFunctions.setBlock(level, (alphaMaterials.Air.ID, 0), x, y, end_z + z_decrement)
                 blocks_found = True
                 z_decrease = True
+
+
+def clear_road(road, level, height_map):
+    for block in road:
+        block_x = block[0]
+        block_z = block[1]
+        block_y = block[2]
+        end_y = block_y + 4
+        for x in xrange(block_x - BUFFER, block_x + BUFFER + 1):
+            for z in xrange(block_z - BUFFER, block_z + BUFFER + 1):
+                this_y = height_map[x, z][0] + 1
+                for y in xrange(this_y, end_y):
+                    utilityFunctions.setBlock(level, (alphaMaterials.Air.ID, 0), x, y, z)
