@@ -98,7 +98,7 @@ def build_floor_bs(level, length_of_building, width_of_building, height_of_build
 
 
 def build_door(level, building):
-    door_coords = building.path_connection_point # (x, z, y)
+    door_coordinate = building.path_connection_point  # (x, z, y)
 
     for i in range(1, 3):
-        utilityFunctions.setBlock(level, (64, 1), door_coords[0], door_coords[2] + i, door_coords[1])
+        utilityFunctions.setBlock(level, (64, 1), door_coordinate[0], door_coordinate[2] + i, door_coordinate[1])

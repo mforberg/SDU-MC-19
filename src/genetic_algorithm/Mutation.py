@@ -65,7 +65,7 @@ def decide_block_amount():
 
 
 def mutate_house(house_to_mutate):
-    if USE_SIZE_FOR_MUTATION:
+    if USE_SIZE_FOR_TYPE_MUTATION:
         sorted_buildings = get_buildings_by_size()
     else:
         sorted_buildings = get_buildings_by_mutation_number()

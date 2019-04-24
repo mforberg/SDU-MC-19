@@ -4,12 +4,16 @@ import time
 from src import MapAnalysis
 from src.genetic_algorithm import PrepareBuildingArea, GeneticAlgorithmMinecraft
 from src.build_solution import BuildHouses
+from src.prepare_solution.deforestation.Deforestation import deforest_area
 
 # noinspection PyUnresolvedReferences
 from pymclevel import alphaMaterials as aM
 from src.prepare_solution.a_star.AStar import *
 from src.prepare_solution.a_star.PrepareAStar import *
 from heapq import *
+
+inputs = (("Genetic Algorithm and A*", "label"),
+          ("Build solution", True))
 
 
 def perform(level, box, options):
@@ -21,9 +25,6 @@ def perform(level, box, options):
     box_width = box.maxz - box.minz
     box_length = box.maxx - box.minx
 
-    
-
-    
     gam = GeneticAlgorithmMinecraft.GeneticAlgorithm()
     # RUN GENETIC ALGORITHM
     result = gam.run_genetic_algorithm(height_map, box.maxx - box.minx, box.maxz - box.minz, starting_point)
@@ -38,9 +39,11 @@ def perform(level, box, options):
     # manhattan_distance(result)
     # blocked_tiles(result)
     # a star
-    # deforest(list_of_buildings, a_star)
-    # place roads
-    BuildHouses.build(level, height_map, result)
+    if options["Build solution"]:
+        # deforest(list_of_buildings, a_star)
+        deforest_area(result, "a_star", height_map, level)
+        # place roads
+        BuildHouses.build(level, height_map, result)
 
     # TODO: add values to width + length to add "buffer" area to modify area
     # TODO: modify how to build house with modifier to subtract "buffer"
