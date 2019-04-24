@@ -16,6 +16,7 @@ Can find if a tile (x,z) is walkable compared to our final list of buildings com
 """
 
 list_of_blocked_coordinates = list()
+WATER_COST = 4 # water 5 times as expensive as ground
 
 
 def run(list_of_buildings, height_map, level, box_length, box_width, starting_point):
@@ -49,7 +50,7 @@ def run(list_of_buildings, height_map, level, box_length, box_width, starting_po
 
         heappush(open_heap, (f_scores[start], start))
         while open_heap:
-            current_node = heappop(open_heap)[1] #check what this does
+            current_node = heappop(open_heap)[1]
             if current_node == end:
                 backtracking = []
                 while current_node in parent_dict:
@@ -62,12 +63,17 @@ def run(list_of_buildings, height_map, level, box_length, box_width, starting_po
             neighbors = find_neighbors_for_current_node(current_node, height_map, box_length, box_width, starting_point, level)
             for neighbor in xrange(0, len(neighbors)):
                 current_neighbor = neighbors[neighbor]
+                block_type_neighbor = height_map[current_neighbor[0], current_neighbor[1]][1]
 
                 #Cost is calculated for the neighbor nodes
                 cost_so_far = g_scores[current_node]
 
                 h_cost = manhattan_distance_between(current_neighbor, end)
-                g_cost = cost_so_far + 1 #TODO: Should account for water
+
+                if block_type_neighbor == 8 or block_type_neighbor == 9:  # 8 = flowing water, 9 = still water
+                    g_cost = cost_so_far + WATER_COST
+                else:
+                    g_cost = cost_so_far + 1  # TODO: Should account for water
 
                 if current_neighbor in close_list and g_cost >= g_scores.get(current_neighbor, 0):
                     continue
@@ -76,6 +82,7 @@ def run(list_of_buildings, height_map, level, box_length, box_width, starting_po
                     parent_dict[current_neighbor] = current_node
                     g_scores[current_neighbor] = g_cost
                     f_scores[current_neighbor] = g_cost + h_cost
+                    #utilityFunctions.setBlock(level, (am.Sand.ID, 0), current_neighbor[0], current_neighbor[2], current_neighbor[1]) # TODO: remove this
                     heappush(open_heap, (f_scores[current_neighbor], current_neighbor))
 
     return list_of_all_building_paths
@@ -148,6 +155,14 @@ def altitude_check(node, neighbor):
         return True
     return False
 
+def lava_check(height_map, neighbor):
+    block_type = height_map[neighbor[0], neighbor[1]]
+    lava_still = 11 # still lava ID is 11, water is 9
+    lava_flowing = 10 # lava can be flowing, different ID
+    if block_type[1] == lava_still or block_type[1] == lava_flowing:
+        return False
+    return True
+
 
 def find_neighbors_for_current_node(node, height_map, box_length, box_width, starting_point, level):
     neighbors = [(0, 1), (0, -1), (1, 0), (-1, 0)]
@@ -162,9 +177,9 @@ def find_neighbors_for_current_node(node, height_map, box_length, box_width, sta
         neighbor = (neighbor_x, neighbor_z, neighbor_y)
 
         # TODO: check if the node is null(it is out of bounce of the world)
-
-
-        if within_bounds(neighbor, box_length, box_width, starting_point):
+        if not within_bounds(neighbor, box_length, box_width, starting_point): # always check bounds first :)
+            continue
+        if not lava_check(height_map, neighbor):
             continue
         if not is_walkable(neighbor, level):
             continue
@@ -178,6 +193,6 @@ def within_bounds(node, box_length, box_width, starting_point):
     max_z = box_width + starting_point["z"]
     max_x = box_length + starting_point["x"]
 
-    if abs(starting_point["x"]) < abs(node[0]) < max_x and abs(starting_point) < abs(node[1]) < max_z:
+    if node[0] >= starting_point["x"] and node[0] < max_x and node[1] >= starting_point["z"] and node[1] < max_z:
         return True
     return False
