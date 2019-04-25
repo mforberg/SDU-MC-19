@@ -56,5 +56,6 @@ def get_reference_block(level, building, target_height):
     reference_blocks = list()
     for x in xrange(building.x, building.x + buildings[building.type_of_house]["xLength"]):
         for z in xrange(building.z, building.z + buildings[building.type_of_house]["zWidth"]):
-            reference_blocks.append(level.blockAt(x, target_height, z))
+            if level.blockAt(x, target_height, z) != aM.Air.ID:
+                reference_blocks.append(level.blockAt(x, target_height, z))
     return max(set(reference_blocks), key=reference_blocks.count)

@@ -242,7 +242,7 @@ def clear_road(road, level, height_map):
         block_x = block[0]
         block_z = block[1]
         bonus_y = 0
-        while go_higher or bonus_y <= 4:
+        while go_higher or bonus_y <= minimum_clear_height:
             bonus_y += 1
             go_higher = False
             for x in xrange(block_x - BUFFER, block_x + BUFFER + 1):
