@@ -8,13 +8,13 @@ from pymclevel import alphaMaterials as aM
 def modify_area(height_map, solution, level):
     use_average = False
     for building in solution:
-        reference_block = get_reference_block(height_map, building)
         """use the average height to create the ground for the building to be build on. This might cause unreachable
         buildings in hill areas"""
         if use_average:
             target_height = find_average_height(building, height_map)
         else:
             target_height = find_most_common_height_around_the_building(height_map, building)
+        reference_block = get_reference_block(level, building, target_height)
         for x in xrange(building.x, building.x + buildings[building.type_of_house]["xLength"]):
             for z in xrange(building.z, building.z + buildings[building.type_of_house]["zWidth"]):
                 zero_difference = False
@@ -28,7 +28,7 @@ def modify_area(height_map, solution, level):
                     """
                     if current_difference == 0:
                         utilityFunctions.setBlock(level, (reference_block, 0), x, height_map[x, z][0], z)
-                        break
+                        zero_difference = True  # Break
                     elif current_difference > 0:
                         utilityFunctions.setBlock(level, (reference_block, 0), x, height_map[x, z][0], z)
                         height_map[x, z][0] += 1
@@ -52,9 +52,9 @@ def find_most_common_height_around_the_building(height_map, building):
     return max(set(all_heights), key=all_heights.count)
 
 
-def get_reference_block(height_map, building):
+def get_reference_block(level, building, target_height):
     reference_blocks = list()
     for x in xrange(building.x, building.x + buildings[building.type_of_house]["xLength"]):
         for z in xrange(building.z, building.z + buildings[building.type_of_house]["zWidth"]):
-            reference_blocks.append(height_map[building.x, building.z][1])
+            reference_blocks.append(level.blockAt(x, target_height, z))
     return max(set(reference_blocks), key=reference_blocks.count)

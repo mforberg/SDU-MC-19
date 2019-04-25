@@ -236,13 +236,18 @@ def clear_z_max_to_min(start_x, end_x, start_z, end_z, start_y, end_y, level):
 
 
 def clear_road(road, level, height_map):
+    minimum_clear_height = 4
     for block in road:
+        go_higher = False
         block_x = block[0]
         block_z = block[1]
-        block_y = block[2]
-        end_y = block_y + 4
-        for x in xrange(block_x - BUFFER, block_x + BUFFER + 1):
-            for z in xrange(block_z - BUFFER, block_z + BUFFER + 1):
-                this_y = height_map[x, z][0] + 1
-                for y in xrange(this_y, end_y):
-                    utilityFunctions.setBlock(level, (alphaMaterials.Air.ID, 0), x, y, z)
+        bonus_y = 0
+        while go_higher or bonus_y <= 4:
+            bonus_y += 1
+            go_higher = False
+            for x in xrange(block_x - BUFFER, block_x + BUFFER + 1):
+                for z in xrange(block_z - BUFFER, block_z + BUFFER + 1):
+                    y = height_map[x, z][0] + bonus_y
+                    if level.blockAt(x, y, z) != alphaMaterials.Air.ID:
+                        utilityFunctions.setBlock(level, (alphaMaterials.Air.ID, 0), x, y, z)
+                        go_higher = True
