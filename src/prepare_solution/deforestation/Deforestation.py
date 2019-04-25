@@ -50,63 +50,57 @@ def clear_building_area(building, height_map, level):
 
 
 def check_area_and_clear_blocks(start_x, end_x, start_z, end_z, start_y, end_y, level):
-    true_checks = 0
-    bottom_block = False
-    top_block = False
-    """bottom/top check"""
+    boolean_set = set()
+    """modifies the list"""
+    check_everything(start_x, end_x, start_z, end_z, start_y, end_y, level, boolean_set)
+    print boolean_set
+    if len(boolean_set) > 1:
+        clear_everything(start_x, end_x, start_z, end_z, start_y, end_y, level)
+    elif len(boolean_set) == 1:
+        functions = {"bottom": clear_bottom_up, "top": clear_up_down,
+                     "x_min": clear_x_min_to_max, "x_max": clear_x_max_to_min,
+                     "z_min": clear_z_min_to_max, "z_max": clear_z_max_to_min}
+        for collision_case in boolean_set:
+            functions[collision_case](start_x, end_x, start_z, end_z, start_y, end_y, level)
+
+
+def check_everything(start_x, end_x, start_z, end_z, start_y, end_y, level, boolean_set):
+    check_bottom_and_top(start_x, end_x, start_z, end_z, start_y, end_y, level, boolean_set)
+    check_x_min_and_x_max(start_x, end_x, start_z, end_z, start_y, end_y, level, boolean_set)
+    check_z_min_and_z_max(start_x, end_x, start_z, end_z, start_y, end_y, level, boolean_set)
+
+
+def check_bottom_and_top(start_x, end_x, start_z, end_z, start_y, end_y, level, boolean_set):
     for x in xrange(start_x, end_x):
         for z in xrange(start_z, end_z):
             """check bottom"""
             if level.blockAt(x, start_y + 1, z) != alphaMaterials.Air.ID:
-                bottom_block = True
-                true_checks += 1
+                boolean_set.add("bottom")
             """check top"""
             if level.blockAt(x, end_y, z) != alphaMaterials.Air.ID:
-                top_block = True
-                true_checks += 1
-    x_min = False
-    x_max = False
-    """x_min/x_max check"""
+                boolean_set.add("top")
+
+
+def check_x_min_and_x_max(start_x, end_x, start_z, end_z, start_y, end_y, level, boolean_set):
     for z in xrange(start_z, end_z):
         for y in xrange(start_y + 2, end_y - 1):
-            """check min_x"""
+            """check x_min"""
             if level.blockAt(start_x, y, z) != alphaMaterials.Air.ID:
-                x_min = True
-                true_checks += 1
-            """check max_x"""
+                boolean_set.add("x_min")
+            """check x_max"""
             if level.blockAt(end_x, y, z) != alphaMaterials.Air.ID:
-                x_max = True
-                true_checks += 1
-    z_min = False
-    z_max = False
-    """z_min/z_max check"""
+                boolean_set.add("x_max")
+
+
+def check_z_min_and_z_max(start_x, end_x, start_z, end_z, start_y, end_y, level, boolean_set):
     for x in xrange(start_x + 1, end_x - 1):
         for y in xrange(start_y + 2, end_y - 1):
-            """check min_z"""
+            """check z_min"""
             if level.blockAt(x, y, start_z) != alphaMaterials.Air.ID:
-                z_min = True
-                true_checks += 1
-            """check max_z"""
+                boolean_set.add("z_min")
+            """check z_max"""
             if level.blockAt(x, y, end_z) != alphaMaterials.Air.ID:
-                z_max = True
-                true_checks += 1
-    """if there are more than one side where blocks are, just clear the whole area"""
-    if true_checks > 1:
-        clear_everything(start_x, end_x, start_z, end_z, start_y, end_y, level)
-    elif true_checks == 1:
-        """boolean checks from earlier"""
-        if bottom_block:
-            clear_bottom_up(start_x, end_x, start_z, end_z, start_y, end_y, level)
-        elif top_block:
-            clear_up_down(start_x, end_x, start_z, end_z, start_y, end_y, level)
-        elif x_min:
-            clear_x_min_to_max(start_x, end_x, start_z, end_z, start_y, end_y, level)
-        elif x_max:
-            clear_x_max_to_min(start_x, end_x, start_z, end_z, start_y, end_y, level)
-        elif z_min:
-            clear_z_min_to_max(start_x, end_x, start_z, end_z, start_y, end_y, level)
-        elif z_max:
-            clear_z_max_to_min(start_x, end_x, start_z, end_z, start_y, end_y, level)
+                boolean_set.add("z_max")
 
 
 def clear_everything(start_x, end_x, start_z, end_z, start_y, end_y, level):
