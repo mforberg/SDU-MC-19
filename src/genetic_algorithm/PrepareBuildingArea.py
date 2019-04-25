@@ -14,6 +14,7 @@ def modify_area(height_map, solution, level):
             target_height = find_average_height(building, height_map)
         else:
             target_height = find_most_common_height_around_the_building(height_map, building)
+        reference_block = get_reference_block(level, building, target_height)
         for x in xrange(building.x, building.x + buildings[building.type_of_house]["xLength"]):
             for z in xrange(building.z, building.z + buildings[building.type_of_house]["zWidth"]):
                 zero_difference = False
@@ -26,13 +27,13 @@ def modify_area(height_map, solution, level):
                     else the target_height is smaller than the height_map location
                     """
                     if current_difference == 0:
-                        utilityFunctions.setBlock(level, (aM.Dirt.ID, 0), x, height_map[x, z][0], z)
-                        break
+                        utilityFunctions.setBlock(level, (reference_block, 0), x, height_map[x, z][0], z)
+                        zero_difference = True  # Break
                     elif current_difference > 0:
-                        utilityFunctions.setBlock(level, (aM.Dirt.ID, 0), x, height_map[x, z][0], z)
+                        utilityFunctions.setBlock(level, (reference_block, 0), x, height_map[x, z][0], z)
                         height_map[x, z][0] += 1
                     else:
-                        utilityFunctions.setBlock(level, (aM.Air.ID, 0), x, height_map[x, z][0], z)
+                        utilityFunctions.setBlock(level, (reference_block, 0), x, height_map[x, z][0], z)
                         height_map[x, z][0] -= 1
 
 
@@ -49,3 +50,11 @@ def find_most_common_height_around_the_building(height_map, building):
         if (building.x + buildings[building.type_of_house]["zWidth"] + 1, z) in height_map:
             all_heights.append(height_map[building.x + buildings[building.type_of_house]["zWidth"] + 1, z][0])
     return max(set(all_heights), key=all_heights.count)
+
+
+def get_reference_block(level, building, target_height):
+    reference_blocks = list()
+    for x in xrange(building.x, building.x + buildings[building.type_of_house]["xLength"]):
+        for z in xrange(building.z, building.z + buildings[building.type_of_house]["zWidth"]):
+            reference_blocks.append(level.blockAt(x, target_height, z))
+    return max(set(reference_blocks), key=reference_blocks.count)

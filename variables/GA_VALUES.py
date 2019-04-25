@@ -1,5 +1,5 @@
 USE_FI2POP = True
-USE_SIZE_FOR_MUTATION = False
+USE_SIZE_FOR_TYPE_MUTATION = False
 """The percent chance of crossover"""
 CROSSOVER_RATE = 0.05  # 5%
 """The amount of "solutions" in a population"""
@@ -23,7 +23,7 @@ NORMAL_HOUSE_WEIGHT = 1  # How much the amount of normal houses should be multip
 Y_DIFFERENCE_WEIGHT = 1  # How much the y difference should be multiplied with
 
 """Extra variables"""
-POINTS_PER_DIFFERENCE_IN_Y = 5  # how many points a single difference in height gives
+POINTS_PER_DIFFERENCE_IN_Y = 10  # how many points a single difference in height gives
 CHANGED_BLOCKS_PERCENTAGE = 0.5  # how big the percentage of changed block (depending on size) is allowed
 
 """Fitness Max Scores"""
