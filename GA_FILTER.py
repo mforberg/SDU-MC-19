@@ -9,6 +9,7 @@ from src.build_solution import BuildHouses
 from pymclevel import alphaMaterials as aM
 from src.prepare_solution.a_star.AStar import *
 from src.prepare_solution.a_star.PrepareAStar import *
+from src.prepare_solution.k_means.KMeansClustering import *
 from heapq import *
 
 
@@ -34,9 +35,11 @@ def perform(level, box, options):
     # SET PATH CONNECTION POINTS FOR ALL STRUCTURES
     set_all_connections_points(result, height_map)
     print "CALL 6"
+    centroids = starting_points(3, result)
+    print "CALL 7"
     start = time.time()
     neighbors = run(result, height_map, level, box_length, box_width, starting_point)
-    print "CALL 7"
+    print "CALL 8"
     end = time.time()
     print end-start, "TOTAL TIME FOR A-STAR"
     # manhattan_distance(result)

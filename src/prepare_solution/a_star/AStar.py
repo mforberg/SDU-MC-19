@@ -6,8 +6,6 @@ import utilityFunctions
 from pymclevel import alphaMaterials as am
 from src.genetic_algorithm.CheckCriterias import check_if_within_box
 import time
-from sklearn.cluster import KMeans
-import numpy as np
 
 
 
@@ -24,7 +22,6 @@ WATER_COST = 4 # water 5 times as expensive as ground
 def run(list_of_buildings, height_map, level, box_length, box_width, starting_point):
     list_of_all_building_paths = list()
     blocked_tiles(list_of_buildings)
-    print starting_points(list_of_buildings)
     sorted_buildings = sort_buildings_by_distance(list_of_buildings, height_map)
     goal = heappop(sorted_buildings)[1]  # the well is the goal
     while sorted_buildings:
@@ -176,7 +173,8 @@ def find_neighbors_for_current_node(node, height_map, box_length, box_width, sta
         try:
             neighbor_y = height_map[neighbor_x, neighbor_z][0]
         except KeyError:
-            neighbor_y = height_map[0, 0][0]
+            #(x,z) is out of bounds, so set a random height value, it is never used as first check skips to next neighbor
+            neighbor_y = 0
         neighbor = (neighbor_x, neighbor_z, neighbor_y)
 
         # TODO: check if the node is null(it is out of bounce of the world)
@@ -200,26 +198,3 @@ def within_bounds(node, box_length, box_width, starting_point):
         return True
     return False
 
-def starting_points(list_of_buildings):
-    list_of_starting_points = list()
-    for building in list_of_buildings:
-        if building.type_of_house == "well":
-            continue
-        coords_for_building = building.path_connection_point
-
-        list_of_starting_points.append([coords_for_building[0], coords_for_building[1] + building.buffer_direction] )
-    list_of_centroids = k_means_clustering(list_of_starting_points)
-    return list_of_centroids
-
-def k_means_clustering(list_of_starting_points):
-    list_of_centroids = list()
-    k = 3
-    kmeans = KMeans(n_clusters=k)
-    kmeans = kmeans.fit(list_of_starting_points)
-    labels = kmeans.predict(list_of_starting_points)
-   # print list_of_starting_points
-    print labels
-    centroids = kmeans.cluster_centers_
-    for centroid in centroids:
-        list_of_centroids.append([int(i) for i in centroid])
-    return list_of_centroids
