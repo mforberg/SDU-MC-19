@@ -65,7 +65,7 @@ def decide_block_amount():
 
 
 def mutate_house(house_to_mutate):
-    if USE_SIZE_FOR_MUTATION:
+    if USE_SIZE_FOR_TYPE_MUTATION:
         sorted_buildings = get_buildings_by_size()
     else:
         sorted_buildings = get_buildings_by_mutation_number()
@@ -74,10 +74,10 @@ def mutate_house(house_to_mutate):
             index_plus_1 = item+1
             index_minus_1 = item-1
             random_number = random_number_between_one_to_hundred()
-            # Special case: Small houses shouldn't become churches
+            # Special case: Smallest building shouldn't become biggest
             if sorted_buildings[item][1] == sorted_buildings[0][1]:
                 return sorted_buildings[index_plus_1][1]
-            # Special case: Churches shouldn't become small houses
+            # Special case: Biggest building shouldn't become smallest building
             if sorted_buildings[item][1] == sorted_buildings[5][1]:
                 return sorted_buildings[index_minus_1][1]
             if random_number > 50:
