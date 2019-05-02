@@ -1,4 +1,5 @@
 import random
+import math
 from variables.GA_VALUES import *
 
 
@@ -8,7 +9,7 @@ def create_new_population_from_old_one(old_generation):
     elites = get_elites(old_generation)
     new_population.extend(elites)
     """calculate the remaining space"""
-    remaining_space = POPULATION_SIZE - len(elites)
+    remaining_space = len(old_generation) - len(elites)
     """if there is any space left in the population, run the while loop"""
     if remaining_space <= 0:
         full = True
@@ -43,7 +44,7 @@ def choose_parents(population):
             total_fitness += solution[1]
     """find parents pair"""
     parents = list()
-    for i in range(0, POPULATION_SIZE / 2):
+    for i in range(0, len(population) / 2):
         parents.append(find_ma_and_pa(total_fitness, pop_list))
     return parents
 
@@ -52,7 +53,7 @@ def find_ma_and_pa(total_fitness, pop_list):
     ma = pop_list[0]
     random_number = random.randint(1, int(total_fitness))
     """find out who the random number corresponds to"""
-    for i in xrange(0, POPULATION_SIZE):
+    for i in xrange(0, len(pop_list)):
         ma = pop_list[i]
         """only if the score is above 0 it will be check it"""
         if pop_list[i][1] > 0:
@@ -63,7 +64,7 @@ def find_ma_and_pa(total_fitness, pop_list):
                 break
     pa = pop_list[0]
     random_number = random.randint(1, int(total_fitness))
-    for i in xrange(0, POPULATION_SIZE):
+    for i in xrange(0, len(pop_list)):
         pa = pop_list[i]
         if random_number > pop_list[i][1]:
             random_number -= pop_list[i][1]
@@ -114,7 +115,7 @@ def get_elites(old_generation):
     """sort so the elites are first"""
     elites_first = sorted(old_generation, key=lambda solution: solution[1], reverse=True)
     """find how many of the elites is wanted"""
-    amount = int(round(ELITES_PERCENTAGE * POPULATION_SIZE))
+    amount = int(math.ceil(ELITES_PERCENTAGE * len(old_generation)))
     """get the elites and put them in another list"""
     for i in range(0, amount):
         elites.append(elites_first[i][0])

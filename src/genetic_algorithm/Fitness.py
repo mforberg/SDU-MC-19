@@ -20,8 +20,9 @@ def solution_fitness(solution, height_map, box_x, box_z):
     fitness_score += normal_houses_in_solution(solution)
     fitness_score += y_difference(solution, height_map)
     fitness_score += building_variance(solution)
-    fitness_score += distance_score_and_area_check(solution, height_map)
-
+    #fitness_score += distance_score_and_area_check(solution)
+    fitness_score += area_coverage_score_and_well_distance(solution)
+    fitness_score += check_area_score(solution, height_map)
     fitness_score -= weight_smaller_solutions(box_x, box_z, solution)
 
     return fitness_score
@@ -74,23 +75,51 @@ def building_variance(solution):
     return score
 
 
-def distance_score_and_area_check(solution, height_map):
-    already_calculated = list()
-    score = 0
-    area_score = 0
+# def distance_score_and_area_check(solution):
+#     already_calculated = list()
+#     score = 0
+#     area_score = 0
+#     for building in solution:
+#         if building.type_of_house == "well":
+#             continue
+#         for building2 in solution:
+#             if building == building2 or building2 in already_calculated:
+#                 continue
+#             elif building2.type_of_house == "well":
+#                 score += (DISTANCE_TO_WELL_WEIGHT * distance_between(building, building2))
+#             else:
+#                 score += (DISTANCE_WEIGHT * distance_between(building, building2))
+#         already_calculated.append(building)
+#     return score + area_score
+
+
+def area_coverage_score_and_well_distance(solution):
+    well_score = 0
+    well = None
+    total_x_max = 0
+    total_x_min = 0
+    total_z_max = 0
+    total_z_min = 0
+    """finding the well and get the total values"""
     for building in solution:
-        area_score += check_area(building, height_map)
+        if building.type_of_house == "well":
+            well = building
+        total_x_min += building.x
+        total_x_max += buildings[building.type_of_house]["xLength"]
+        total_z_min += building.z
+        total_z_max += buildings[building.type_of_house]["zWidth"]
+    """calculating the area coverage score"""
+    avg_x = ((total_x_max / len(solution)) - (total_x_min / len(solution)))
+    avg_z = ((total_z_max / len(solution)) - (total_z_min / len(solution)))
+    distance = math.sqrt(math.pow(avg_x, 2) + math.pow(avg_z, 2)) + FIT_AREA_COVERAGE_TO_DISTANCE_QUADRATIC_EQUATION
+    value = A * math.pow(distance, 2) + B * distance + C
+    area_coverage_score = AREA_WEIGHT * (AVG_AREA_COVERAGE_MAX_SCORE - value)
+    """calculate distance to well"""
+    for building in solution:
         if building.type_of_house == "well":
             continue
-        for building2 in solution:
-            if building == building2 or building2 in already_calculated:
-                continue
-            elif building2.type_of_house == "well":
-                score += (DISTANCE_TO_WELL_WEIGHT * distance_between(building, building2))
-            else:
-                score += (DISTANCE_WEIGHT * distance_between(building, building2))
-        already_calculated.append(building)
-    return score + area_score
+        well_score += DISTANCE_TO_WELL_WEIGHT * distance_between(well, building)
+    return area_coverage_score + well_score
 
 
 def distance_between(house1, house2):
@@ -107,29 +136,32 @@ def distance_between(house1, house2):
     return score
 
 
-def check_area(building, height_map):
-    building_area = buildings[building.type_of_house]["xLength"] * buildings[building.type_of_house]["zWidth"]
-    average = find_average_height(building, height_map)
-    amount_of_water_and_lava = find_amount_of_water_and_lava(building, height_map)
-    """water/lava score is calculated here"""
-    water_lava_score = amount_of_water_and_lava * WATER_AND_LAVA_WEIGHT
-    changed_blocks = 0
-    for x in xrange(building.x, building.x + buildings[building.type_of_house]["xLength"]):
-        for z in xrange(building.z, building.z + buildings[building.type_of_house]["zWidth"]):
-            height = height_map[x, z][0]
-            difference = abs(height - average)
-            changed_blocks += difference
-    """changed block score is calculated here"""
-    actual_percentage = changed_blocks / building_area
-    if actual_percentage < CHANGED_BLOCKS_PERCENTAGE:
-        actual_percentage = CHANGED_BLOCKS_PERCENTAGE
-    difference_in_percentage = actual_percentage - CHANGED_BLOCKS_PERCENTAGE
-    score = AREA_MAX_SCORE - (AREA_MAX_SCORE * difference_in_percentage)
-    """subtract the water/lava score"""
-    score = (score * AREA_WEIGHT) - water_lava_score
-    """we don't want score under zero"""
-    if score < 0:
-        score = 0
+def check_area_score(solution, height_map):
+    score = 0
+    for building in solution:
+        building_area = buildings[building.type_of_house]["xLength"] * buildings[building.type_of_house]["zWidth"]
+        average = find_average_height(building, height_map)
+        amount_of_water_and_lava = find_amount_of_water_and_lava(building, height_map)
+        """water/lava score is calculated here"""
+        water_lava_score = amount_of_water_and_lava * WATER_AND_LAVA_WEIGHT
+        changed_blocks = 0
+        for x in xrange(building.x, building.x + buildings[building.type_of_house]["xLength"]):
+            for z in xrange(building.z, building.z + buildings[building.type_of_house]["zWidth"]):
+                height = height_map[x, z][0]
+                difference = abs(height - average)
+                changed_blocks += difference
+        """changed block score is calculated here"""
+        actual_percentage = changed_blocks / building_area
+        if actual_percentage < CHANGED_BLOCKS_PERCENTAGE:
+            actual_percentage = CHANGED_BLOCKS_PERCENTAGE
+        difference_in_percentage = actual_percentage - CHANGED_BLOCKS_PERCENTAGE
+        building_score = AREA_MAX_SCORE - (AREA_MAX_SCORE * difference_in_percentage)
+        """subtract the water/lava score"""
+        building_score = (building_score * AREA_WEIGHT) - water_lava_score
+        """we don't want score under zero"""
+        if building_score < 0:
+            building_score = 0
+        score += building_score
     return score
 
 

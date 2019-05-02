@@ -9,11 +9,9 @@ class GeneticAlgorithm:
         pass
 
     def run_genetic_algorithm(self, height_map, box_x, box_z, starting_point):
-        extra_generation = None
+        unfeasible = list()
         overall_best_solution = None
         init_generation = Generation.generate_population(box_x, box_z, starting_point)
-        if USE_FI2POP:
-            extra_generation = Generation.generate_population(box_x, box_z, starting_point)
         current_generation = init_generation
         highest_fitness = 0
         """save the overall best"""
@@ -24,23 +22,26 @@ class GeneticAlgorithm:
             generation_with_fitness = Fitness.population_fitness(current_generation, height_map, box_x, box_z)
             print self.min_max_avg(generation_with_fitness)
             """save the best solution"""
-            current_best_solution = self.find_best_solution(generation_with_fitness)
-            if current_best_solution[1] > highest_fitness:
-                highest_fitness = current_best_solution[1]
-                overall_best_solution = copy.deepcopy(current_best_solution[0])
+            if len(generation_with_fitness) > 0:
+                current_best_solution = self.find_best_solution(generation_with_fitness)
+                if current_best_solution[1] > highest_fitness:
+                    highest_fitness = current_best_solution[1]
+                    overall_best_solution = copy.deepcopy(current_best_solution[0])
             """FI2POP"""
             if USE_FI2POP:
-                extra_with_fitness = Fitness.extra_population_fitness(extra_generation, box_x, box_z, starting_point)
+                extra_with_fitness = Fitness.extra_population_fitness(unfeasible, box_x, box_z, starting_point)
                 new_extra_without_fitness = Crossover.create_new_population_from_old_one(extra_with_fitness)
                 Mutation.mutate_population(new_extra_without_fitness)
-                extra_generation = new_extra_without_fitness
+                unfeasible = new_extra_without_fitness
             """skip mutation and new generation on last"""
             if x < GENERATIONS - 1:
                 new_generation_without_fitness = Crossover.create_new_population_from_old_one(generation_with_fitness)
                 Mutation.mutate_population(new_generation_without_fitness)
                 if USE_FI2POP:
-                    current_generation = CheckCriterias.fi2pop_check(new_generation_without_fitness, box_x, box_z,
-                                                                     starting_point, extra_generation)
+                    result = CheckCriterias.fi2pop_check(new_generation_without_fitness, box_x, box_z,
+                                                                     starting_point, unfeasible)
+                    current_generation = result["feasible"]
+                    unfeasible = result["unfeasible"]
                 else:
                     current_generation = CheckCriterias.check_population(new_generation_without_fitness, box_x, box_z,
                                                                          starting_point)
@@ -51,6 +52,8 @@ class GeneticAlgorithm:
 
     @staticmethod
     def min_max_avg(data):
+        if len(data) == 0:
+            return "empty"
         maximum = data[0]
         minimum = data[0]
         average = 0

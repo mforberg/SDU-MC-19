@@ -1,4 +1,3 @@
-USE_FI2POP = True
 USE_SIZE_FOR_TYPE_MUTATION = False
 """The percent chance of crossover"""
 CROSSOVER_RATE = 0.05  # 5%
@@ -16,15 +15,17 @@ MUTATION_RATE_MODIFIER = 2  # Twice as unlikely to mutate
 """Fitness weights"""
 WATER_AND_LAVA_WEIGHT = 12  # For each water/lava-block found
 AREA_WEIGHT = 1  # Multiply the blocks modified
-DISTANCE_WEIGHT = 1  # What the distance score should be multiplied with
+#DISTANCE_WEIGHT = 1  # What the distance score should be multiplied with
 DISTANCE_TO_WELL_WEIGHT = 2  # The distance to the well multiplied
 VARIANCE_WEIGHT = 2  # How much the variance score should be multiplied
 NORMAL_HOUSE_WEIGHT = 1  # How much the amount of normal houses should be multiplied with
 Y_DIFFERENCE_WEIGHT = 1  # How much the y difference should be multiplied with
+AVG_AREA_COVERAGE_WEIGHT = 1  # How much the average area coverage score should be multiplied with
 
 """Extra variables"""
 POINTS_PER_DIFFERENCE_IN_Y = 10  # how many points a single difference in height gives
 CHANGED_BLOCKS_PERCENTAGE = 0.5  # how big the percentage of changed block (depending on size) is allowed
+FIT_AREA_COVERAGE_TO_DISTANCE_QUADRATIC_EQUATION = -10  # self explanatory
 
 """Fitness Max Scores"""
 VARIANCE_MAX_SCORE = 1000  # max score for the variance in buildings
@@ -32,13 +33,14 @@ AREA_MAX_SCORE = 100  # contains both water and blocks modified
 NORMAL_HOUSE_MAX_SCORE = 1000  # max score for the right amount of houses
 Y_MAX_SCORE = 1000  # max score for the difference in y coordinate
 DISTANCE_MAX_SCORE = 100  # max score for distance to other houses
-
+AVG_AREA_COVERAGE_MAX_SCORE = 1000  # max score for average area coverage
 
 """Length of solution variables"""
-DECREASE_PER_EXTRA_BUILDING = 410  # the average number of fitness points decreased per building after min length
+DECREASE_PER_EXTRA_BUILDING = 300  # 410 the average number of fitness points decreased per building after min length
 
 
 """FI2POP variables"""
+USE_FI2POP = True
 COLLISION_MAX_SCORE = 1000
 COLLISION_WEIGHT = 4
 WITHIN_BOX_MAX_SCORE = 1000
@@ -46,7 +48,7 @@ WITHIN_BOX_WEIGHT = 1
 NOT_WITHIN_BOX_MINUS_PER_HOUSE = 250
 
 
-"""Quadratic Equation in Fitness"""
+"""Quadratic Equation in Fitness (distance)"""
 A = float(-4) / 45
 B = float(16) / 3
 C = 0
