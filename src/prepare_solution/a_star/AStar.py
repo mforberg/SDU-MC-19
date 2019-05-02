@@ -6,6 +6,8 @@ import utilityFunctions
 from pymclevel import alphaMaterials as am
 from src.genetic_algorithm.CheckCriterias import check_if_within_box
 import time
+from sklearn.cluster import KMeans
+import numpy as np
 
 
 
@@ -22,6 +24,7 @@ WATER_COST = 4 # water 5 times as expensive as ground
 def run(list_of_buildings, height_map, level, box_length, box_width, starting_point):
     list_of_all_building_paths = list()
     blocked_tiles(list_of_buildings)
+    print starting_points(list_of_buildings)
     sorted_buildings = sort_buildings_by_distance(list_of_buildings, height_map)
     goal = heappop(sorted_buildings)[1]  # the well is the goal
     while sorted_buildings:
@@ -196,3 +199,27 @@ def within_bounds(node, box_length, box_width, starting_point):
     if node[0] >= starting_point["x"] and node[0] < max_x and node[1] >= starting_point["z"] and node[1] < max_z:
         return True
     return False
+
+def starting_points(list_of_buildings):
+    list_of_starting_points = list()
+    for building in list_of_buildings:
+        if building.type_of_house == "well":
+            continue
+        coords_for_building = building.path_connection_point
+
+        list_of_starting_points.append([coords_for_building[0], coords_for_building[1] + building.buffer_direction] )
+    list_of_centroids = k_means_clustering(list_of_starting_points)
+    return list_of_centroids
+
+def k_means_clustering(list_of_starting_points):
+    list_of_centroids = list()
+    k = 3
+    kmeans = KMeans(n_clusters=k)
+    kmeans = kmeans.fit(list_of_starting_points)
+    labels = kmeans.predict(list_of_starting_points)
+   # print list_of_starting_points
+    print labels
+    centroids = kmeans.cluster_centers_
+    for centroid in centroids:
+        list_of_centroids.append([int(i) for i in centroid])
+    return list_of_centroids
