@@ -13,8 +13,6 @@ def deforest_area(list_of_buildings, list_of_roads, height_map, level):
 
 
 def find_bounds(list_of_buildings):
-    for b in list_of_buildings:
-        print b.type_of_house
     min_x = list_of_buildings[0].x
     max_x = list_of_buildings[0].x
 
@@ -31,8 +29,6 @@ def find_bounds(list_of_buildings):
             min_z = building.z
         if building.z > max_z:
             max_z = building.z
-
-    print min_x, max_x, min_z, max_z
 
 
 def clear_building_area(building, height_map, level):
@@ -53,7 +49,6 @@ def check_area_and_clear_blocks(start_x, end_x, start_z, end_z, start_y, end_y, 
     boolean_set = set()
     """modifies the list"""
     check_everything(start_x, end_x, start_z, end_z, start_y, end_y, level, boolean_set)
-    print boolean_set
     if len(boolean_set) > 1:
         clear_everything(start_x, end_x, start_z, end_z, start_y, end_y, level)
     elif len(boolean_set) == 1:
