@@ -173,7 +173,8 @@ def find_neighbors_for_current_node(node, height_map, box_length, box_width, sta
         try:
             neighbor_y = height_map[neighbor_x, neighbor_z][0]
         except KeyError:
-            neighbor_y = height_map[0, 0][0]
+            #(x,z) is out of bounds, so set a random height value, it is never used as first check skips to next neighbor
+            neighbor_y = 0
         neighbor = (neighbor_x, neighbor_z, neighbor_y)
 
         # TODO: check if the node is null(it is out of bounce of the world)
@@ -196,3 +197,4 @@ def within_bounds(node, box_length, box_width, starting_point):
     if node[0] >= starting_point["x"] and node[0] < max_x and node[1] >= starting_point["z"] and node[1] < max_z:
         return True
     return False
+
