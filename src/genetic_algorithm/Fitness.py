@@ -111,14 +111,32 @@ def area_coverage_score_and_well_distance(solution):
     """calculating the area coverage score"""
     avg_x = ((total_x_max / len(solution)) - (total_x_min / len(solution)))
     avg_z = ((total_z_max / len(solution)) - (total_z_min / len(solution)))
-    distance = math.sqrt(math.pow(avg_x, 2) + math.pow(avg_z, 2)) + FIT_AREA_COVERAGE_TO_DISTANCE_QUADRATIC_EQUATION
-    value = A * math.pow(distance, 2) + B * distance + C
+    distance = math.sqrt(math.pow(avg_x, 2) + math.pow(avg_z, 2))
+    # print distance
+    # value = 0
+    # if distance > 160:
+    #     value = 200
+    # if distance > 170:
+    #     value = 400
+    # if distance > 180:
+    #     value = 600
+    # if distance > 190:
+    #     value = 800
+    # if distance > 200:
+    #     value = 100
+    value = AREA_COVERAGE_POINTS_PER_UNIT * distance
+    # value = A * math.pow(distance, 2) + B * distance + C
+    # if value < 0:
+    #     value = 0
+    #print value
     area_coverage_score = AREA_WEIGHT * (AVG_AREA_COVERAGE_MAX_SCORE - value)
+    #print area_coverage_score
     """calculate distance to well"""
     for building in solution:
         if building.type_of_house == "well":
             continue
         well_score += DISTANCE_TO_WELL_WEIGHT * distance_between(well, building)
+    #print well_score
     return area_coverage_score + well_score
 
 

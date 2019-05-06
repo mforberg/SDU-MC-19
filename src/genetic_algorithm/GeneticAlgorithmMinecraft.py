@@ -17,8 +17,8 @@ class GeneticAlgorithm:
         """save the overall best"""
         for x in range(0, GENERATIONS):
             start = time.time()
-            print "- - - - - - - - - - - -"
-            print "CURRENT GEN: ", x + 1
+            #print "- - - - - - - - - - - -"
+            #print "CURRENT GEN: ", x + 1
             generation_with_fitness = Fitness.population_fitness(current_generation, height_map, box_x, box_z)
             print self.min_max_avg(generation_with_fitness)
             """save the best solution"""
@@ -46,8 +46,8 @@ class GeneticAlgorithm:
                     current_generation = CheckCriterias.check_population(new_generation_without_fitness, box_x, box_z,
                                                                          starting_point)
             end = time.time()
-            print end - start, "<-- Time"
-
+            #print end - start, "<-- Time"
+            #print "Overall Best: ", highest_fitness, ",   Size: ", len(overall_best_solution)
         return overall_best_solution
 
     @staticmethod
@@ -65,7 +65,8 @@ class GeneticAlgorithm:
                 minimum = item
             average += item[1]
         average = average/len(data)
-        return "MIN: {0}\tMAX: {1}\tAVG: {2}".format(round(minimum[1], 3), round(maximum[1], 3), round(average, 3))
+        return "{0}\t{1}\t{2}".format(round(minimum[1], 3), round(maximum[1], 3), round(average, 3))
+
 
     @staticmethod
     def find_best_solution(fitness_generation):
