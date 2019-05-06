@@ -18,9 +18,13 @@ def k_means_clustering(amount_of_clusters, list_of_starting_points):
     kmeans = KMeans(n_clusters=k, init="k-means++")
     kmeans = kmeans.fit(list_of_starting_points)
     labels = kmeans.predict(list_of_starting_points)
-   # print list_of_starting_points
-    print labels
     centroids = kmeans.cluster_centers_
     for centroid in centroids:
         list_of_centroids.append([int(i) for i in centroid])
+        print centroids
+
+    print list_of_starting_points
+    for i in range(len(list_of_starting_points)):
+        print labels[i], "label"
+
     return list_of_centroids
