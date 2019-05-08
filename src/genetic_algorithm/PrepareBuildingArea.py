@@ -37,21 +37,6 @@ def modify_area(height_map, solution, level):
                         height_map[x, z][0] -= 1
 
 
-def find_most_common_height_around_the_building(height_map, building):
-    all_heights = list()
-    for x in xrange(building.x - 1, building.x + buildings[building.type_of_house]["xLength"] + 1):
-        if (x, building.z - 1) in height_map:
-            all_heights.append(height_map[x, building.z - 1][0])
-        if (x, building.z + buildings[building.type_of_house]["xLength"] + 1) in height_map:
-            all_heights.append(height_map[x, building.z + buildings[building.type_of_house]["xLength"] + 1][0])
-    for z in xrange(building.z, building.z + buildings[building.type_of_house]["zWidth"]):
-        if (building.x, z) in height_map:
-            all_heights.append(height_map[building.x, z][0])
-        if (building.x + buildings[building.type_of_house]["zWidth"] + 1, z) in height_map:
-            all_heights.append(height_map[building.x + buildings[building.type_of_house]["zWidth"] + 1, z][0])
-    return max(set(all_heights), key=all_heights.count)
-
-
 def get_reference_block(level, building, target_height):
     reference_blocks = list()
     for x in xrange(building.x, building.x + buildings[building.type_of_house]["xLength"]):
