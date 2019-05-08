@@ -19,11 +19,11 @@ list_of_blocked_coordinates = list()
 WATER_COST = 4 # water 5 times as expensive as ground
 
 
-def run(list_of_buildings, height_map, level, box_length, box_width, starting_point):
+def run(list_of_buildings, height_map, level, box_length, box_width, starting_point, goal):
     list_of_all_building_paths = list()
     blocked_tiles(list_of_buildings)
     sorted_buildings = sort_buildings_by_distance(list_of_buildings, height_map)
-    goal = heappop(sorted_buildings)[1]  # the well is the goal
+    #goal = heappop(sorted_buildings)[1]  # the well is the goal
     while sorted_buildings:
         building = heappop(sorted_buildings)[1]
         if building.type_of_house == "well":

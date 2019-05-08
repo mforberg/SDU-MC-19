@@ -38,6 +38,12 @@ def perform(level, box, options):
     set_all_connections_points(result, height_map)
     print "CALL 6"
     centroids = starting_points(3, result)
+    pikkemand = points_to_buildings(centroids, result)
+    for cluster in centroids:
+        print len(cluster), "point length"
+    for pik in pikkemand:
+        print len(pik), "pik length"
+
     print "CALL 7"
     start = time.time()
     paths = run(result, height_map, level, box_length, box_width, starting_point)
