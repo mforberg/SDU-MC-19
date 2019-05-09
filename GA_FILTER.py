@@ -9,6 +9,7 @@ from src.prepare_solution.deforestation.Deforestation import deforest_area
 from pymclevel import alphaMaterials as aM
 from src.prepare_solution.a_star.AStar import *
 from src.prepare_solution.a_star.PrepareAStar import *
+from src.prepare_solution.a_star.PathsForClusters import *
 from src.prepare_solution.k_means.KMeansClustering import *
 from heapq import *
 
@@ -38,9 +39,15 @@ def perform(level, box, options):
     set_all_connections_points(result, height_map)
     print "CALL 6"
     centroids = starting_points(3, result)
+    pikkemand = points_to_buildings(centroids, result)
+    print pikkemand
+
+    #print d
+
     print "CALL 7"
     start = time.time()
-    paths = run(result, height_map, level, box_length, box_width, starting_point)
+    d = path_for_clusters(pikkemand, height_map, level, box_length, box_width, starting_point)
+    #paths = run(result, height_map, level, box_length, box_width, starting_point)
     print "CALL 8"
     end = time.time()
     print end-start, "TOTAL TIME FOR A-STAR"
@@ -49,8 +56,8 @@ def perform(level, box, options):
     # a star
     if options["Build solution"]:
         # deforest(list_of_buildings, a_star)
-        deforest_area(result, paths, height_map, level)
+       # deforest_area(result, paths, height_map, level)
         # place roads
         BuildHouses.build(level, height_map, result)
-
+    del list_of_blocked_coordinates[:]
     # TODO: change how we calculate door / connection point location
