@@ -5,7 +5,6 @@ def starting_points(amount_of_clusters, list_of_buildings):
     list_of_starting_points = list()
     for building in list_of_buildings:
         coords_for_building = building.path_connection_point
-
         list_of_starting_points.append([coords_for_building[0], coords_for_building[1], coords_for_building[2]])
     list_of_centroids = k_means_clustering(amount_of_clusters, list_of_starting_points)
     return list_of_centroids
@@ -38,4 +37,4 @@ def points_to_buildings(list_of_clusters, list_of_buildings):
                     building_clusters[cluster].append(building)
                     break
 
-    return goal, building_clusters
+    return building_clusters
