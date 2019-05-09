@@ -1,5 +1,5 @@
 # import time
-from src.genetic_algorithm import CheckCriterias, Crossover, Fitness, Generation, Mutation
+from src.genetic_algorithm import CheckCriterias, Crossover, Fitness, Generation, Mutation, InfeasibleFitness
 from variables.GA_VALUES import *
 import copy
 
@@ -13,7 +13,7 @@ class GeneticAlgorithm:
         avg_list = list()
         max_list = list()
 
-        unfeasible = list()
+        infeasible_population = list()
         overall_best_solution = None
         init_generation = Generation.generate_population(box_x, box_z, starting_point)
         current_generation = init_generation
@@ -38,19 +38,20 @@ class GeneticAlgorithm:
                     overall_best_solution = copy.deepcopy(current_best_solution[0])
             """FI2POP"""
             if USE_FI2POP:
-                extra_with_fitness = Fitness.extra_population_fitness(unfeasible, box_x, box_z, starting_point)
+                extra_with_fitness = InfeasibleFitness.population_fitness(infeasible_population, box_x, box_z,
+                                                                          starting_point)
                 new_extra_without_fitness = Crossover.create_new_population_from_old_one(extra_with_fitness)
                 Mutation.mutate_population(new_extra_without_fitness)
-                unfeasible = new_extra_without_fitness
+                infeasible_population = new_extra_without_fitness
             """skip mutation and new generation on last"""
             if x < GENERATIONS - 1:
                 new_generation_without_fitness = Crossover.create_new_population_from_old_one(generation_with_fitness)
                 Mutation.mutate_population(new_generation_without_fitness)
                 if USE_FI2POP:
                     result = CheckCriterias.fi2pop_check(new_generation_without_fitness, box_x, box_z, starting_point,
-                                                         unfeasible)
+                                                         infeasible_population)
                     current_generation = result["feasible"]
-                    unfeasible = result["unfeasible"]
+                    infeasible_population = result["infeasible"]
                 else:
                     current_generation = CheckCriterias.check_population(new_generation_without_fitness, box_x, box_z,
                                                                          starting_point)

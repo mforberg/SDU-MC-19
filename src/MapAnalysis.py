@@ -26,7 +26,9 @@ blocks = [
     am.Clay.ID,
     am.Glowstone.ID,
     am.Water.ID,
-    am.Lava.ID
+    am.Lava.ID,
+    am.Snow.ID,
+    am.Ice.ID
 ]
 
 # zero indexed coordinates in the box

@@ -1,3 +1,5 @@
+import math
+
 USE_SIZE_FOR_TYPE_MUTATION = False
 """The percent chance of crossover"""
 CROSSOVER_RATE = 0.05  # 5%
@@ -17,21 +19,19 @@ MAX_SCORE = 1000
 """Fitness weights"""
 WATER_AND_LAVA_WEIGHT = 10  # For each water/lava-block found, how much does it cost to use that area
 AREA_WEIGHT = 1.5  # Multiply the blocks modified
-#DISTANCE_WEIGHT = 1  # What the distance score should be multiplied with
 DISTANCE_TO_WELL_WEIGHT = 1  # The distance to the well multiplied
 VARIANCE_WEIGHT = 0.5  # How much the variance score should be multiplied
 NORMAL_HOUSE_WEIGHT = 0.5  # How much the amount of normal houses should be multiplied with
 Y_DIFFERENCE_WEIGHT = 0.5  # How much the y difference should be multiplied with
-#AVG_AREA_COVERAGE_WEIGHT = 2  # How much the average area coverage score should be multiplied with
+COVERAGE_WEIGHT = 1  # How much the score for the area covered is multiplied with
 
 """Extra variables"""
 POINTS_PER_DIFFERENCE_IN_Y = 10  # how many points a single difference in height gives
-CHANGED_BLOCKS_PERCENTAGE = 0.1  # how big the percentage of changed block (depending on size) is allowed
-AREA_COVERAGE_POINTS_PER_UNIT = 4
-#FIT_AREA_COVERAGE_TO_DISTANCE_QUADRATIC_EQUATION = -10  # self explanatory
+ALLOWED_CHANGED_BLOCKS_PERCENTAGE = 0.01  # how big the percentage of changed block (depending on size) is allowed
+AREA_COVERAGE_POINTS_PER_UNIT = 4  # how many points is subtracted for every unit
 
 """Length of solution variables"""
-DECREASE_PER_EXTRA_BUILDING = -40  # Positive number increases the chance of smaller solution (Negative for bigger)
+DECREASE_PER_EXTRA_BUILDING = -30  # Positive number increases the chance of smaller solution (Negative for bigger)
 
 """FI2POP variables"""
 USE_FI2POP = True
@@ -41,12 +41,24 @@ WITHIN_BOX_MAX_SCORE = 1000
 WITHIN_BOX_WEIGHT = 1
 NOT_WITHIN_BOX_MINUS_PER_HOUSE = 250
 
-"""Quadratic Equation in Fitness (distance)"""
-A = float(-7) / 300
-B = float(29) / 15
-C = 40
-MAX_VALUE_QE = 80
-VALUE_CUT_FOR_MAX = 70
+"""Quadratic Equation in Fitness (distance to well)"""
+Q_A = float(-3) / 140
+Q_B = float(23) / 14
+Q_C = 50
+Q_D = math.pow(Q_B, 2) - (4 * Q_A * Q_C)
+VERTEX_Y = -Q_D / (4 * Q_A)
+VERTEX_X = -Q_B / (2 * Q_A)
+PERCENTAGE_FOR_MAX_VALUE_QE = 0.1
+
+"""Linea Equation in Fitness (distance to well)"""
+y_1 = 0
+y_2 = VERTEX_Y
+x_1 = 0
+x_2 = VERTEX_X
+L_A = (y_2 - y_1) / (x_2 - x_1)
+print VERTEX_Y
+print VERTEX_X
+print L_A
 
 
 def get_minimum_amount_of_houses(box_x, box_z):

@@ -1,4 +1,3 @@
-import math
 from variables.GA_VALUES import *
 from src.MapAnalysis import *
 from src.genetic_algorithm.CheckCriterias import *
@@ -20,48 +19,11 @@ def solution_fitness(solution, height_map, box_x, box_z):
     fitness_score += normal_houses_in_solution(solution)
     fitness_score += y_difference(solution, height_map)
     fitness_score += building_variance(solution)
-    fitness_score += area_coverage_score_and_well_distance(solution)
-    fitness_score += check_area_score(solution, height_map)
+    fitness_score += coverage_score_and_well_distance(solution)
+    fitness_score += check_area_for_water_and_changed_blocks_score(solution, height_map)
     fitness_score -= weight_solutions(box_x, box_z, solution)
 
     return fitness_score
-
-
-def extra_population_fitness(extra_population, box_x, box_z, starting_point):
-    full_extra_pop_with_fitness = list()
-    for solution in extra_population:
-        fitness = extra_solution_fitness(solution, box_x, box_z, starting_point)
-        inner_list = list()
-        inner_list.append(solution)
-        inner_list.append(fitness)
-        full_extra_pop_with_fitness.append(inner_list)
-    return full_extra_pop_with_fitness
-
-
-def extra_solution_fitness(solution, box_x, box_z, starting_point):
-    already_calculated = list()
-    collision_negative_score = 0
-    out_of_box_negative_score = 0
-    for building in solution:
-        """score is calculated based if they are within the box there are no collision"""
-        """within box"""
-        if not check_if_within_box(building, box_x, box_z, starting_point):
-            out_of_box_negative_score += NOT_WITHIN_BOX_MINUS_PER_HOUSE
-        """collision"""
-        for building2 in solution:
-            if building == building2 or building2 in already_calculated:
-                continue
-            if building.check_if_house_is_within(building2):
-                collision_negative_score += ((float(1)/len(solution)) * MAX_SCORE)
-        already_calculated.append(building)
-    box_score = WITHIN_BOX_WEIGHT * (MAX_SCORE - out_of_box_negative_score)
-    if box_score < 0:
-        box_score = 0
-    collision_score = COLLISION_WEIGHT * (MAX_SCORE - collision_negative_score)
-    if collision_score < 0:
-        collision_score = 0
-    score = box_score + collision_score
-    return score
 
 
 def building_variance(solution):
@@ -75,25 +37,7 @@ def building_variance(solution):
     return score
 
 
-# def distance_score_and_area_check(solution):
-#     already_calculated = list()
-#     score = 0
-#     area_score = 0
-#     for building in solution:
-#         if building.type_of_house == "well":
-#             continue
-#         for building2 in solution:
-#             if building == building2 or building2 in already_calculated:
-#                 continue
-#             elif building2.type_of_house == "well":
-#                 score += (DISTANCE_TO_WELL_WEIGHT * distance_between(building, building2))
-#             else:
-#                 score += (DISTANCE_WEIGHT * distance_between(building, building2))
-#         already_calculated.append(building)
-#     return score + area_score
-
-
-def area_coverage_score_and_well_distance(solution):
+def coverage_score_and_well_distance(solution):
     well = None
     total_x_max = 0
     total_x_min = 0
@@ -112,8 +56,7 @@ def area_coverage_score_and_well_distance(solution):
     avg_z = ((total_z_max / len(solution)) - (total_z_min / len(solution)))
     distance = math.sqrt(math.pow(avg_x, 2) + math.pow(avg_z, 2))
     value = AREA_COVERAGE_POINTS_PER_UNIT * distance
-    area_coverage_score = AREA_WEIGHT * (MAX_SCORE - value)
-
+    area_coverage_score = COVERAGE_WEIGHT * (MAX_SCORE - value)
     """calculate distance to well"""
     well_score = average_distance_to_well_score(solution, well)
     print "LOOK HERE ---------------------------------------------> ", area_coverage_score, "  well: ", well_score
@@ -128,12 +71,18 @@ def average_distance_to_well_score(solution, well):
             continue
         total_distance += well.distance_between_building(building)
     avg_distance = total_distance / len(solution)
-    """distance score is calculated using an quadratic equation"""
-    value = A * math.pow(avg_distance, 2) + B * avg_distance + C
+    """depending on what side of the vertex_x it is, use different equations"""
+    if avg_distance < VERTEX_X:
+        """distance score is calculated using a linear equation"""
+        value = L_A * avg_distance
+    else:
+        """distance score is calculated using an quadratic equation"""
+        value = Q_A * math.pow(avg_distance, 2) + Q_B * avg_distance + Q_C
     """if value is at the cut, we want to give it a max score"""
-    if value > VALUE_CUT_FOR_MAX:
-        value = MAX_VALUE_QE
-    score = MAX_SCORE * (value/MAX_VALUE_QE)
+    value_cut_for_max = VERTEX_Y - (VERTEX_Y * PERCENTAGE_FOR_MAX_VALUE_QE)
+    if value > value_cut_for_max:
+        value = VERTEX_Y
+    score = MAX_SCORE * (value/VERTEX_Y)
     """we don't want score under zero"""
     if score < 0:
         score = 0
@@ -141,26 +90,13 @@ def average_distance_to_well_score(solution, well):
     return score
 
 
-# def distance_between(house1, house2):
-#     distance = house1.distance_between_building(house2)
-#     """distance score is calculated using an quadratic equation"""
-#     value = A * math.pow(distance, 2) + B * distance + C
-#     """if value is at the cut, we want to give it a max score"""
-#     if value > VALUE_CUT_FOR_MAX:
-#         value = MAX_VALUE_QE
-#     score = MAX_SCORE * (value/MAX_VALUE_QE)
-#     """we don't want score under zero"""
-#     if score < 0:
-#         score = 0
-#     return score
-
-
-def check_area_score(solution, height_map):
+def check_area_for_water_and_changed_blocks_score(solution, height_map):
     amount_of_water_and_lava = 0
     total_percentage_changed = 0
     for building in solution:
         building_area = buildings[building.type_of_house]["xLength"] * buildings[building.type_of_house]["zWidth"]
-        average = find_average_height(building, height_map)
+        #average = find_average_height(building, height_map)
+        average = find_most_common_height_around_the_building(height_map, building)
         """finding water and lava"""
         amount_of_water_and_lava += find_amount_of_water_and_lava(building, height_map)
         """finding changed blocks"""
@@ -171,12 +107,12 @@ def check_area_score(solution, height_map):
                 difference = abs(height - average)
                 changed_blocks += difference
         total_percentage_changed += changed_blocks / building_area
-    """changed block score is calculated here"""
+    """changed block score is calculated here (for the whole solution)"""
     actual_percentage = total_percentage_changed / len(solution)
-    if actual_percentage < CHANGED_BLOCKS_PERCENTAGE:
-        actual_percentage = CHANGED_BLOCKS_PERCENTAGE
-    difference_in_percentage = actual_percentage - CHANGED_BLOCKS_PERCENTAGE
-    building_score = MAX_SCORE - (MAX_SCORE * difference_in_percentage)
+    if actual_percentage < ALLOWED_CHANGED_BLOCKS_PERCENTAGE:
+        actual_percentage = 0
+    #difference_in_percentage = actual_percentage - CHANGED_BLOCKS_PERCENTAGE
+    building_score = MAX_SCORE - (MAX_SCORE * actual_percentage)
     building_score *= AREA_WEIGHT
     """water/lava score is calculated here"""
     water_lava_score = amount_of_water_and_lava * WATER_AND_LAVA_WEIGHT

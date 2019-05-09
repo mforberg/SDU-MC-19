@@ -14,32 +14,20 @@ def check_population(population, box_x, box_z, starting_point):
     return checked_population
 
 
-def fi2pop_check(population, box_x, box_z, starting_point, extra_population):
+def fi2pop_check(population, box_x, box_z, starting_point, infeasible_population):
     feasible_solution = list()
-    unfeasible_solution = list()
+    infeasible_solution = list()
     for solution in population:
         if check_solution(solution, box_x, box_z, starting_point):
             feasible_solution.append(solution)
         else:
-            unfeasible_solution.append(solution)
-    for solution in extra_population:
+            infeasible_solution.append(solution)
+    for solution in infeasible_population:
         if check_solution(solution, box_x, box_z, starting_point):
             feasible_solution.append(solution)
         else:
-            unfeasible_solution.append(solution)
-            # """If the solution does not meet the basics"""
-            # working_extra_solution = find_working_extra_solution(extra_population, box_x, box_z, starting_point)
-            # if working_extra_solution is None:
-            #     feasible_solution.append(
-            #         src.genetic_algorithm.Generation.generate_solution(box_x, box_z, starting_point))
-            # else:
-            #     """change the two solutions"""
-            #     solution_copy = copy.deepcopy(solution)
-            #     extra_copy = copy.deepcopy(working_extra_solution)
-            #     extra_population.remove(working_extra_solution)
-            #     extra_population.append(solution_copy)
-            #     feasible_solution.append(extra_copy)
-    return {"feasible": feasible_solution, "unfeasible": unfeasible_solution}
+            infeasible_solution.append(solution)
+    return {"feasible": feasible_solution, "infeasible": infeasible_solution}
 
 
 def find_working_extra_solution(extra_population, box_x, box_z, starting_point):

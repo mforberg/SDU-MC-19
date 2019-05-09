@@ -4,6 +4,16 @@ import utilityFunctions
 # noinspection PyUnresolvedReferences
 from pymclevel import alphaMaterials as aM
 
+# naturally occurring materials we want
+blocks = [
+    am.Grass.ID,
+    am.Dirt.ID,
+    am.Stone.ID,
+    am.Sand.ID,
+    am.Gravel.ID,
+    am.Snow.ID
+]
+
 
 def modify_area(height_map, solution, level):
     use_average = False
@@ -41,6 +51,6 @@ def get_reference_block(level, building, target_height):
     reference_blocks = list()
     for x in xrange(building.x, building.x + buildings[building.type_of_house]["xLength"]):
         for z in xrange(building.z, building.z + buildings[building.type_of_house]["zWidth"]):
-            if level.blockAt(x, target_height, z) != aM.Air.ID:
+            if level.blockAt(x, target_height, z) in blocks:
                 reference_blocks.append(level.blockAt(x, target_height, z))
     return max(set(reference_blocks), key=reference_blocks.count)
