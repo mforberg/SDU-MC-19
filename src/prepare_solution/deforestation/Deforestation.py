@@ -236,7 +236,8 @@ def clear_road(road, level, height_map):
             go_higher = False
             for x in xrange(block_x - BUFFER, block_x + BUFFER + 1):
                 for z in xrange(block_z - BUFFER, block_z + BUFFER + 1):
-                    y = height_map[x, z][0] + bonus_y
-                    if level.blockAt(x, y, z) != alphaMaterials.Air.ID:
-                        utilityFunctions.setBlock(level, (alphaMaterials.Air.ID, 0), x, y, z)
-                        go_higher = True
+                    if (x, z) in height_map:
+                        y = height_map[x, z][0] + bonus_y
+                        if level.blockAt(x, y, z) != alphaMaterials.Air.ID:
+                            utilityFunctions.setBlock(level, (alphaMaterials.Air.ID, 0), x, y, z)
+                            go_higher = True

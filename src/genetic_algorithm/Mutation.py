@@ -14,20 +14,20 @@ def mutate_population(population):
         """The percent chance of mutation"""
         mutation_rate = float(1) / (gene_size * MUTATION_RATE_MODIFIER)
         mutation_trigger = mutation_rate * 100
-        for i in building_list:
+        for building in building_list:
 
             random_number_x = random_number_between_one_to_hundred()
             random_number_z = random_number_between_one_to_hundred()
             random_number_house = random_number_between_one_to_hundred()
 
-            mutation_count_coord += mutate_coordinate(random_number_x, mutation_trigger, i.x)  # mutate x
-            mutation_count_coord += mutate_coordinate(random_number_z, mutation_trigger, i.z)  # mutate z
+            mutation_count_coord += mutate_coordinate(random_number_x, mutation_trigger, building.x)  # mutate x
+            mutation_count_coord += mutate_coordinate(random_number_z, mutation_trigger, building.z)  # mutate z
 
             if random_number_house <= mutation_trigger:
-                if i.type_of_house == "well":  # Do not mutate the well
+                if building.type_of_house == "well":  # Do not mutate the well
                     continue
                 mutation_count_building += 1
-                i.type_of_house = mutate_house(i.type_of_house)
+                building.type_of_house = mutate_house(building.type_of_house)
 
 
 def random_number_between_one_to_hundred():
