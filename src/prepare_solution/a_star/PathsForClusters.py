@@ -24,11 +24,11 @@ def path_for_clusters(list_of_clusters, height_map, level, box_length, box_width
         # for heap in heaps[x]:
         while heaps[x]:
             building = heappop(heaps[x])[1]
-            print building.type_of_house
+            print building.path_connection_point
             if building.type_of_house == "well":
                 continue
-            AStar.run2(building, height_map, level, box_length, box_width, starting_point, list_of_goals_copy, list_of_blocked_coordinates)
-
+            list_of_building_paths.append(AStar.run2(building, height_map, level, box_length, box_width, starting_point, list_of_goals_copy, list_of_blocked_coordinates))
+    return list_of_building_paths
 
 def distance_for_cluster(list_of_clusters, height_map):
     goal = find_goal_in_cluster(list_of_clusters)
