@@ -38,7 +38,7 @@ def perform(level, box, options):
     # SET PATH CONNECTION POINTS FOR ALL STRUCTURES
     set_all_connections_points(result, height_map)
     print "CALL 6"
-    centroids = starting_points(3, result)
+    centroids = starting_points(2, result)
     pikkemand = points_to_buildings(centroids, result)
     print pikkemand
 
@@ -46,7 +46,7 @@ def perform(level, box, options):
 
     print "CALL 7"
     start = time.time()
-    d = path_for_clusters(pikkemand, height_map, level, box_length, box_width, starting_point)
+    paths = path_for_clusters(pikkemand, height_map, level, box_length, box_width, starting_point)
     #paths = run(result, height_map, level, box_length, box_width, starting_point)
     print "CALL 8"
     end = time.time()
@@ -55,8 +55,7 @@ def perform(level, box, options):
     # blocked_tiles(result)
     # a star
     if options["Build solution"]:
-        # deforest(list_of_buildings, a_star)
-       # deforest_area(result, paths, height_map, level)
+        deforest_area(result, paths, height_map, level)
         # place roads
         BuildHouses.build(level, height_map, result)
     del list_of_blocked_coordinates[:]
