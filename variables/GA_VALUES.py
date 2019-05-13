@@ -56,9 +56,6 @@ y_2 = VERTEX_Y
 x_1 = 0
 x_2 = VERTEX_X
 L_A = (y_2 - y_1) / (x_2 - x_1)
-print VERTEX_Y
-print VERTEX_X
-print L_A
 
 
 def get_minimum_amount_of_houses(box_x, box_z):

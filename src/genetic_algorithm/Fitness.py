@@ -1,5 +1,6 @@
 from variables.GA_VALUES import *
 from src.MapAnalysis import *
+from variables.MC_LIBRARY import *
 from src.genetic_algorithm.CheckCriterias import *
 
 
@@ -22,7 +23,7 @@ def solution_fitness(solution, height_map, box_x, box_z):
     fitness_score += coverage_score_and_well_distance(solution)
     fitness_score += check_area_for_water_and_changed_blocks_score(solution, height_map)
     fitness_score -= weight_solutions(box_x, box_z, solution)
-
+    force_building_probability(solution)
     return fitness_score
 
 
@@ -159,6 +160,29 @@ def y_difference(solution, height_map):
     if score < 0:
         score = 0
     return score
+
+
+def force_building_probability(solution):
+    type_dict = {}
+    total_probability_value = 0
+    for building_type in buildings:
+        if building_type == "well":
+            continue
+        total_probability_value += buildings[building_type]["probability"]
+        type_dict[building_type] = 0
+    for building in solution:
+        if building.type_of_house == "well":
+            continue
+        type_dict[building.type_of_house] += 1
+    total_difference = 0.0
+    for building_type in buildings:
+        if building_type == "well":
+            continue
+        value = type_dict[building_type]
+        percentage_of_solution = value / (len(solution) - 1)  # skip well
+        percentage_of_probability = buildings[building_type]["probability"] / total_probability_value
+        total_difference += abs(percentage_of_probability - percentage_of_solution)
+    # how to calculate :^)
 
 
 def weight_solutions(box_x, box_z, solution):
