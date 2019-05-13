@@ -1,5 +1,5 @@
-import time
-from src.genetic_algorithm import CheckCriterias, Crossover, Fitness, Generation, Mutation
+# import time
+from src.genetic_algorithm import CheckCriterias, Crossover, Fitness, Generation, Mutation, InfeasibleFitness
 from variables.GA_VALUES import *
 import copy
 
@@ -9,48 +9,75 @@ class GeneticAlgorithm:
         pass
 
     def run_genetic_algorithm(self, height_map, box_x, box_z, starting_point):
-        extra_generation = None
+        min_list = list()
+        avg_list = list()
+        max_list = list()
+
+        infeasible_population = list()
         overall_best_solution = None
         init_generation = Generation.generate_population(box_x, box_z, starting_point)
-        if USE_FI2POP:
-            extra_generation = Generation.generate_population(box_x, box_z, starting_point)
         current_generation = init_generation
         highest_fitness = 0
         """save the overall best"""
         for x in range(0, GENERATIONS):
-            start = time.time()
-            print "- - - - - - - - - - - -"
-            print "CURRENT GEN: ", x + 1
+            # start = time.time()
+            # print "- - - - - - - - - - - -"
+            # print "CURRENT GEN: ", x + 1
             generation_with_fitness = Fitness.population_fitness(current_generation, height_map, box_x, box_z)
-            print self.min_max_avg(generation_with_fitness)
+            score = self.min_max_avg(generation_with_fitness)
+            if score != "empty":
+                min_list.append(score[0])
+                avg_list.append(score[1])
+                max_list.append(score[2])
+
             """save the best solution"""
-            current_best_solution = self.find_best_solution(generation_with_fitness)
-            if current_best_solution[1] > highest_fitness:
-                highest_fitness = current_best_solution[1]
-                overall_best_solution = copy.deepcopy(current_best_solution[0])
+            if len(generation_with_fitness) > 0:
+                current_best_solution = self.find_best_solution(generation_with_fitness)
+                if current_best_solution[1] > highest_fitness:
+                    highest_fitness = current_best_solution[1]
+                    overall_best_solution = copy.deepcopy(current_best_solution[0])
             """FI2POP"""
             if USE_FI2POP:
-                extra_with_fitness = Fitness.extra_population_fitness(extra_generation, box_x, box_z, starting_point)
+                extra_with_fitness = InfeasibleFitness.population_fitness(infeasible_population, box_x, box_z,
+                                                                          starting_point)
                 new_extra_without_fitness = Crossover.create_new_population_from_old_one(extra_with_fitness)
                 Mutation.mutate_population(new_extra_without_fitness)
-                extra_generation = new_extra_without_fitness
+                infeasible_population = new_extra_without_fitness
             """skip mutation and new generation on last"""
             if x < GENERATIONS - 1:
                 new_generation_without_fitness = Crossover.create_new_population_from_old_one(generation_with_fitness)
                 Mutation.mutate_population(new_generation_without_fitness)
                 if USE_FI2POP:
-                    current_generation = CheckCriterias.fi2pop_check(new_generation_without_fitness, box_x, box_z,
-                                                                     starting_point, extra_generation)
+                    result = CheckCriterias.fi2pop_check(new_generation_without_fitness, box_x, box_z, starting_point,
+                                                         infeasible_population)
+                    current_generation = result["feasible"]
+                    infeasible_population = result["infeasible"]
                 else:
                     current_generation = CheckCriterias.check_population(new_generation_without_fitness, box_x, box_z,
                                                                          starting_point)
-            end = time.time()
-            print end - start, "<-- Time"
+            # end = time.time()
+            # print end - start, "<-- Time"
+            # print "Overall Best: ", highest_fitness, ",   Size: ", len(overall_best_solution)
 
+        dump = open(r"C:\Users\jonas\Desktop\GDMC-master\GDMC\stock-filters\src\dump.txt", "w")
+        for value in min_list:
+            dump.write("\n" + str(round(value)))
+        dump.write("\n")
+        dump.write("\n")
+        for value in avg_list:
+            dump.write("\n" + str(round(value)))
+        dump.write("\n")
+        dump.write("\n")
+        for value in max_list:
+            dump.write("\n" + str(round(value)))
+        dump.close()
+        print len(overall_best_solution)
         return overall_best_solution
 
     @staticmethod
     def min_max_avg(data):
+        if len(data) == 0:
+            return "empty"
         maximum = data[0]
         minimum = data[0]
         average = 0
@@ -62,7 +89,9 @@ class GeneticAlgorithm:
                 minimum = item
             average += item[1]
         average = average/len(data)
-        return "MIN: {0}\tMAX: {1}\tAVG: {2}".format(round(minimum[1], 3), round(maximum[1], 3), round(average, 3))
+        ok = [minimum[1], average, maximum[1]]
+        return ok
+        # return "{0}\t{1}\t{2}".format(round(minimum[1], 3), round(maximum[1], 3), round(average, 3))
 
     @staticmethod
     def find_best_solution(fitness_generation):
