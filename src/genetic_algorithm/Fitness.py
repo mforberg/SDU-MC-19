@@ -1,6 +1,6 @@
 from variables.GA_VALUES import *
 from src.MapAnalysis import *
-from variables.MC_LIBRARY import *
+# from variables.MC_LIBRARY import *
 from src.genetic_algorithm.CheckCriterias import *
 
 
@@ -17,25 +17,25 @@ def population_fitness(population, height_map, box_x, box_z):
 
 def solution_fitness(solution, height_map, box_x, box_z):
     fitness_score = 0
-    fitness_score += normal_houses_in_solution(solution)
+    # fitness_score += normal_houses_in_solution(solution)
+    # fitness_score += building_variance(solution)
     fitness_score += y_difference(solution, height_map)
-    fitness_score += building_variance(solution)
     fitness_score += coverage_score_and_well_distance(solution)
     fitness_score += check_area_for_water_and_changed_blocks_score(solution, height_map)
+    fitness_score += force_building_probability(solution)
     fitness_score -= weight_solutions(box_x, box_z, solution)
-    force_building_probability(solution)
     return fitness_score
 
 
-def building_variance(solution):
-    unique_buildings = set()
-    for building in solution:
-        unique_buildings.add(building.type_of_house)
-    float_length = len(unique_buildings) - 1  # we do not care about well
-    percent_of_max_possible = float(float_length) / len(get_available_buildings())
-    score = VARIANCE_WEIGHT * (MAX_SCORE * math.pow(percent_of_max_possible, 2))
-    print "variance: ", score
-    return score
+# def building_variance(solution):
+#     unique_buildings = set()
+#     for building in solution:
+#         unique_buildings.add(building.type_of_house)
+#     float_length = len(unique_buildings) - 1  # we do not care about well
+#     percent_of_max_possible = float(float_length) / len(get_available_buildings())
+#     score = VARIANCE_WEIGHT * (MAX_SCORE * math.pow(percent_of_max_possible, 2))
+#     print "variance: ", score
+#     return score
 
 
 def coverage_score_and_well_distance(solution):
@@ -127,21 +127,21 @@ def check_area_for_water_and_changed_blocks_score(solution, height_map):
     return score
 
 
-def normal_houses_in_solution(solution):
-    amount_of_normal_houses = 0.0
-    for building in solution:
-        if building.type_of_house == "normalHouse":
-            amount_of_normal_houses += 1
-    percentage = amount_of_normal_houses / len(solution)
-    score = 0
-    if percentage > 0:
-        if percentage >= NORMAL_HOUSE_PERCENTAGE:
-            score = MAX_SCORE * (NORMAL_HOUSE_PERCENTAGE / percentage)
-        else:
-            score = MAX_SCORE * (percentage / NORMAL_HOUSE_PERCENTAGE)
-        score *= NORMAL_HOUSE_WEIGHT
-    print "normal houses in solution: ", score
-    return score
+# def normal_houses_in_solution(solution):
+#     amount_of_normal_houses = 0.0
+#     for building in solution:
+#         if building.type_of_house == "normalHouse":
+#             amount_of_normal_houses += 1
+#     percentage = amount_of_normal_houses / len(solution)
+#     score = 0
+#     if percentage > 0:
+#         if percentage >= NORMAL_HOUSE_PERCENTAGE:
+#             score = MAX_SCORE * (NORMAL_HOUSE_PERCENTAGE / percentage)
+#         else:
+#             score = MAX_SCORE * (percentage / NORMAL_HOUSE_PERCENTAGE)
+#         score *= NORMAL_HOUSE_WEIGHT
+#     print "normal houses in solution: ", score
+#     return score
 
 
 def y_difference(solution, height_map):
@@ -164,25 +164,39 @@ def y_difference(solution, height_map):
 
 def force_building_probability(solution):
     type_dict = {}
+    #print "BANANANANANANANNANANNANANANNANANANANANANANAN"
     total_probability_value = 0
     for building_type in buildings:
         if building_type == "well":
             continue
         total_probability_value += buildings[building_type]["probability"]
         type_dict[building_type] = 0
+    #print(type_dict)
     for building in solution:
         if building.type_of_house == "well":
             continue
         type_dict[building.type_of_house] += 1
+    #print(type_dict)
     total_difference = 0.0
     for building_type in buildings:
         if building_type == "well":
             continue
         value = type_dict[building_type]
-        percentage_of_solution = value / (len(solution) - 1)  # skip well
-        percentage_of_probability = buildings[building_type]["probability"] / total_probability_value
+        #print value
+        percentage_of_solution = float(value) / (len(solution) - 1)  # skip well
+        #print "%"
+        percentage_of_probability = buildings[building_type]["probability"] / float(total_probability_value)
+        #print "DKAKLLDAK ", percentage_of_probability
+        #print "odoajfojafoja ", abs(percentage_of_probability - percentage_of_solution)
         total_difference += abs(percentage_of_probability - percentage_of_solution)
+    # print "building prop: ", total_difference
     # how to calculate :^)
+    score = MAX_SCORE - (MAX_SCORE * total_difference)
+    score *= FORCE_PROBABILITY_WEIGHT
+    if score < 0:
+        score = 0
+    print "probability score: ", score
+    return score
 
 
 def weight_solutions(box_x, box_z, solution):

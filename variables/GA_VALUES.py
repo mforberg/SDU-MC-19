@@ -20,10 +20,11 @@ MAX_SCORE = 1000
 WATER_AND_LAVA_WEIGHT = 10  # For each water/lava-block found, how much does it cost to use that area
 AREA_WEIGHT = 1.5  # Multiply the blocks modified
 DISTANCE_TO_WELL_WEIGHT = 1  # The distance to the well multiplied
-VARIANCE_WEIGHT = 0.5  # How much the variance score should be multiplied
-NORMAL_HOUSE_WEIGHT = 0.5  # How much the amount of normal houses should be multiplied with
+# VARIANCE_WEIGHT = 0.5  # How much the variance score should be multiplied
+# NORMAL_HOUSE_WEIGHT = 0.5  # How much the amount of normal houses should be multiplied with
 Y_DIFFERENCE_WEIGHT = 0.5  # How much the y difference should be multiplied with
 COVERAGE_WEIGHT = 1  # How much the score for the area covered is multiplied with
+FORCE_PROBABILITY_WEIGHT = 1
 
 """Extra variables"""
 POINTS_PER_DIFFERENCE_IN_Y = 10  # how many points a single difference in height gives
