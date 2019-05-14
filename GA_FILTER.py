@@ -40,7 +40,7 @@ def perform(level, box, options):
     print "CALL 6"
     centroids = starting_points(2, result)
     pikkemand = points_to_buildings(centroids, result)
-    print pikkemand
+    # print pikkemand
 
     #print d
 

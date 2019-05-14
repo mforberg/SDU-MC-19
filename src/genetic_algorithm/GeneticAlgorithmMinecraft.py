@@ -36,6 +36,9 @@ class GeneticAlgorithm:
                 if current_best_solution[1] > highest_fitness:
                     highest_fitness = current_best_solution[1]
                     overall_best_solution = copy.deepcopy(current_best_solution[0])
+                    print "------NEW MAX------"
+                    print "     ", x, "     "
+                    print "-------------------"
             """FI2POP"""
             if USE_FI2POP:
                 extra_with_fitness = InfeasibleFitness.population_fitness(infeasible_population, box_x, box_z,
@@ -59,20 +62,20 @@ class GeneticAlgorithm:
             # print end - start, "<-- Time"
             # print "Overall Best: ", highest_fitness, ",   Size: ", len(overall_best_solution)
 
-        dump = open(r"C:\Users\jonas\Desktop\GDMC-master\GDMC\stock-filters\src\dump.txt", "w")
-        for value in min_list:
-            dump.write("\n" + str(round(value)))
-        dump.write("\n")
-        dump.write("\n")
-        for value in avg_list:
-            dump.write("\n" + str(round(value)))
-        dump.write("\n")
-        dump.write("\n")
-        for value in max_list:
-            dump.write("\n" + str(round(value)))
-        dump.close()
-        print len(overall_best_solution)
-        return overall_best_solution
+        # dump = open(r"C:\Users\jonas\Desktop\GDMC-master\GDMC\stock-filters\src\dump.txt", "w")
+        # for value in min_list:
+        #     dump.write("\n" + str(round(value)))
+        # dump.write("\n")
+        # dump.write("\n")
+        # for value in avg_list:
+        #     dump.write("\n" + str(round(value)))
+        # dump.write("\n")
+        # dump.write("\n")
+        # for value in max_list:
+        #     dump.write("\n" + str(round(value)))
+        # dump.close()
+        # print len(overall_best_solution)
+        # return overall_best_solution
 
     @staticmethod
     def min_max_avg(data):

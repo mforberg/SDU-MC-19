@@ -6,11 +6,11 @@ CROSSOVER_RATE = 0.05  # 5%
 """The amount of "solutions" in a population"""
 POPULATION_SIZE = 100
 """The amount of generations the algorithm should be run"""
-GENERATIONS = 1
+GENERATIONS = 100
 """The top percentage of the population who should just continue to next"""
 ELITES_PERCENTAGE = 0.1  # 10%
-"""Percentage of solution that should be normal houses"""
-NORMAL_HOUSE_PERCENTAGE = 0.33  # 33%
+# """Percentage of solution that should be normal houses"""
+# NORMAL_HOUSE_PERCENTAGE = 0.33  # 33%
 """Mutation rate is calculated by (1 / (gene_size * MUTATION_RATE_MODIFIER))"""
 MUTATION_RATE_MODIFIER = 1  # x time as unlikely to mutate
 """Fitness Max Scores"""
@@ -24,12 +24,13 @@ DISTANCE_TO_WELL_WEIGHT = 1  # The distance to the well multiplied
 # NORMAL_HOUSE_WEIGHT = 0.5  # How much the amount of normal houses should be multiplied with
 Y_DIFFERENCE_WEIGHT = 0.5  # How much the y difference should be multiplied with
 COVERAGE_WEIGHT = 1  # How much the score for the area covered is multiplied with
-FORCE_PROBABILITY_WEIGHT = 1
+FORCE_PROBABILITY_WEIGHT = 0.3
 
 """Extra variables"""
 POINTS_PER_DIFFERENCE_IN_Y = 10  # how many points a single difference in height gives
-ALLOWED_CHANGED_BLOCKS_PERCENTAGE = 0.01  # how big the percentage of changed block (depending on size) is allowed
-AREA_COVERAGE_POINTS_PER_UNIT = 4  # how many points is subtracted for every unit
+ALLOWED_CHANGED_BLOCKS_PERCENTAGE = 0.1  # how big the percentage of changed block (depending on size) is allowed
+# AREA_COVERAGE_POINTS_PER_UNIT = 2  # how many points is subtracted for every unit
+# AREA_COVERAGE_ZERO_SCORE = 200  # average coverage distance for zero points
 
 """Length of solution variables"""
 DECREASE_PER_EXTRA_BUILDING = -30  # Positive number increases the chance of smaller solution (Negative for bigger)
