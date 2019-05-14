@@ -13,21 +13,14 @@ def path_for_clusters(list_of_clusters, height_map, level, box_length, box_width
     blocked_tiles(list_of_clusters)
     heaps = distance_for_cluster(list_of_clusters, height_map)
     list_of_goals = goals_for_well(list_of_clusters, height_map)
-    poo = 0
-    for item in list_of_clusters:
-        for i in item:
-            poo += 1
-    print poo, "<--- poo"
+
     for x in xrange(0, len(list_of_clusters)):
         list_of_goals_copy = copy.deepcopy(list_of_goals)
-        print " - - - - - - -"
-        # for heap in heaps[x]:
         while heaps[x]:
             building = heappop(heaps[x])[1]
-            print building.path_connection_point
             if building.type_of_house == "well":
                 continue
-            list_of_building_paths.append(AStar.run2(building, height_map, level, box_length, box_width, starting_point, list_of_goals_copy, list_of_blocked_coordinates))
+            list_of_building_paths.append(AStar.run(building, height_map, level, box_length, box_width, starting_point, list_of_goals_copy, list_of_blocked_coordinates))
     return list_of_building_paths
 
 def distance_for_cluster(list_of_clusters, height_map):
@@ -85,8 +78,6 @@ def goals_for_well(list_of_clusters, height_map):
     well_goals = list()
 
     goal_y = height_map[goal.x, goal.z][0]
-    print buildings["well"]["xLength"]
-    print buildings["well"]["zWidth"]
 
     center_x = goal.x + ((buildings["well"]["xLength"] - (2*BUFFER)) / 2) + 1
     center_z = goal.z + ((buildings["well"]["zWidth"] - (2*BUFFER)) / 2) + 1

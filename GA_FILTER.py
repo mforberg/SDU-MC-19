@@ -3,6 +3,7 @@ import utilityFunctions
 from src import MapAnalysis
 from src.genetic_algorithm import PrepareBuildingArea, GeneticAlgorithmMinecraft
 from src.build_solution import BuildHouses
+from src.build_solution import BuildRoads
 from src.prepare_solution.deforestation.Deforestation import deforest_area
 
 # noinspection PyUnresolvedReferences
@@ -12,6 +13,7 @@ from src.prepare_solution.a_star.PrepareAStar import *
 from src.prepare_solution.a_star.PathsForClusters import *
 from src.prepare_solution.k_means.KMeansClustering import *
 from heapq import *
+import time
 
 inputs = (("Genetic Algorithm and A*", "label"),
           ("Build solution", True))
@@ -40,7 +42,6 @@ def perform(level, box, options):
     print "CALL 6"
     centroids = starting_points(2, result)
     pikkemand = points_to_buildings(centroids, result)
-    print pikkemand
 
     #print d
 
@@ -55,8 +56,9 @@ def perform(level, box, options):
     # blocked_tiles(result)
     # a star
     if options["Build solution"]:
-        deforest_area(result, paths, height_map, level)
+        #deforest_area(result, paths, height_map, level)
         # place roads
+        BuildRoads.build_roads(paths, level)
         BuildHouses.build(level, height_map, result)
     del list_of_blocked_coordinates[:]
     # TODO: change how we calculate door / connection point location

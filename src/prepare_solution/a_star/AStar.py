@@ -5,10 +5,8 @@ from Queue import PriorityQueue
 import utilityFunctions
 from pymclevel import alphaMaterials as am
 from src.genetic_algorithm.CheckCriterias import check_if_within_box
-import time
+import copy
 import random
-
-
 
 """
 Can find Manhattan distance for all buildings
@@ -18,81 +16,10 @@ Can find if a tile (x,z) is walkable compared to our final list of buildings com
 
 old_list_of_blocked_coordinates = list()
 WATER_COST = 4 # water 5 times as expensive as ground
+ALTITUDE_COST = 25
 
 
-def run(list_of_buildings, height_map, level, box_length, box_width, starting_point):
-    list_of_all_building_paths = list()
-    blocked_tiles(list_of_buildings)
-    sorted_buildings = sort_buildings_by_distance(list_of_buildings, height_map)
-    goal = heappop(sorted_buildings)[1]  # the well is the goal
-    while sorted_buildings:
-        print sorted_buildings
-        building = heappop(sorted_buildings)[1]
-        if building.type_of_house == "well":
-            continue  # don't generate paths from well to well
-        """- - - - - - - - - - - - - - - - - - - - """
-        """ Generate paths for each building"""
-        building_path = list()  # should be list of x,z,y that is the path from current building to well
-
-        open_heap = []
-
-
-        coords_for_building = building.path_connection_point
-        start = (coords_for_building[0], coords_for_building[1]+building.buffer_direction, coords_for_building[2])  # x,z,y
-        goal_y = height_map[goal.x, goal.z][0]
-        center_x = goal.x + (buildings["well"]["xLength"]/2)
-        center_z = goal.z + (buildings["well"]["zWidth"]/2)
-        coords_for_well = (center_x, center_z, goal_y)
-        end = (coords_for_well[0], coords_for_well[1], coords_for_well[2])  # x,z,y
-        parent_dict = {}
-        close_list = set()
-        utilityFunctions.setBlock(level, (am.Wood.ID, 0), start[0], start[2], start[1] )
-
-        g_scores = {start: 0}
-        f_scores = {start: manhattan_distance_between(start, end)}
-
-        heappush(open_heap, (f_scores[start], start))
-        while open_heap:
-            current_node = heappop(open_heap)[1]
-            if current_node == end:
-                backtracking = []
-                while current_node in parent_dict:
-                    utilityFunctions.setBlock(level, (am.Wood.ID, 0), current_node[0], current_node[2], current_node[1])
-                    backtracking.append(current_node)
-                    current_node = parent_dict[current_node]
-                list_of_all_building_paths.append(backtracking)
-                break
-            close_list.add(current_node)
-            neighbors = find_neighbors_for_current_node(current_node, height_map, box_length, box_width, starting_point, level)
-            for neighbor in xrange(0, len(neighbors)):
-                current_neighbor = neighbors[neighbor]
-                block_type_neighbor = height_map[current_neighbor[0], current_neighbor[1]][1]
-
-                #Cost is calculated for the neighbor nodes
-                cost_so_far = g_scores[current_node]
-
-                h_cost = manhattan_distance_between(current_neighbor, end)
-
-                if block_type_neighbor == 8 or block_type_neighbor == 9:  # 8 = flowing water, 9 = still water
-                    g_cost = cost_so_far + WATER_COST
-                else:
-                    g_cost = cost_so_far + 1  # TODO: Should account for water
-
-                if current_neighbor in close_list and g_cost >= g_scores.get(current_neighbor, 0):
-                    continue
-
-                if current_neighbor not in [i[1] for i in open_heap] or g_cost < g_scores.get(current_neighbor, 0):
-                    parent_dict[current_neighbor] = current_node
-                    g_scores[current_neighbor] = g_cost
-                    f_scores[current_neighbor] = g_cost + h_cost
-                    #utilityFunctions.setBlock(level, (am.Sand.ID, 0), current_neighbor[0], current_neighbor[2], current_neighbor[1]) # TODO: remove this
-                    heappush(open_heap, (f_scores[current_neighbor], current_neighbor))
-          # TODO: append fail coord
-
-    return list_of_all_building_paths
-
-
-def run2(building, height_map, level, box_length, box_width, starting_point, list_of_goals, list_of_blocked_coordinates):
+def run(building, height_map, level, box_length, box_width, starting_point, list_of_goals, list_of_blocked_coordinates):
         """- - - - - - - - - - - - - - - - - - - - """
         """ Generate paths for each building"""
         building_path = list()  # should be list of x,z,y that is the path from current building to well
@@ -102,64 +29,74 @@ def run2(building, height_map, level, box_length, box_width, starting_point, lis
         parent_dict = {}
         close_list = set()
         distance_heap = []
+        list_of_goals_copy = copy.deepcopy(list_of_goals)
 
         coords_for_building = building.path_connection_point
         start = (coords_for_building[0], coords_for_building[1] + building.buffer_direction, coords_for_building[2])
-        utilityFunctions.setBlock(level, (am.Wood.ID, 0), start[0], start[2], start[1] )
 
 
         # Find goal with smallest distance from start
-        # TODO: Make heap for all the goals find the goal with lowest distance, check if they can connect otherwise go to next
-        # TODO: goal. Heap needs to be updated with new goals
         g_scores = {start: 0}
         for goal in list_of_goals:
             distance = manhattan_distance_between(start, goal)
             heappush(distance_heap, (distance, goal))
-        end = heappop(distance_heap)[1]
-        f_scores = {start: manhattan_distance_between(start, end)}
+        while distance_heap:
+            end = heappop(distance_heap)[1]
+            f_scores = {start: manhattan_distance_between(start, end)}
 
-        heappush(open_heap, (f_scores[start], start))
-        while open_heap:
-            current_node = heappop(open_heap)[1]
-            if current_node in list_of_goals:
-                backtracking = []
-                random_num = random.randint(0, 15)
-                while current_node in parent_dict:
-                    utilityFunctions.setBlock(level, (95, random_num), current_node[0], current_node[2], current_node[1])
-                    backtracking.append(current_node)
-                    current_node = parent_dict[current_node]
-                list_of_all_building_paths.append(backtracking)
-                for node in backtracking:
-                    list_of_goals.append(node)
+            heappush(open_heap, (f_scores[start], start))
+            while open_heap:
+                current_node = heappop(open_heap)[1]
+                if current_node in list_of_goals:
+                    backtracking = []
+                    random_num = random.randint(0, 15)
+                    while current_node in parent_dict:
+                        backtracking.append(current_node)
+                        current_node = parent_dict[current_node]
+                        #utilityFunctions.setBlock(level, (95, random_num), current_node[0], current_node[2], current_node[1])
+                    backtracking.append(current_node) # Add start node
+                    list_of_all_building_paths.append(backtracking)
+                    for node in backtracking:
+                        list_of_goals.append(node)
+                    return list_of_all_building_paths
+                close_list.add(current_node)
+                neighbors = find_neighbors_for_current_node(current_node, height_map, box_length, box_width, starting_point, level, list_of_blocked_coordinates)
+                for neighbor in xrange(0, len(neighbors)):
+                    current_neighbor = neighbors[neighbor]
+                    block_type_neighbor = height_map[current_neighbor[0], current_neighbor[1]][1]
+
+                    #Cost is calculated for the neighbor nodes
+                    cost_so_far = g_scores[current_node]
+
+                    h_cost = manhattan_distance_between(current_neighbor, end)
+
+                    if block_type_neighbor == 8 or block_type_neighbor == 9:  # 8 = flowing water, 9 = still water
+                        g_cost = cost_so_far + WATER_COST
+                    else:
+                        if not altitude_check(current_node, current_neighbor):
+                            #   print current_node, "\t", current_neighbor
+                            altitude_diff = abs(current_node[2] - current_neighbor[2])
+                            g_cost = cost_so_far + ((altitude_diff*10)-10 + ALTITUDE_COST)
+                            #print "MAX ALTITUDE BREACHED: ", g_cost
+                        else:
+                            g_cost = cost_so_far + 1
+
+                    if current_neighbor in close_list and g_cost >= g_scores.get(current_neighbor, 0):
+                        continue
+
+                    if current_neighbor not in [i[1] for i in open_heap] or g_cost < g_scores.get(current_neighbor, 0):
+                        parent_dict[current_neighbor] = current_node
+                        g_scores[current_neighbor] = g_cost
+                        f_scores[current_neighbor] = g_cost + h_cost
+                        #utilityFunctions.setBlock(level, (am.Sand.ID, 0), current_neighbor[0], current_neighbor[2], current_neighbor[1]) # TODO: remove this
+                        heappush(open_heap, (f_scores[current_neighbor], current_neighbor))
+              # TODO: append fail coord
+            if len(list_of_goals) > len(list_of_goals_copy):
                 break
-            close_list.add(current_node)
-            neighbors = find_neighbors_for_current_node(current_node, height_map, box_length, box_width, starting_point, level, list_of_blocked_coordinates)
-            for neighbor in xrange(0, len(neighbors)):
-                current_neighbor = neighbors[neighbor]
-                block_type_neighbor = height_map[current_neighbor[0], current_neighbor[1]][1]
-
-                #Cost is calculated for the neighbor nodes
-                cost_so_far = g_scores[current_node]
-
-                h_cost = manhattan_distance_between(current_neighbor, end)
-
-                if block_type_neighbor == 8 or block_type_neighbor == 9:  # 8 = flowing water, 9 = still water
-                    g_cost = cost_so_far + WATER_COST
-                else:
-                    g_cost = cost_so_far + 1  # TODO: Should account for water
-
-                if current_neighbor in close_list and g_cost >= g_scores.get(current_neighbor, 0):
-                    continue
-
-                if current_neighbor not in [i[1] for i in open_heap] or g_cost < g_scores.get(current_neighbor, 0):
-                    parent_dict[current_neighbor] = current_node
-                    g_scores[current_neighbor] = g_cost
-                    f_scores[current_neighbor] = g_cost + h_cost
-                    #utilityFunctions.setBlock(level, (am.Sand.ID, 0), current_neighbor[0], current_neighbor[2], current_neighbor[1]) # TODO: remove this
-                    heappush(open_heap, (f_scores[current_neighbor], current_neighbor))
-          # TODO: append fail coord
-
+            print end, "can't access goal"
+            continue
         return list_of_all_building_paths
+
 
 def sort_buildings_by_distance(list_of_buildings, height_map):
     well = find_well(list_of_buildings)
@@ -256,8 +193,8 @@ def find_neighbors_for_current_node(node, height_map, box_length, box_width, sta
             continue
         if not is_walkable(neighbor, level, list_of_blocked_coordinates):
             continue
-        if not altitude_check(node, neighbor):
-            continue
+        # if not altitude_check(node, neighbor):
+        #     continue
         neighbor_list.append(neighbor)
     return neighbor_list
 
