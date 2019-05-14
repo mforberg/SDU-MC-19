@@ -55,7 +55,7 @@ def perform(level, box, options):
     # blocked_tiles(result)
     # a star
     if options["Build solution"]:
-        #deforest_area(result, paths, height_map, level)
+        deforest_area(result, paths, height_map, level)
         # place roads
         BuildRoads.build_roads(paths, level)
         BuildHouses.build(level, height_map, result)
