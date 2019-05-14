@@ -5,11 +5,12 @@ from pymclevel import alphaMaterials
 from variables.MC_LIBRARY import *
 
 
-def deforest_area(list_of_buildings, list_of_roads, height_map, level):
+def deforest_area(list_of_buildings, clusters, height_map, level):
     for building in list_of_buildings:
         clear_building_area(building, height_map, level)
-    for road in list_of_roads:
-        clear_road(road, level, height_map)
+    for cluster in clusters:
+        for road in cluster:
+            clear_road(road, level, height_map)
 
 
 def find_bounds(list_of_buildings):

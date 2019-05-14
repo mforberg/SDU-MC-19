@@ -48,7 +48,6 @@ def perform(level, box, options):
     print "CALL 7"
     start = time.time()
     paths = path_for_clusters(pikkemand, height_map, level, box_length, box_width, starting_point)
-    #paths = run(result, height_map, level, box_length, box_width, starting_point)
     print "CALL 8"
     end = time.time()
     print end-start, "TOTAL TIME FOR A-STAR"
