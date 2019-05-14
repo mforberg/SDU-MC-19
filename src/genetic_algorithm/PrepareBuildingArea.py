@@ -53,4 +53,7 @@ def get_reference_block(level, building, target_height):
         for z in xrange(building.z, building.z + buildings[building.type_of_house]["zWidth"]):
             if level.blockAt(x, target_height, z) in blocks:
                 reference_blocks.append(level.blockAt(x, target_height, z))
-    return max(set(reference_blocks), key=reference_blocks.count)
+    if len(reference_blocks) < 1:
+        return 3  # dirt
+    else:
+        return max(set(reference_blocks), key=reference_blocks.count)
