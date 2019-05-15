@@ -14,7 +14,7 @@ MAX_HEIGHT = 255
 
 buildings = {
     "well": {"probability": WELL_PROBABILITY, "xLength": 5 + (BUFFER * 2), "zWidth": 5 + (BUFFER * 2),
-             "yHeight": 4, "floorAndRoof": False, "mutationNumber": 0},
+             "yHeight": 2, "floorAndRoof": False, "mutationNumber": 0},
     "normalHouse": {"probability": NORMAL_HOUSE_PROBABILITY, "xLength": 7 + (BUFFER * 2), "zWidth": 7 + (BUFFER * 2),
                     "yHeight": 6, "floorAndRoof": True, "mutationNumber": 2},
     "blackSmith": {"probability": BLACKSMITH_PROBABILITY, "xLength": 9 + (BUFFER * 2), "zWidth": 7 + (BUFFER * 2),

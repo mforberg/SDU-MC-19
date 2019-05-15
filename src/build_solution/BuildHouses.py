@@ -6,14 +6,16 @@ from pymclevel import alphaMaterials as am
 # noinspection PyUnresolvedReferences
 from mcplatform import *
 
+wood_material = am.WoodPlanks.ID
+cobble_material = am.Cobblestone.ID
+crops_material = am.Crops.ID
+dirt_material = am.Farmland.ID
+water_material = am.WaterActive.ID
+air_material = am.Air.ID
 
 def build(level, height_map, solution):
 
-    wood_material = am.WoodPlanks.ID
-    cobble_material = am.Cobblestone.ID
-    crops_material = am.Crops.ID
-    dirt_material = am.Dirt.ID
-    water_material = am.WaterActive.ID
+
 
     for building in solution:
         if building.type_of_house == "well":
@@ -119,10 +121,15 @@ def water_in_well(level, length_of_building, width_of_building, box_height, buil
     for x in range(building.x + BUFFER + 1, building.x + length_of_building + BUFFER - 1):
         for z in range(building.z + BUFFER + 1, building.z + width_of_building + BUFFER - 1):
             utilityFunctions.setBlock(level, (cobble, 0),  x, box_height, z)
-            utilityFunctions.setBlockToGround(level, (water, 0), x, box_height + 3, z, box_height+1)
+            utilityFunctions.setBlockToGround(level, (water, 0), x, box_height+2, z, box_height+1)
 
-def plant_in_farm(level, length_of_building, width_of_building, height_of_building, box_height, building, crops, dirt):
+def plant_in_farm(level, length_of_building, width_of_building, height_of_building, box_height, building, crops, dirt,):
     for x in range(building.x + BUFFER + 1, building.x + length_of_building + BUFFER - 1):
         for z in range(building.z + BUFFER + 1, building.z + width_of_building + BUFFER - 1):
             utilityFunctions.setBlock(level, (crops, 0), x, box_height + height_of_building, z)
-            utilityFunctions.setBlockToGround(level, (dirt, 0), x, box_height + 2, z, box_height)
+            utilityFunctions.setBlockToGround(level, (dirt, 7), x, box_height + 2, z, box_height)
+    center_x = building.x + (length_of_building / 2) + 1
+    center_z = building.z + (width_of_building / 2) + 1
+    utilityFunctions.setBlock(level, (water_material, 0), center_x, box_height + 1, center_z)
+    utilityFunctions.setBlock(level, (air_material, 0), center_x, box_height + height_of_building, center_z)
+
