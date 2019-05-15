@@ -1,4 +1,5 @@
 from src.MapAnalysis import *
+from variables.MC_LIBRARY import MAX_HEIGHT
 # noinspection PyUnresolvedReferences
 import utilityFunctions
 # noinspection PyUnresolvedReferences
@@ -40,11 +41,16 @@ def modify_area(height_map, solution, level):
                         utilityFunctions.setBlock(level, (reference_block, 0), x, height_map[x, z][0], z)
                         zero_difference = True  # Break
                     elif current_difference > 0:
-                        utilityFunctions.setBlock(level, (reference_block, 0), x, height_map[x, z][0], z)
+                        if reference_block == aM.Grass.ID:
+                            utilityFunctions.setBlock(level, (aM.Dirt.ID, 0), x, height_map[x, z][0], z)
+                        else:
+                            utilityFunctions.setBlock(level, (reference_block, 0), x, height_map[x, z][0], z)
                         height_map[x, z][0] += 1
                     else:
-                        utilityFunctions.setBlock(level, (reference_block, 0), x, height_map[x, z][0], z)
-                        height_map[x, z][0] -= 1
+                        for y in xrange(MAX_HEIGHT, target_height, -1):
+                            utilityFunctions.setBlock(level, (aM.Air.ID, 0), x, height_map[x, z][0], z)
+                        # utilityFunctions.setBlock(level, (reference_block, 0), x, height_map[x, z][0], z)
+                        height_map[x, z][0] = target_height
 
 
 def get_reference_block(level, building, target_height):
@@ -54,6 +60,6 @@ def get_reference_block(level, building, target_height):
             if level.blockAt(x, target_height, z) in blocks:
                 reference_blocks.append(level.blockAt(x, target_height, z))
     if len(reference_blocks) < 1:
-        return 3  # dirt
+        return aM.Dirt.ID
     else:
         return max(set(reference_blocks), key=reference_blocks.count)

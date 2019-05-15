@@ -75,7 +75,7 @@ class GeneticAlgorithm:
         #     dump.write("\n" + str(round(value)))
         # dump.close()
         # print len(overall_best_solution)
-        # return overall_best_solution
+        return overall_best_solution
 
     @staticmethod
     def min_max_avg(data):

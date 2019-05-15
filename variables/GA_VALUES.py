@@ -6,7 +6,7 @@ CROSSOVER_RATE = 0.05  # 5%
 """The amount of "solutions" in a population"""
 POPULATION_SIZE = 100
 """The amount of generations the algorithm should be run"""
-GENERATIONS = 100
+GENERATIONS = 10
 """The top percentage of the population who should just continue to next"""
 ELITES_PERCENTAGE = 0.1  # 10%
 # """Percentage of solution that should be normal houses"""
@@ -27,8 +27,9 @@ COVERAGE_WEIGHT = 1  # How much the score for the area covered is multiplied wit
 FORCE_PROBABILITY_WEIGHT = 0.3
 
 """Extra variables"""
-POINTS_PER_DIFFERENCE_IN_Y = 10  # how many points a single difference in height gives
+POINTS_PER_DIFFERENCE_IN_Y = 20  # how many points a single difference in height gives
 ALLOWED_CHANGED_BLOCKS_PERCENTAGE = 0.1  # how big the percentage of changed block (depending on size) is allowed
+COEFFICIENT_MODIFIER_FOR_CHANGED_BLOCKS = 0.75  # y = ax + b, where 'a' = MAX_SCORE * (THIS)
 # AREA_COVERAGE_POINTS_PER_UNIT = 2  # how many points is subtracted for every unit
 # AREA_COVERAGE_ZERO_SCORE = 200  # average coverage distance for zero points
 
