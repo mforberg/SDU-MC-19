@@ -17,9 +17,9 @@ def population_fitness(population, height_map, box_x, box_z):
 
 def solution_fitness(solution, height_map, box_x, box_z):
     fitness_score = 0
-    # fitness_score += normal_houses_in_solution(solution)
-    # fitness_score += building_variance(solution)
-    fitness_score += y_difference(solution, height_map)
+    # # fitness_score += normal_houses_in_solution(solution)
+    # # fitness_score += building_variance(solution)
+    # fitness_score += y_difference(solution, height_map)
     fitness_score += coverage_score_and_well_distance(box_x, box_z, solution)
     fitness_score += check_area_for_water_and_changed_blocks_score(solution, height_map)
     fitness_score += force_building_probability(solution)
@@ -40,34 +40,35 @@ def solution_fitness(solution, height_map, box_x, box_z):
 
 def coverage_score_and_well_distance(box_x, box_z, solution):
     well = None
-    total_x_max = 0
-    total_x_min = 0
-    total_z_max = 0
-    total_z_min = 0
-    zero_score = math.sqrt(math.pow(box_x, 2) + math.pow(box_z, 2)) / 1.5
+    # total_x_max = 0
+    # total_x_min = 0
+    # total_z_max = 0
+    # total_z_min = 0
+    # zero_score = math.sqrt(math.pow(box_x, 2) + math.pow(box_z, 2)) / 1.5
     """finding the well and get the total values"""
     for building in solution:
         if building.type_of_house == "well":
             well = building
-        total_x_min += building.x
-        total_x_max += buildings[building.type_of_house]["xLength"]
-        total_z_min += building.z
-        total_z_max += buildings[building.type_of_house]["zWidth"]
+        # total_x_min += building.x
+        # total_x_max += buildings[building.type_of_house]["xLength"]
+        # total_z_min += building.z
+        # total_z_max += buildings[building.type_of_house]["zWidth"]
     """calculating the area coverage distance"""
-    avg_x = ((total_x_max / len(solution)) - (total_x_min / len(solution)))
-    avg_z = ((total_z_max / len(solution)) - (total_z_min / len(solution)))
-    distance = math.sqrt(math.pow(avg_x, 2) + math.pow(avg_z, 2))
+    # avg_x = ((total_x_max / len(solution)) - (total_x_min / len(solution)))
+    # avg_z = ((total_z_max / len(solution)) - (total_z_min / len(solution)))
+    # distance = math.sqrt(math.pow(avg_x, 2) + math.pow(avg_z, 2))
     # print distance
     """create the linear graph for the score"""
-    a = -MAX_SCORE / zero_score
-    area_coverage_score = a * distance + MAX_SCORE
+    # a = -MAX_SCORE / zero_score
+    # area_coverage_score = a * distance + MAX_SCORE
     # value = AREA_COVERAGE_POINTS_PER_UNIT * distance
     # area_coverage_score = COVERAGE_WEIGHT * (MAX_SCORE - value)
     """calculate distance to well"""
     well_score = average_distance_to_well_score(solution, well)
     # print "LOOK HERE ---------------------------------------------> ", area_coverage_score, "  well: ", well_score
     # print "Coverage: ", area_coverage_score, "   Well: ", well_score
-    return area_coverage_score + well_score
+    # score = area_coverage_score + well_score
+    return well_score
 
 
 def average_distance_to_well_score(solution, well):
@@ -124,7 +125,7 @@ def check_area_for_water_and_changed_blocks_score(solution, height_map):
     #     #value = average_percentage / ALLOWED_CHANGED_BLOCKS_PERCENTAGE
     #     x = average_percentage / ALLOWED_CHANGED_BLOCKS_PERCENTAGE
     #     value = 50 / (2*x)
-    value = -(0.75 * MAX_SCORE) * average_percentage + MAX_SCORE
+    value = -(COEFFICIENT_MODIFIER_FOR_CHANGED_BLOCKS * MAX_SCORE) * average_percentage + MAX_SCORE
     # print "value: ", value
     # print "actual % ", average_percentage
 

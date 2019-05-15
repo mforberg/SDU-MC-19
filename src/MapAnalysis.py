@@ -37,7 +37,7 @@ dimension_corrector = -1
 
 def create_two_dimensional_height_map(level, box):
     position_dict = {}
-    x_reference_point = 200
+    x_reference_point = MAX_HEIGHT
     """Find the reference point by going down the y-axis until there is a block that isn't in the skipBlocks"""
     for y in range(box.maxy + dimension_corrector, box.miny + dimension_corrector, -1):
         current_block = level.blockAt(box.maxx + dimension_corrector, y, box.maxz + dimension_corrector)
