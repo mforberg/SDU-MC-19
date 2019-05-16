@@ -4,7 +4,7 @@ from heapq import *
 from Queue import PriorityQueue
 import utilityFunctions
 from pymclevel import alphaMaterials as am
-from src.genetic_algorithm.CheckCriterias import check_if_within_box
+from src.genetic_algorithm.CheckCriterias import check_if_within_box_area
 import copy
 import random
 

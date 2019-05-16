@@ -20,7 +20,7 @@ def solution_fitness(solution, box_x, box_z, starting_point):
     for building in solution:
         """score is calculated based if they are within the box there are no collision"""
         """within box"""
-        if not check_if_within_box(building, box_x, box_z, starting_point):
+        if not check_if_within_box_area(building, box_x, box_z, starting_point):
             out_of_box_negative_score += NOT_WITHIN_BOX_MINUS_PER_HOUSE
         """collision"""
         for building2 in solution:

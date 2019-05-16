@@ -1,5 +1,4 @@
 import random
-import math
 from variables.GA_VALUES import *
 
 
@@ -18,7 +17,7 @@ def create_new_population_from_old_one(old_generation):
     """while there is space in the population, fill it up with children"""
     while not full:
         parents = choose_parents(old_generation)
-        children = it_is_baby_time(parents[0]["ma"], parents[0]["pa"])
+        children = create_pair_of_children(parents["ma"], parents["pa"])
         """use both children if the remaining space is even, use only one if it is odd"""
         if remaining_space % 2 == 0:
             new_population.append(children[0])
@@ -42,14 +41,11 @@ def choose_parents(population):
         pop_list.append(solution)
         if solution[1] > 0:
             total_fitness += solution[1]
-    """find parents pair"""
-    parents = list()
-    for i in range(0, len(population) / 2):
-        parents.append(find_ma_and_pa(total_fitness, pop_list))
-    return parents
+    """find parents"""
+    return select_parents_from_wheel_of_fortune(total_fitness, pop_list)
 
 
-def find_ma_and_pa(total_fitness, pop_list):
+def select_parents_from_wheel_of_fortune(total_fitness, pop_list):
     ma = pop_list[0]
     random_number = random.randint(1, int(total_fitness))
     """find out who the random number corresponds to"""
@@ -74,7 +70,7 @@ def find_ma_and_pa(total_fitness, pop_list):
     return {"ma": ma, "pa": pa}
 
 
-def it_is_baby_time(ma, pa):
+def create_pair_of_children(ma, pa):
     ma_list = well_first(ma[0])
     pa_list = well_first(pa[0])
     child1 = []
