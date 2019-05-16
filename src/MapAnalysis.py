@@ -95,7 +95,7 @@ def find_amount_of_water_and_lava(building, height_map):
     for x in xrange(building.x, building.x + buildings[building.type_of_house]["xLength"]):
         for z in xrange(building.z, building.z + buildings[building.type_of_house]["zWidth"]):
             """check for water or lava"""
-            if height_map[x, z][1] == 9 or height_map[x, z][1] == 11:
+            if height_map[x, z][1] == am.Water.ID or height_map[x, z][1] == am.Lava.ID:
                 amount += 1
     return amount
 

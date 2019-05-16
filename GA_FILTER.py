@@ -8,11 +8,9 @@ from src.prepare_solution.deforestation.Deforestation import deforest_area
 
 # noinspection PyUnresolvedReferences
 from pymclevel import alphaMaterials as aM
-from src.prepare_solution.a_star.AStar import *
 from src.prepare_solution.a_star.PrepareAStar import *
 from src.prepare_solution.a_star.PathsForClusters import *
 from src.prepare_solution.k_means.KMeansClustering import *
-from heapq import *
 import time
 
 inputs = (("Genetic Algorithm and A*", "label"),

@@ -35,7 +35,7 @@ def modify_area(height_map, solution, level):
                     if there is no difference, set a block 
                     (used because the else statement does not put a block there when it gets to the correct floor)
                     else if target_height is bigger than the height_map location
-                    else the target_height is smaller than the height_map location
+                    else the target_height is smaller than the height_map location, clear everything down
                     """
                     if current_difference == 0:
                         utilityFunctions.setBlock(level, (reference_block, 0), x, height_map[x, z][0], z)
@@ -49,7 +49,6 @@ def modify_area(height_map, solution, level):
                     else:
                         for y in xrange(MAX_HEIGHT, target_height, -1):
                             utilityFunctions.setBlock(level, (aM.Air.ID, 0), x, height_map[x, z][0], z)
-                        # utilityFunctions.setBlock(level, (reference_block, 0), x, height_map[x, z][0], z)
                         height_map[x, z][0] = target_height
 
 
