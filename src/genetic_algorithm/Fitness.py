@@ -17,10 +17,10 @@ def population_fitness(population, height_map, box_x, box_z):
 
 def solution_fitness(solution, height_map, box_x, box_z):
     fitness_score = 0
-    # # fitness_score += normal_houses_in_solution(solution)
-    # # fitness_score += building_variance(solution)
-    # fitness_score += y_difference(solution, height_map)
-    fitness_score += coverage_score_and_well_distance(box_x, box_z, solution)
+    # fitness_score += normal_houses_in_solution(solution)
+    # fitness_score += building_variance(solution)
+    fitness_score += y_difference(solution, height_map)
+    fitness_score += coverage_score_and_well_distance(solution)
     fitness_score += check_area_for_water_and_changed_blocks_score(solution, height_map)
     fitness_score += force_building_probability(solution)
     fitness_score -= weight_solutions(box_x, box_z, solution)
@@ -38,7 +38,7 @@ def solution_fitness(solution, height_map, box_x, box_z):
 #     return score
 
 
-def coverage_score_and_well_distance(box_x, box_z, solution):
+def coverage_score_and_well_distance(solution):
     well = None
     # total_x_max = 0
     # total_x_min = 0
@@ -181,30 +181,27 @@ def y_difference(solution, height_map):
 
 def force_building_probability(solution):
     type_dict = {}
-    #print "BANANANANANANANNANANNANANANNANANANANANANANAN"
     total_probability_value = 0
     for building_type in buildings:
         if building_type == "well":
             continue
         total_probability_value += buildings[building_type]["probability"]
         type_dict[building_type] = 0
-    #print(type_dict)
+    # print(type_dict)
     for building in solution:
         if building.type_of_house == "well":
             continue
         type_dict[building.type_of_house] += 1
-    #print(type_dict)
+    # print(type_dict)
     total_difference = 0.0
     for building_type in buildings:
         if building_type == "well":
             continue
         value = type_dict[building_type]
-        #print value
+        # print value
         percentage_of_solution = float(value) / (len(solution) - 1)  # skip well
-        #print "%"
+        # print "%"
         percentage_of_probability = buildings[building_type]["probability"] / float(total_probability_value)
-        #print "DKAKLLDAK ", percentage_of_probability
-        #print "odoajfojafoja ", abs(percentage_of_probability - percentage_of_solution)
         total_difference += abs(percentage_of_probability - percentage_of_solution)
     # print "building prop: ", total_difference
     # how to calculate :^)
