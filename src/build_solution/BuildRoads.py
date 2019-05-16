@@ -9,6 +9,7 @@ from mcplatform import *
 gravel_material = (am.Gravel.ID, 0)
 ladder = am.Ladder.ID
 
+
 def build_roads(list_of_coordinates, level):
     direction_lib = [5, 4, 3, 2]  # 5 = East, 4 = West, 3 = South, 2 = North
 
@@ -23,6 +24,7 @@ def build_roads(list_of_coordinates, level):
                 height_difference = parent_node_y - current_node_y
 
                 utilityFunctions.setBlock(level, gravel_material, current_node_x, current_node_y, current_node_z)
+               # insert_road(current_node_x, current_node_z, current_node_y, height_difference, level)
 
                 if abs(height_difference) >= 2:
                     parent_node_x = parent_node[0]
@@ -36,14 +38,16 @@ def build_roads(list_of_coordinates, level):
                         direction_lib = [4, 5, 2, 3]  # 4 = West, 5 = East, 2 = North, 3 = South
                         direction_node = parent_node  # Going uphill
 
-                    height_difference = abs(height_difference)
 
+                    height_difference = abs(height_difference)
+                    utilityFunctions.setBlockToGround(level, gravel_material, current_node_x, current_node_y,
+                                                      current_node_z, current_node_y - height_difference)
                     insert_ladder(length_difference, width_difference, height_difference, direction_node, direction_lib, level)
                 parent_node = current_node
 
 
 def insert_ladder(length_difference, width_difference, height_difference, direction_node, direction_lib, level):
-    # Will decide where to place the latter from the four directions
+    # Will decide where to place the ladder from the four directions
     if length_difference == 1:
         utilityFunctions.setBlockToGround(level, (ladder, direction_lib[0]), direction_node[0],
                                           direction_node[2] + height_difference + 1, direction_node[1],
@@ -64,3 +68,5 @@ def insert_ladder(length_difference, width_difference, height_difference, direct
 
 
 
+# def insert_road(current_node_x, current_node_z, current_node_y, height_differnce, level):
+#     for node in range(current_node_y, )
