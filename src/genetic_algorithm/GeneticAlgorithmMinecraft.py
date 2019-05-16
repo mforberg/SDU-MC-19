@@ -61,19 +61,19 @@ class GeneticAlgorithm:
             # print end - start, "<-- Time"
             # print "Overall Best: ", highest_fitness, ",   Size: ", len(overall_best_solution)
 
-        dump = open(r"C:\Users\jonas\Desktop\GDMC-master\GDMC\stock-filters\src\dump.txt", "w")
-        for value in min_list:
-            dump.write("\n" + str(round(value)))
-        dump.write("\n")
-        dump.write("\n")
-        for value in avg_list:
-            dump.write("\n" + str(round(value)))
-        dump.write("\n")
-        dump.write("\n")
-        for value in max_list:
-            dump.write("\n" + str(round(value)))
-        dump.close()
-        print len(overall_best_solution)
+        # dump = open(r"C:\Users\jonas\Desktop\GDMC-master\GDMC\stock-filters\src\dump.txt", "w")
+        # for value in min_list:
+        #     dump.write("\n" + str(round(value)))
+        # dump.write("\n")
+        # dump.write("\n")
+        # for value in avg_list:
+        #     dump.write("\n" + str(round(value)))
+        # dump.write("\n")
+        # dump.write("\n")
+        # for value in max_list:
+        #     dump.write("\n" + str(round(value)))
+        # dump.close()
+        # print len(overall_best_solution)
         return overall_best_solution
 
     @staticmethod
