@@ -21,11 +21,6 @@ def generate_solution(box_x, box_z, starting_point):
         if house_number == 0:
             current_house = "well"
         list_of_buildings.append(place_building(box_x, box_z, starting_point, current_house, list_of_buildings))
-        # """The probability of normal houses should not be lowered"""
-        # if current_house == "normalHouse":
-        #     continue
-        # """Reduce the probability of specialty buildings"""
-        # buildings_copy[current_house]["probability"] = buildings_copy[current_house]["probability"] / 2
     return list_of_buildings
 
 

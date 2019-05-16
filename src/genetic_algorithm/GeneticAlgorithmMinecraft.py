@@ -1,4 +1,3 @@
-# import time
 from src.genetic_algorithm import CheckCriterias, Crossover, Fitness, Generation, Mutation, InfeasibleFitness
 from variables.GA_VALUES import *
 import copy

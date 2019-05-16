@@ -37,7 +37,7 @@ dimension_corrector = -1
 
 def create_two_dimensional_height_map(level, box):
     position_dict = {}
-    x_reference_point = 200
+    x_reference_point = MAX_HEIGHT
     """Find the reference point by going down the y-axis until there is a block that isn't in the skipBlocks"""
     for y in range(box.maxy + dimension_corrector, box.miny + dimension_corrector, -1):
         current_block = level.blockAt(box.maxx + dimension_corrector, y, box.maxz + dimension_corrector)
@@ -95,7 +95,7 @@ def find_amount_of_water_and_lava(building, height_map):
     for x in xrange(building.x, building.x + buildings[building.type_of_house]["xLength"]):
         for z in xrange(building.z, building.z + buildings[building.type_of_house]["zWidth"]):
             """check for water or lava"""
-            if height_map[x, z][1] == 9 or height_map[x, z][1] == 11:
+            if height_map[x, z][1] == am.Water.ID or height_map[x, z][1] == am.Lava.ID:
                 amount += 1
     return amount
 
