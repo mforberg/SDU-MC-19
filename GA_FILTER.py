@@ -38,14 +38,14 @@ def perform(level, box, options):
     # SET PATH CONNECTION POINTS FOR ALL STRUCTURES
     set_all_connections_points(result, height_map)
     print "CALL 6"
-    centroids = starting_points(2, result)
+    centroids = starting_points(3, result)
     clusters = points_to_buildings(centroids, result)
 
     #print d
 
     print "CALL 7"
     start = time.time()
-    paths = path_for_clusters(clusters, height_map, level, box_length, box_width, starting_point)
+    paths = path_for_clusters(clusters, height_map, box_length, box_width, starting_point)
     print "CALL 8"
     end = time.time()
     print end-start, "TOTAL TIME FOR A-STAR"

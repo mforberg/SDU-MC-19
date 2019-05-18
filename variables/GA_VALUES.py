@@ -6,7 +6,7 @@ CROSSOVER_RATE = 0.05  # 5%
 """The amount of "solutions" in a population"""
 POPULATION_SIZE = 100
 """The amount of generations the algorithm should be run"""
-GENERATIONS = 100
+GENERATIONS = 1
 """The top percentage of the population who should just continue to next"""
 ELITES_PERCENTAGE = 0.1  # 10%
 """Mutation rate is calculated by (1 / (gene_size * MUTATION_RATE_MODIFIER))"""
