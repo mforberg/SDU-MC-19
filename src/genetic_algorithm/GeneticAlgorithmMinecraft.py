@@ -11,7 +11,6 @@ class GeneticAlgorithm:
         min_list = list()
         avg_list = list()
         max_list = list()
-
         infeasible_population = list()
         overall_best_solution = None
         init_generation = Generation.generate_population(box_x, box_z, starting_point)
@@ -28,15 +27,15 @@ class GeneticAlgorithm:
                 min_list.append(score[0])
                 avg_list.append(score[1])
                 max_list.append(score[2])
-
-            """save the best solution"""
+            """if there is any feasible solutions"""
             if len(generation_with_fitness) > 0:
                 current_best_solution = self.find_best_solution(generation_with_fitness)
+                """save the best solution"""
                 if current_best_solution[1] > highest_fitness:
                     highest_fitness = current_best_solution[1]
                     overall_best_solution = copy.deepcopy(current_best_solution[0])
                     print "------NEW MAX------"
-                    print "     ", x, "     "
+                    print "       ", x
                     print "-------------------"
             """FI2POP"""
             if USE_FI2POP:
@@ -71,6 +70,14 @@ class GeneticAlgorithm:
         # dump.write("\n")
         # dump.write("\n")
         # for value in max_list:
+        #     dump.write("\n" + str(round(value)))
+        # dump.write("\n")
+        # dump.write("\n")
+        # for value in feasible_len:
+        #     dump.write("\n" + str(round(value)))
+        # dump.write("\n")
+        # dump.write("\n")
+        # for value in infeasible_len:
         #     dump.write("\n" + str(round(value)))
         # dump.close()
         # print len(overall_best_solution)
