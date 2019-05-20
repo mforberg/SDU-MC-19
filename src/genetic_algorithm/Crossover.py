@@ -1,4 +1,5 @@
 import random
+import copy
 from variables.GA_VALUES import *
 
 
@@ -97,12 +98,16 @@ def create_pair_of_children(ma, pa):
             gene_changer = not gene_changer
         if gene_changer:
             if shortest_nr > i:
-                child1.append(first[i])
-            child2.append(second[i])
+                building = copy.deepcopy(first[i])
+                child1.append(building)
+            building2 = copy.deepcopy(second[i])
+            child2.append(building2)
         else:
             if shortest_nr > i:
-                child2.append(first[i])
-            child1.append(second[i])
+                building = copy.deepcopy(first[i])
+                child2.append(building)
+            building2 = copy.deepcopy(second[i])
+            child1.append(building2)
     return [child1, child2]
 
 

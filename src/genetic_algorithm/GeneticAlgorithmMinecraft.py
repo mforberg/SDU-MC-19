@@ -11,7 +11,6 @@ class GeneticAlgorithm:
         min_list = list()
         avg_list = list()
         max_list = list()
-
         infeasible_population = list()
         overall_best_solution = None
         init_generation = Generation.generate_population(box_x, box_z, starting_point)
@@ -23,20 +22,21 @@ class GeneticAlgorithm:
             # print "- - - - - - - - - - - -"
             # print "CURRENT GEN: ", x + 1
             generation_with_fitness = Fitness.population_fitness(current_generation, height_map, box_x, box_z)
-            score = self.min_max_avg(generation_with_fitness)
-            if score != "empty":
-                min_list.append(score[0])
-                avg_list.append(score[1])
-                max_list.append(score[2])
-
-            """save the best solution"""
+            # """used for creating graphs"""
+            # score = self.min_max_avg(generation_with_fitness)
+            # if score != "empty":
+            #     min_list.append(score[0])
+            #     avg_list.append(score[1])
+            #     max_list.append(score[2])
+            """if there is any feasible solutions"""
             if len(generation_with_fitness) > 0:
                 current_best_solution = self.find_best_solution(generation_with_fitness)
+                """save the best solution"""
                 if current_best_solution[1] > highest_fitness:
                     highest_fitness = current_best_solution[1]
                     overall_best_solution = copy.deepcopy(current_best_solution[0])
                     print "------NEW MAX------"
-                    print "     ", x, "     "
+                    print "       ", x
                     print "-------------------"
             """FI2POP"""
             if USE_FI2POP:
@@ -72,6 +72,14 @@ class GeneticAlgorithm:
         # dump.write("\n")
         # for value in max_list:
         #     dump.write("\n" + str(round(value)))
+        # dump.write("\n")
+        # dump.write("\n")
+        # for value in feasible_len:
+        #     dump.write("\n" + str(round(value)))
+        # dump.write("\n")
+        # dump.write("\n")
+        # for value in infeasible_len:
+        #     dump.write("\n" + str(round(value)))
         # dump.close()
         # print len(overall_best_solution)
         return overall_best_solution
@@ -104,33 +112,3 @@ class GeneticAlgorithm:
                 current_top = solution[1]
                 current_best = solution
         return current_best
-
-
-"""
-        Run-times for sections
-        InitGeneration: 9.985
-        FITNESS: 2.163
-        MIN_MAX_AVG: 0.0
-        MUTATE: 0.007
-        """
-"""
-11.05799 initGen
-2.2326 Fitness
-3.1375 Crossover
-0.022988 Mutation
-"""
-"""
-avg time for fitness:
-0.631109833717
-crossover:
-0.03
-mutation:
-0.006
-CheckCriteria with no commented out code:
-3.52894238063
-with comment:
-same
-
-
-"""
-""" time testing in future: time.time() - time.time() = x seconds"""
