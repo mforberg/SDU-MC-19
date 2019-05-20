@@ -1,1 +1,0 @@
-# TODO: Should iterate through solution and sort by manhattan distance, so that we can do a_star that connects houses to other available roads

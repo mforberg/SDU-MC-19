@@ -1,5 +1,4 @@
 import AStar
-import PrepareAStar
 from heapq import *
 from variables.MC_LIBRARY import *
 import copy
@@ -8,25 +7,30 @@ import copy
 list_of_blocked_coordinates = list()
 
 
-def path_for_clusters(list_of_clusters, height_map, level, box_length, box_width, starting_point):
+def path_for_clusters(list_of_clusters, height_map, box_length, box_width, starting_point):
     list_of_building_paths = list()
     blocked_tiles(list_of_clusters)
     heaps = distance_for_cluster(list_of_clusters, height_map)
     list_of_goals = goals_for_well(list_of_clusters, height_map)
 
+    # Will generate the block coordinates where the roads need to be created
     for x in xrange(0, len(list_of_clusters)):
         list_of_goals_copy = copy.deepcopy(list_of_goals)
         while heaps[x]:
             building = heappop(heaps[x])[1]
             if building.type_of_house == "well":
                 continue
-            list_of_building_paths.append(AStar.run(building, height_map, level, box_length, box_width, starting_point, list_of_goals_copy, list_of_blocked_coordinates))
+            list_of_building_paths.append(AStar.run(building, height_map, box_length, box_width, starting_point,
+                                                    list_of_goals_copy, list_of_blocked_coordinates))
     return list_of_building_paths
+
 
 def distance_for_cluster(list_of_clusters, height_map):
     goal = find_goal_in_cluster(list_of_clusters)
     goal_coords = (goal.x, goal.z, height_map[goal.x, goal.z][0])
-    building_clusters = [[] for x in xrange(len(list_of_clusters))]
+    building_clusters = [[] for x in xrange(len(list_of_clusters))]  # Will create k lists in a list
+
+    # Find distance for each building in each cluster
     for cluster in xrange(0, len(list_of_clusters)):
         for building in list_of_clusters[cluster]:
             x = building.x
@@ -52,7 +56,9 @@ def points_to_buildings(list_of_clusters, list_of_buildings):
 
     return building_clusters
 
+
 def blocked_tiles(list_of_clusters):
+    # Will have a list of tiles where a road cannot pass through
     for cluster in list_of_clusters:
         for building in cluster:
             if building.type_of_house == "well":
@@ -63,17 +69,18 @@ def blocked_tiles(list_of_clusters):
             list_of_blocked_coordinates.append(rectangle)
 
 
-
-
-
 def find_goal_in_cluster(list_of_clusters):
+    # Find the well in one of the clusters, and make it the building goal
     for cluster in list_of_clusters:
         for building in cluster:
             if building.type_of_house == "well":
                 goal = building
                 return goal
 
+
 def goals_for_well(list_of_clusters, height_map):
+    # Will generate the four points on each side of the well as goals
+
     goal = find_goal_in_cluster(list_of_clusters)
     well_goals = list()
 

@@ -1,12 +1,5 @@
-from variables.MC_LIBRARY import buildings
-from src.prepare_solution.a_star.PrepareAStar import find_well
 from heapq import *
-from Queue import PriorityQueue
-import utilityFunctions
-from pymclevel import alphaMaterials as am
-from src.genetic_algorithm.CheckCriterias import check_if_within_box_area
 import copy
-import random
 
 """
 Can find Manhattan distance for all buildings
@@ -14,15 +7,13 @@ Can add list of blocked coordinates based on final solution
 Can find if a tile (x,z) is walkable compared to our final list of buildings com
 """
 
-old_list_of_blocked_coordinates = list()
-WATER_COST = 4 # water 5 times as expensive as ground
+WATER_COST = 4  # water 5 times as expensive as ground
 ALTITUDE_COST = 25
 
 
-def run(building, height_map, level, box_length, box_width, starting_point, list_of_goals, list_of_blocked_coordinates):
+def run(building, height_map, box_length, box_width, starting_point, list_of_goals, list_of_blocked_coordinates):
         """- - - - - - - - - - - - - - - - - - - - """
         """ Generate paths for each building"""
-        building_path = list()  # should be list of x,z,y that is the path from current building to well
 
         list_of_all_building_paths = list()
         open_heap = []
@@ -32,8 +23,10 @@ def run(building, height_map, level, box_length, box_width, starting_point, list
         list_of_goals_copy = copy.deepcopy(list_of_goals)
 
         coords_for_building = building.path_connection_point
-        start = (coords_for_building[0], coords_for_building[1] + building.buffer_direction, coords_for_building[2])
-
+        coords_for_start_z = coords_for_building[1] + building.buffer_direction
+        coords_for_start_y = height_map[coords_for_building[0], coords_for_start_z][0]
+        start = (coords_for_building[0], coords_for_start_z, coords_for_start_y,
+                 coords_for_building[1] + building.ladder_direction, coords_for_building[2])
 
         # Find goal with smallest distance from start
         g_scores = {start: 0}
@@ -43,29 +36,32 @@ def run(building, height_map, level, box_length, box_width, starting_point, list
         while distance_heap:
             end = heappop(distance_heap)[1]
             f_scores = {start: manhattan_distance_between(start, end)}
-
             heappush(open_heap, (f_scores[start], start))
+
+            # Start A*
             while open_heap:
                 current_node = heappop(open_heap)[1]
-                if current_node in list_of_goals:
+
+                if current_node in list_of_goals: # Check if node is goal
                     backtracking = []
-                    random_num = random.randint(0, 15)
                     while current_node in parent_dict:
                         backtracking.append(current_node)
                         current_node = parent_dict[current_node]
-                        #utilityFunctions.setBlock(level, (95, random_num), current_node[0], current_node[2], current_node[1])
-                    backtracking.append(current_node) # Add start node
+                    backtracking.append(start)  # Add start node
                     list_of_all_building_paths.append(backtracking)
                     for node in backtracking:
                         list_of_goals.append(node)
                     return list_of_all_building_paths
+
                 close_list.add(current_node)
-                neighbors = find_neighbors_for_current_node(current_node, height_map, box_length, box_width, starting_point, level, list_of_blocked_coordinates)
+                neighbors = find_neighbors_for_current_node(current_node, height_map, box_length, box_width,
+                                                            starting_point, list_of_blocked_coordinates)
+
                 for neighbor in xrange(0, len(neighbors)):
                     current_neighbor = neighbors[neighbor]
                     block_type_neighbor = height_map[current_neighbor[0], current_neighbor[1]][1]
 
-                    #Cost is calculated for the neighbor nodes
+                    # Cost is calculated for the neighbor nodes
                     cost_so_far = g_scores[current_node]
 
                     h_cost = manhattan_distance_between(current_neighbor, end)
@@ -74,10 +70,8 @@ def run(building, height_map, level, box_length, box_width, starting_point, list
                         g_cost = cost_so_far + WATER_COST
                     else:
                         if not altitude_check(current_node, current_neighbor):
-                            #   print current_node, "\t", current_neighbor
                             altitude_diff = abs(current_node[2] - current_neighbor[2])
                             g_cost = cost_so_far + ((altitude_diff*10)-10 + ALTITUDE_COST)
-                            #print "MAX ALTITUDE BREACHED: ", g_cost
                         else:
                             g_cost = cost_so_far + 1
 
@@ -88,29 +82,12 @@ def run(building, height_map, level, box_length, box_width, starting_point, list
                         parent_dict[current_neighbor] = current_node
                         g_scores[current_neighbor] = g_cost
                         f_scores[current_neighbor] = g_cost + h_cost
-                        #utilityFunctions.setBlock(level, (am.Sand.ID, 0), current_neighbor[0], current_neighbor[2], current_neighbor[1]) # TODO: remove this
                         heappush(open_heap, (f_scores[current_neighbor], current_neighbor))
-              # TODO: append fail coord
             if len(list_of_goals) > len(list_of_goals_copy):
+                # Goal has been found for this node, makes sure to check for evey goal
                 break
-            print end, "can't access goal"
             continue
         return list_of_all_building_paths
-
-
-def sort_buildings_by_distance(list_of_buildings, height_map):
-    well = find_well(list_of_buildings)
-    well_coords = (well.x, well.z, height_map[well.x, well.z][0])
-    sorted_buildings = []
-    for building in list_of_buildings:
-        x = building.x
-        z = building.z
-        y = height_map[x, z][0]
-        building_coords = (x, z, y)
-
-        distance = manhattan_distance_between(building_coords, well_coords)
-        heappush(sorted_buildings, (distance, building))
-    return sorted_buildings
 
 
 def manhattan_distance_between(current, goal):  # current, goal = tuple (x, z, y)
@@ -120,29 +97,8 @@ def manhattan_distance_between(current, goal):  # current, goal = tuple (x, z, y
     return x + z + y
 
 
-def manhattan_distance(list_of_buildings):
-    well = find_well(list_of_buildings)
-    for building in list_of_buildings:
-        if building.type_of_house == "well":
-            continue
-        connection_point = building.path_connection_point  # (x, z, y)
-        distance = abs(connection_point[0] - well.x) + abs(connection_point[1] - well.z)
-        print distance
-
-
-def blocked_tiles(list_of_buildings):
-    for building in list_of_buildings:
-        if building.type_of_house == "well":
-            continue
-        max_x = building.x + buildings[building.type_of_house]["xLength"]
-        max_z = building.z + buildings[building.type_of_house]["zWidth"]
-        rectangle = (building.x, building.z, max_x, max_z)  # min_x, min_z, max_x, max_z
-        old_list_of_blocked_coordinates.append(rectangle)
-    return old_list_of_blocked_coordinates
-
-
-# TODO: remove level and util
-def is_walkable(node, level, list_of_blocked_coordinates):
+def is_walkable(node, list_of_blocked_coordinates):
+    # Check for coordinate being walkable
     for rectangle in list_of_blocked_coordinates:
         # construct a rectangle based on the specifications of the building
         min_x = rectangle[0]
@@ -151,7 +107,6 @@ def is_walkable(node, level, list_of_blocked_coordinates):
         max_z = rectangle[3]
         # if the overlap return false
         if node[0] >= min_x and node[0] < max_x and node[1] >= min_z and node[1] < max_z:
-            utilityFunctions.setBlock(level, (am.Obsidian.ID, 0), node[0], node[2], node[1])
             return False
     # does not overlap -> it is walkable
     return True
@@ -164,16 +119,17 @@ def altitude_check(node, neighbor):
         return True
     return False
 
+
 def lava_check(height_map, neighbor):
     block_type = height_map[neighbor[0], neighbor[1]]
-    lava_still = 11 # still lava ID is 11, water is 9
-    lava_flowing = 10 # lava can be flowing, different ID
+    lava_still = 11  # still lava ID is 11, water is 9
+    lava_flowing = 10  # lava can be flowing, different ID
     if block_type[1] == lava_still or block_type[1] == lava_flowing:
         return False
     return True
 
 
-def find_neighbors_for_current_node(node, height_map, box_length, box_width, starting_point, level, list_of_blocked_coordinates):
+def find_neighbors_for_current_node(node, height_map, box_length, box_width, starting_point, list_of_blocked_coordinates):
     neighbors = [(0, 1), (0, -1), (1, 0), (-1, 0)]
     neighbor_list = list()
     for x, z in neighbors:
@@ -182,28 +138,28 @@ def find_neighbors_for_current_node(node, height_map, box_length, box_width, sta
         try:
             neighbor_y = height_map[neighbor_x, neighbor_z][0]
         except KeyError:
-            #(x,z) is out of bounds, so set a random height value, it is never used as first check skips to next neighbor
+            # (x,z) is out of bounds, so set a random height value, it is never used as first check skips to next neighbor
             neighbor_y = 0
         neighbor = (neighbor_x, neighbor_z, neighbor_y)
 
-        # TODO: check if the node is null(it is out of bounce of the world)
         if not within_bounds(neighbor, box_length, box_width, starting_point): # always check bounds first :)
             continue
         if not lava_check(height_map, neighbor):
             continue
-        if not is_walkable(neighbor, level, list_of_blocked_coordinates):
+        if not is_walkable(neighbor, list_of_blocked_coordinates):
             continue
-        # if not altitude_check(node, neighbor):
-        #     continue
         neighbor_list.append(neighbor)
     return neighbor_list
 
 
 def within_bounds(node, box_length, box_width, starting_point):
+    # Check if node is within the box given
     max_z = box_width + starting_point["z"]
     max_x = box_length + starting_point["x"]
 
     if node[0] >= starting_point["x"] and node[0] < max_x and node[1] >= starting_point["z"] and node[1] < max_z:
         return True
     return False
+
+
 
