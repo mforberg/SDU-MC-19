@@ -22,11 +22,12 @@ class GeneticAlgorithm:
             # print "- - - - - - - - - - - -"
             # print "CURRENT GEN: ", x + 1
             generation_with_fitness = Fitness.population_fitness(current_generation, height_map, box_x, box_z)
-            score = self.min_max_avg(generation_with_fitness)
-            if score != "empty":
-                min_list.append(score[0])
-                avg_list.append(score[1])
-                max_list.append(score[2])
+            # """used for creating graphs"""
+            # score = self.min_max_avg(generation_with_fitness)
+            # if score != "empty":
+            #     min_list.append(score[0])
+            #     avg_list.append(score[1])
+            #     max_list.append(score[2])
             """if there is any feasible solutions"""
             if len(generation_with_fitness) > 0:
                 current_best_solution = self.find_best_solution(generation_with_fitness)
@@ -111,33 +112,3 @@ class GeneticAlgorithm:
                 current_top = solution[1]
                 current_best = solution
         return current_best
-
-
-"""
-        Run-times for sections
-        InitGeneration: 9.985
-        FITNESS: 2.163
-        MIN_MAX_AVG: 0.0
-        MUTATE: 0.007
-        """
-"""
-11.05799 initGen
-2.2326 Fitness
-3.1375 Crossover
-0.022988 Mutation
-"""
-"""
-avg time for fitness:
-0.631109833717
-crossover:
-0.03
-mutation:
-0.006
-CheckCriteria with no commented out code:
-3.52894238063
-with comment:
-same
-
-
-"""
-""" time testing in future: time.time() - time.time() = x seconds"""
