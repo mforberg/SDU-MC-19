@@ -47,7 +47,7 @@ def calculate_average_distance_to_well_score(solution, well):
         """distance score is calculated using a linear equation"""
         value = L_A * avg_distance
     else:
-        """distance score is calculated using an quadratic equation"""
+        """distance score is calculated using a quadratic equation"""
         value = Q_A * math.pow(avg_distance, 2) + Q_B * avg_distance + Q_C
     """if value is at the cut, we want to give it a max score"""
     value_cut_for_max = VERTEX_Y - (VERTEX_Y * PERCENTAGE_FOR_MAX_VALUE_QE)
@@ -66,7 +66,7 @@ def check_area_for_water_and_changed_blocks_score(solution, height_map):
     total_percentage_changed = 0
     for building in solution:
         building_area = buildings[building.type_of_house]["xLength"] * buildings[building.type_of_house]["zWidth"]
-        average = find_most_common_height_around_the_building(height_map, building)
+        target_height = find_most_common_height_around_the_building(height_map, building)
         """finding water and lava"""
         amount_of_water_and_lava += find_amount_of_water_and_lava(building, height_map)
         """finding changed blocks"""
@@ -74,11 +74,12 @@ def check_area_for_water_and_changed_blocks_score(solution, height_map):
         for x in xrange(building.x, building.x + buildings[building.type_of_house]["xLength"]):
             for z in xrange(building.z, building.z + buildings[building.type_of_house]["zWidth"]):
                 height = height_map[x, z][0]
-                difference = abs(height - average)
+                difference = abs(height - target_height)
                 changed_blocks += float(difference)
         total_percentage_changed += changed_blocks / building_area
     """changed block score is calculated here (for the whole solution)"""
     average_percentage = total_percentage_changed / len(solution)
+    print average_percentage
     value = -(COEFFICIENT_MODIFIER_FOR_CHANGED_BLOCKS * MAX_SCORE) * average_percentage + MAX_SCORE
     building_score = AREA_WEIGHT * value
     """water/lava score is calculated here"""
