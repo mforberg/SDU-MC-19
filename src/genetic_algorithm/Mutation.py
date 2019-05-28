@@ -10,9 +10,9 @@ def mutate_population(population):
     for solution in population:
         building_list = solution
         """The amount of houses in a single solution"""
-        gene_size = len(solution)
+        chromosome_size = len(solution)
         """The percent chance of mutation"""
-        mutation_rate = float(1) / (gene_size * MUTATION_RATE_MODIFIER)
+        mutation_rate = float(1) / (chromosome_size * MUTATION_RATE_MODIFIER)
         mutation_trigger = mutation_rate * 100
         for building in building_list:
 
