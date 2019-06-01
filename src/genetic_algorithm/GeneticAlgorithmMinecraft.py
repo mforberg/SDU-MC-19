@@ -20,7 +20,7 @@ class GeneticAlgorithm:
         for x in range(0, GENERATIONS):
             # start = time.time()
             # print "- - - - - - - - - - - -"
-            # print "CURRENT GEN: ", x + 1
+            print "CURRENT GEN: ", x + 1
             generation_with_fitness = Fitness.population_fitness(current_generation, height_map, box_x, box_z)
             # """used for creating graphs"""
             # score = self.min_max_avg(generation_with_fitness)

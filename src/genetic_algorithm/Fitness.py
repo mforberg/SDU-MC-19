@@ -79,7 +79,6 @@ def check_area_for_water_and_changed_blocks_score(solution, height_map):
         total_percentage_changed += changed_blocks / building_area
     """changed block score is calculated here (for the whole solution)"""
     average_percentage = total_percentage_changed / len(solution)
-    print average_percentage
     value = -(COEFFICIENT_MODIFIER_FOR_CHANGED_BLOCKS * MAX_SCORE) * average_percentage + MAX_SCORE
     building_score = AREA_WEIGHT * value
     """water/lava score is calculated here"""
