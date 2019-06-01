@@ -45,14 +45,13 @@ def create_two_dimensional_height_map(level, box):
             continue
         x_reference_point = y
         break
-
     """From the reference point, start finding the heights"""
     for x in range(box.maxx + dimension_corrector, box.minx + dimension_corrector, -1):
         current_reference_point = x_reference_point
         only_update_once = True
         for z in range(box.maxz + dimension_corrector, box.minz + dimension_corrector, -1):
             current_block = level.blockAt(x, current_reference_point, z)
-            """if non-naturally occurring blocks is found, go down until there is one"""
+            """if a non-naturally occurring blocks is found, go down until there is one"""
             if current_block not in blocks:
                 while current_block not in blocks:
                     current_reference_point -= 1
