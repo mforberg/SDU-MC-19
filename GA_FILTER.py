@@ -40,7 +40,6 @@ def perform(level, box, options):
     centroids = starting_points(3, result)
     clusters = points_to_buildings(centroids, result)
 
-    #print d
 
     print "CALL 7"
     start = time.time()

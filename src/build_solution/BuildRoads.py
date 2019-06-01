@@ -94,14 +94,15 @@ def check_start_node(start_node, direction_lib, level):
     building_z = start_node[3]
     building_y = start_node[4]
 
-    height_difference = abs(calculate_difference(start_node_y, building_y))
+    ladder_limit = 2
+    height_difference = calculate_difference(start_node_y, building_y)
     width_difference = calculate_difference(start_node_z, building_z)
     length_difference = 0  # Will always be 0 in this case
 
-    if start_node_y > building_y:
+    if height_difference >= ladder_limit:
         building_node = (start_node_x, building_z, building_y)
         direction_lib = [4, 5, 2, 3]  # 4 = West, 5 = East, 2 = North, 3 = South
-        insert_ladder(length_difference, width_difference, height_difference, building_node, direction_lib, level)
-    elif start_node_y < building_y:
-        insert_ladder(length_difference, width_difference, height_difference, start_node, direction_lib, level)
+        insert_ladder(length_difference, width_difference, abs(height_difference), building_node, direction_lib, level)
+    elif height_difference <= -ladder_limit:
+        insert_ladder(length_difference, width_difference, abs(height_difference), start_node, direction_lib, level)
 
