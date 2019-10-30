@@ -1,5 +1,6 @@
 import random
 import copy
+from src.genetic_algorithm import SharedFunctions
 from variables.GA_VALUES import *
 
 
@@ -72,8 +73,10 @@ def select_parents_from_wheel_of_fortune(total_fitness, pop_list):
 
 
 def create_pair_of_children(ma, pa):
-    ma_list = well_first(ma[0])
-    pa_list = well_first(pa[0])
+    randomized_ma = SharedFunctions.new_randomized_order(ma[0])
+    randomized_pa = SharedFunctions.new_randomized_order(pa[0])
+    ma_list = SharedFunctions.well_first(randomized_ma)
+    pa_list = SharedFunctions.well_first(randomized_pa)
     child1 = []
     child2 = []
     """find which of ma and pa is smaller"""
@@ -82,19 +85,31 @@ def create_pair_of_children(ma, pa):
         shortest_nr = len(ma_list)
         first = ma_list
         second = pa_list
-        """single-point crossover (random point)"""
-        point = random.randint(0, shortest_nr)
     else:
         longest_nr = len(ma_list)
         shortest_nr = len(pa_list)
         first = pa_list
         second = ma_list
-        """single-point crossover (random point)"""
+    """single-point crossover (random point)"""
+    amount = 2
+    return x_point_crossover(amount, shortest_nr, longest_nr, first, second, child1, child2)
+
+
+def x_point_crossover(x, shortest_nr, longest_nr, first, second, child1, child2):
+    if x <= 0:
+        x = 1
+    point_list = []
+    while len(point_list) < x:
         point = random.randint(0, shortest_nr)
+        if point in point_list:
+            continue
+        else:
+            point_list.append(point)
+
     """start adding buildings to the children"""
     gene_changer = False
     for i in range(0, longest_nr):
-        if point == i:
+        if i in point_list:
             gene_changer = not gene_changer
         if gene_changer:
             if shortest_nr > i:
@@ -122,15 +137,3 @@ def get_elites(old_generation):
         elites.append(elites_first[i][0])
     return elites
 
-
-def well_first(parent):
-    new_list = list()
-    extra_list = list()
-    for building in parent:
-        if building.type_of_house == "well":
-            new_list.append(building)
-        else:
-            extra_list.append(building)
-    for building in extra_list:
-        new_list.append(building)
-    return new_list

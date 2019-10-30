@@ -36,7 +36,7 @@ class GeneticAlgorithm:
                     highest_fitness = current_best_solution[1]
                     overall_best_solution = copy.deepcopy(current_best_solution[0])
                     print "------NEW MAX------"
-                    print "       ", x
+                    print "       ", x + 1
                     print "-------------------"
             """FI2POP"""
             if USE_FI2POP:
@@ -112,3 +112,16 @@ class GeneticAlgorithm:
                 current_top = solution[1]
                 current_best = solution
         return current_best
+
+    @staticmethod
+    def well_first(parent):
+        new_list = list()
+        extra_list = list()
+        for building in parent:
+            if building.type_of_house == "well":
+                new_list.append(building)
+            else:
+                extra_list.append(building)
+        for building in extra_list:
+            new_list.append(building)
+        return new_list
