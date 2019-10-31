@@ -92,7 +92,9 @@ def create_pair_of_children(ma, pa):
         second = ma_list
     """single-point crossover (random point)"""
     amount = 2
-    return x_point_crossover(amount, shortest_nr, longest_nr, first, second, child1, child2)
+    # result = x_point_crossover(amount, shortest_nr, longest_nr, first, second, child1, child2)
+    result = uniformed_crossover(shortest_nr, longest_nr, first, second, child1, child2)
+    return result
 
 
 def x_point_crossover(x, shortest_nr, longest_nr, first, second, child1, child2):
@@ -126,6 +128,27 @@ def x_point_crossover(x, shortest_nr, longest_nr, first, second, child1, child2)
     return [child1, child2]
 
 
+def uniformed_crossover(shortest_nr, longest_nr, first, second, child1, child2):
+    """start adding buildings to the children"""
+    gene_changer = False
+    for i in range(0, longest_nr):
+        change = random.randint(0, 1)
+        if change == 1:
+            gene_changer = not gene_changer
+        if gene_changer:
+            if shortest_nr > i:
+                building = copy.deepcopy(first[i])
+                child1.append(building)
+            building2 = copy.deepcopy(second[i])
+            child2.append(building2)
+        else:
+            if shortest_nr > i:
+                building = copy.deepcopy(first[i])
+                child2.append(building)
+            building2 = copy.deepcopy(second[i])
+            child1.append(building2)
+    return [child1, child2]
+
 def get_elites(old_generation):
     elites = list()
     """sort so the elites are first"""
@@ -136,4 +159,3 @@ def get_elites(old_generation):
     for i in range(0, amount):
         elites.append(elites_first[i][0])
     return elites
-

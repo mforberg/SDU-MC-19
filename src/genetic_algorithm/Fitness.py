@@ -1,6 +1,7 @@
 from variables.GA_VALUES import *
 from src.MapAnalysis import *
 from src.genetic_algorithm.CheckCriterias import *
+from src.genetic_algorithm.SharedFunctions import *
 
 
 def population_fitness(population, height_map, box_x, box_z):
