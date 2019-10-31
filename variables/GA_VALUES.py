@@ -49,12 +49,3 @@ PERCENTAGE_FOR_MAX_VALUE_QE = 0.1
 """Linea Equation in Fitness (distance to well)"""
 L_A = VERTEX_Y / VERTEX_X
 
-
-def get_minimum_amount_of_houses(box_x, box_z):
-    minimum_amount_of_houses = round((box_z * box_x) / 6200)
-    return minimum_amount_of_houses
-
-
-def get_maximum_amount_of_houses(box_x, box_z):
-    maximum_amount_of_houses = round((box_z * box_x) / 3100)
-    return maximum_amount_of_houses

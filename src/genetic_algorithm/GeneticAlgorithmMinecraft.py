@@ -43,12 +43,12 @@ class GeneticAlgorithm:
                 extra_with_fitness = InfeasibleFitness.population_fitness(infeasible_population, box_x, box_z,
                                                                           starting_point)
                 new_extra_without_fitness = Crossover.create_new_population_from_old_one(extra_with_fitness)
-                Mutation.mutate_population(new_extra_without_fitness)
+                Mutation.mutate_population(new_extra_without_fitness, box_x, box_z, starting_point)
                 infeasible_population = new_extra_without_fitness
             """skip mutation and new generation on last"""
             if x < GENERATIONS - 1:
                 new_generation_without_fitness = Crossover.create_new_population_from_old_one(generation_with_fitness)
-                Mutation.mutate_population(new_generation_without_fitness)
+                Mutation.mutate_population(new_generation_without_fitness, box_x, box_z, starting_point)
                 if USE_FI2POP:
                     result = CheckCriterias.fi2pop_check(new_generation_without_fitness, box_x, box_z, starting_point,
                                                          infeasible_population)

@@ -3,7 +3,7 @@ from variables.GA_VALUES import *
 from variables.MC_LIBRARY import buildings
 
 
-def mutate_population(population):
+def mutate_population(population, box_x, box_z, starting_point):
     mutation_count_coord = 0
     mutation_count_building = 0
 

@@ -2,6 +2,16 @@ import random
 import copy
 
 
+def get_minimum_amount_of_houses(box_x, box_z):
+    minimum_amount_of_houses = round((box_z * box_x) / 6200)
+    return minimum_amount_of_houses
+
+
+def get_maximum_amount_of_houses(box_x, box_z):
+    maximum_amount_of_houses = round((box_z * box_x) / 3100)
+    return maximum_amount_of_houses
+
+
 def well_first(solution):
     new_list = list()
     extra_list = list()

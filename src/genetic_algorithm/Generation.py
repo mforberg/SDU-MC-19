@@ -1,6 +1,7 @@
 from variables.MC_LIBRARY import *
 from variables.GA_VALUES import *
 from src.Building import *
+from src.genetic_algorithm.SharedFunctions import *
 
 
 def generate_population(box_x, box_z, starting_point):
