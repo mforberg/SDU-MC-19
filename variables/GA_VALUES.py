@@ -1,16 +1,26 @@
 import math
 
-USE_SIZE_FOR_TYPE_MUTATION = False
+
 """The amount of "solutions" in a population"""
 POPULATION_SIZE = 50
 """The amount of generations the algorithm should be run"""
 GENERATIONS = 50
-"""The top percentage of the population who should just continue to next"""
-ELITES_PERCENTAGE = 0.1  # 10%
-"""Mutation rate is calculated by (1 / (gene_size * MUTATION_RATE_MODIFIER))"""
-MUTATION_RATE_MODIFIER = 1  # x time as unlikely to mutate
+
 """Fitness Max Scores"""
 MAX_SCORE = 1000
+
+"""-----Crossover-----"""
+AMOUNT_OF_CO_POINTS = 2
+USE_UNIFIED_CROSSOVER = False
+"""The top percentage of the population who should just continue to next"""
+ELITES_PERCENTAGE = 0.1  # 10%
+
+"""-----Mutation-----"""
+USE_SIZE_FOR_TYPE_MUTATION = False
+"""Mutation rate is calculated by (1 / (gene_size * MUTATION_RATE_MODIFIER))"""
+MUTATION_RATE_MODIFIER = 1  # x time as unlikely to mutate
+"""Mutate gene length probability cut"""
+MUTATE_GENE_LENGTH_CUT = 10  # x% change of happening
 
 """Fitness weights"""
 WATER_AND_LAVA_WEIGHT = 20  # For each water/lava-block found, how much does it cost to use that area

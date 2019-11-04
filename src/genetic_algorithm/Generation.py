@@ -60,3 +60,9 @@ def get_amount_of_houses(box_x, box_z):
     amount_of_houses = random.randint(get_minimum_amount_of_houses(box_x, box_z), get_maximum_amount_of_houses(box_x,
                                                                                                                box_z))
     return amount_of_houses
+
+
+def get_single_building(box_x, box_z, starting_point, list_of_buildings):
+    buildings_copy = copy_of_buildings()
+    current_house = get_random_house(buildings_copy)
+    return place_building(box_x, box_z, starting_point, current_house, list_of_buildings)

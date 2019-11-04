@@ -90,10 +90,12 @@ def create_pair_of_children(ma, pa):
         shortest_nr = len(pa_list)
         first = pa_list
         second = ma_list
-    """single-point crossover (random point)"""
-    amount = 2
-    # result = x_point_crossover(amount, shortest_nr, longest_nr, first, second, child1, child2)
-    result = uniformed_crossover(shortest_nr, longest_nr, first, second, child1, child2)
+    """Use the desired method for crossover"""
+    if USE_UNIFIED_CROSSOVER:
+        result = uniformed_crossover(shortest_nr, longest_nr, first, second, child1, child2)
+    else:
+        result = x_point_crossover(AMOUNT_OF_CO_POINTS, shortest_nr, longest_nr, first, second, child1, child2)
+
     return result
 
 
@@ -148,6 +150,7 @@ def uniformed_crossover(shortest_nr, longest_nr, first, second, child1, child2):
             building2 = copy.deepcopy(second[i])
             child1.append(building2)
     return [child1, child2]
+
 
 def get_elites(old_generation):
     elites = list()

@@ -1,6 +1,4 @@
-import random
-from variables.GA_VALUES import *
-from variables.MC_LIBRARY import buildings
+from src.genetic_algorithm.Generation import *
 
 
 def mutate_population(population, box_x, box_z, starting_point):
@@ -8,6 +6,11 @@ def mutate_population(population, box_x, box_z, starting_point):
     mutation_count_building = 0
 
     for solution in population:
+        """Change gene length?"""
+        change = random_number_between_one_to_hundred()
+        if change <= MUTATE_GENE_LENGTH_CUT:
+            change_solution_size(solution, box_x, box_z, starting_point)
+
         building_list = solution
         """The amount of houses in a single solution"""
         chromosome_size = len(solution)
@@ -110,3 +113,13 @@ def get_buildings_by_mutation_number():
     number_list.sort()
     returned_list = number_list
     return returned_list
+
+
+def change_solution_size(solution, box_x, box_z, starting_point):
+    change = random.randint(0, 1)
+    if change == 0 and len(solution) > get_minimum_amount_of_houses(box_x, box_z):
+        """remove last structure (if the length is above minimum)"""
+        solution.remove(solution[len(solution)-1])
+    elif len(solution) < get_maximum_amount_of_houses(box_x, box_z):
+        """add to solution a whole new building (if the length is below maximum"""
+        solution.append(get_single_building(box_x, box_z, starting_point, solution))
