@@ -1,6 +1,6 @@
 from src.genetic_algorithm import CheckCriterias, Crossover, Fitness, Generation, Mutation, InfeasibleFitness
 from variables.GA_VALUES import *
-import copy
+import copy, time
 
 
 class GeneticAlgorithm:
@@ -18,16 +18,16 @@ class GeneticAlgorithm:
         highest_fitness = 0
         """save the overall best"""
         for x in range(0, GENERATIONS):
-            # start = time.time()
-            # print "- - - - - - - - - - - -"
+            start = time.time()
+            print "- - - - - - - - - - - -"
             print "CURRENT GEN: ", x + 1
             generation_with_fitness = Fitness.population_fitness(current_generation, height_map, box_x, box_z)
             # """used for creating graphs"""
-            # score = self.min_max_avg(generation_with_fitness)
-            # if score != "empty":
-            #     min_list.append(score[0])
-            #     avg_list.append(score[1])
-            #     max_list.append(score[2])
+            score = self.min_max_avg(generation_with_fitness)
+            if score != "empty":
+                min_list.append(score[0])
+                avg_list.append(score[1])
+                max_list.append(score[2])
             """if there is any feasible solutions"""
             if len(generation_with_fitness) > 0:
                 current_best_solution = self.find_best_solution(generation_with_fitness)
@@ -57,31 +57,31 @@ class GeneticAlgorithm:
                 else:
                     current_generation = CheckCriterias.check_population(new_generation_without_fitness, box_x, box_z,
                                                                          starting_point)
-            # end = time.time()
-            # print end - start, "<-- Time"
-            # print "Overall Best: ", highest_fitness, ",   Size: ", len(overall_best_solution)
+            end = time.time()
+            print end - start, "<-- Time"
+            print "Overall Best: ", highest_fitness, ",   Size: ", len(overall_best_solution)
 
-        # dump = open(r"C:\Users\jonas\Desktop\GDMC-master\GDMC\stock-filters\src\dump.txt", "w")
-        # for value in min_list:
-        #     dump.write("\n" + str(round(value)))
-        # dump.write("\n")
-        # dump.write("\n")
-        # for value in avg_list:
-        #     dump.write("\n" + str(round(value)))
-        # dump.write("\n")
-        # dump.write("\n")
-        # for value in max_list:
-        #     dump.write("\n" + str(round(value)))
-        # dump.write("\n")
-        # dump.write("\n")
+        dump = open(r"C:\Users\zaczt\Documents\ScientificMethods\cp1flat.txt", "w+")
+        for value in min_list:
+            dump.write("\n" + str(round(value)))
+        dump.write("\n")
+        dump.write("\n")
+        for value in avg_list:
+            dump.write("\n" + str(round(value)))
+        dump.write("\n")
+        dump.write("\n")
+        for value in max_list:
+            dump.write("\n" + str(round(value)))
+        dump.write("\n")
+        dump.write("\n")
         # for value in feasible_len:
         #     dump.write("\n" + str(round(value)))
         # dump.write("\n")
         # dump.write("\n")
         # for value in infeasible_len:
         #     dump.write("\n" + str(round(value)))
-        # dump.close()
-        # print len(overall_best_solution)
+        dump.close()
+        print len(overall_best_solution)
         return overall_best_solution
 
     @staticmethod
