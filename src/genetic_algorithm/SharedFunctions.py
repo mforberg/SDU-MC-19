@@ -28,4 +28,4 @@ def well_first(solution):
 def new_randomized_order(solution):
     temp_solution = copy.deepcopy(solution)
     random.shuffle(temp_solution)
-    return temp_solution
+    return solution

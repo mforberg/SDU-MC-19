@@ -11,6 +11,7 @@ class GeneticAlgorithm:
         min_list = list()
         avg_list = list()
         max_list = list()
+        infeasible_len = list()
         infeasible_population = list()
         overall_best_solution = None
         init_generation = Generation.generate_population(box_x, box_z, starting_point)
@@ -45,6 +46,7 @@ class GeneticAlgorithm:
                 new_extra_without_fitness = Crossover.create_new_population_from_old_one(extra_with_fitness)
                 Mutation.mutate_population(new_extra_without_fitness, box_x, box_z, starting_point)
                 infeasible_population = new_extra_without_fitness
+
             """skip mutation and new generation on last"""
             if x < GENERATIONS - 1:
                 new_generation_without_fitness = Crossover.create_new_population_from_old_one(generation_with_fitness)
@@ -57,11 +59,12 @@ class GeneticAlgorithm:
                 else:
                     current_generation = CheckCriterias.check_population(new_generation_without_fitness, box_x, box_z,
                                                                          starting_point)
+            infeasible_len.append(len(infeasible_population))
             end = time.time()
             print end - start, "<-- Time"
             print "Overall Best: ", highest_fitness, ",   Size: ", len(overall_best_solution)
 
-        dump = open(r"C:\Users\zaczt\Documents\ScientificMethods\cp1flat.txt", "w+")
+        dump = open(r"C:\Users\zaczt\Documents\ScientificMethods\uctest5.txt", "w+")
         for value in min_list:
             dump.write("\n" + str(round(value)))
         dump.write("\n")
@@ -78,8 +81,8 @@ class GeneticAlgorithm:
         #     dump.write("\n" + str(round(value)))
         # dump.write("\n")
         # dump.write("\n")
-        # for value in infeasible_len:
-        #     dump.write("\n" + str(round(value)))
+        for value in infeasible_len:
+            dump.write("\n" + str(round(value)))
         dump.close()
         print len(overall_best_solution)
         return overall_best_solution

@@ -2,7 +2,7 @@ import math
 
 
 """The amount of "solutions" in a population"""
-POPULATION_SIZE = 50
+POPULATION_SIZE = 100
 """The amount of generations the algorithm should be run"""
 GENERATIONS = 100
 
@@ -10,8 +10,8 @@ GENERATIONS = 100
 MAX_SCORE = 1000
 
 """-----Crossover-----"""
-AMOUNT_OF_CO_POINTS = 1
-USE_UNIFIED_CROSSOVER = False
+AMOUNT_OF_CO_POINTS = 3
+USE_UNIFIED_CROSSOVER = True
 """The top percentage of the population who should just continue to next"""
 ELITES_PERCENTAGE = 0.1  # 10%
 

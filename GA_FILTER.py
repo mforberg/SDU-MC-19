@@ -28,8 +28,11 @@ def perform(level, box, options):
     print "CALL 2"
     gam = GeneticAlgorithmMinecraft.GeneticAlgorithm()
     # RUN GENETIC ALGORITHM
+    gaStart = time.time()
     print "CALL 3"
     result = gam.run_genetic_algorithm(height_map, box.maxx - box.minx, box.maxz - box.minz, starting_point)
+    gaEnd = time.time()
+    print gaEnd - gaStart, " GA total time"
     # LEVEL AREA FOR BUILDINGS
     print "CALL 4"
     PrepareBuildingArea.modify_area(height_map, result, level)
